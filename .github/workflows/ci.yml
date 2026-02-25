@@ -1,0 +1,49 @@
+name: CI — Validate Pull Request
+
+# Runs on every PR targeting main.
+# Blocks the merge until the build succeeds and all official links are healthy.
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-validate:
+    name: Build & Link Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build site (strict mode)
+        # --strict turns warnings into errors so broken templates or bad YAML
+        # cause the check to fail and block the PR.
+        run: mkdocs build --strict
+
+      - name: Check for dead official links (htmlproofer)
+        uses: anishathalye/proof-html@v2
+        with:
+          directory: ./site
+          # Disable HTML/CSS validation — errors come from Material theme internals
+          # (e.g. autocomplete attributes, scrollbar-gutter CSS) that we don't control.
+          check_html: false
+          check_css: false
+          check_external_hash: false
+          enforce_https: true
+          # Ignore GitHub links (private repo returns 404 to unauthenticated crawlers),
+          # Google Fonts CDN (blocks HEAD requests from CI runners), and Japanese government
+          # domains (.go.jp) — all Japanese govt sites block automated crawlers with 403 by
+          # policy. This is structural bot-blocking, not a dead link.
+          ignore_url_re: |
+            ^https://github\.com/
+            ^https://fonts\.(gstatic|googleapis)\.com
+            \.go\.jp

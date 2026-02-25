@@ -1,10 +1,15 @@
 site_name: Project Codex
 site_description: The verifiable visa database for Indian citizens.
+
+repo_url: https://github.com/shan8tanu/atlas-wiki
+repo_name: shan8tanu/atlas-wiki
+edit_uri: edit/main/
 theme:
   name: material
   features:
     - navigation.tabs
     - navigation.sections
+    - content.action.edit
 
 plugins:
   - search
@@ -16,3 +21,4 @@ nav:
   - Home: index.md
   - Destinations:
     - Japan: japan.md
+  - Contribute: CONTRIBUTING.md

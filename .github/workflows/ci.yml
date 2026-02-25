@@ -1,0 +1,42 @@
+name: CI — Validate Pull Request
+
+# Runs on every PR targeting main.
+# Blocks the merge until the build succeeds and all official links are healthy.
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-validate:
+    name: Build & Link Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build site (strict mode)
+        # --strict turns warnings into errors so broken templates or bad YAML
+        # cause the check to fail and block the PR.
+        run: mkdocs build --strict
+
+      - name: Check for dead official links (htmlproofer)
+        uses: anishathalye/proof-html@v2
+        with:
+          directory: ./site
+          # Only check external links in the official_portal anchors.
+          # Internal links are always valid since we just built the site.
+          check_external_hash: false
+          enforce_https: true
+          # Ignore GitHub itself (edit links) to avoid rate-limiting failures.
+          ignore_urls: |
+            https://github.com/

@@ -1,0 +1,12 @@
+# Built site — never commit generated output, it's deployed by CI
+site/
+
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db

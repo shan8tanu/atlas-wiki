@@ -28,3 +28,7 @@ for filename in os.listdir(data_dir):
         
         with mkdocs_gen_files.open(md_filename, "w") as fd:
             fd.write(rendered_markdown)
+
+        # Route the "Edit this page" button to the YAML source file,
+        # not the generated .md. This is the entry point for community edits.
+        mkdocs_gen_files.set_edit_path(md_filename, f"data/visas/{filename}")

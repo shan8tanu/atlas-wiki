@@ -1,0 +1,41 @@
+name: Deploy — Publish to GitHub Pages
+
+# Runs only when a PR is merged into main.
+# This is the single source of truth for what goes live.
+on:
+  push:
+    branches:
+      - main
+
+# Allow the workflow to write to the gh-pages branch.
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Build & Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history so mkdocs can read git timestamps for pages.
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Configure git identity for deploy commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy to GitHub Pages
+        # gh-deploy builds the site and force-pushes it to the gh-pages branch.
+        run: mkdocs gh-deploy --force

@@ -33,10 +33,17 @@ jobs:
         uses: anishathalye/proof-html@v2
         with:
           directory: ./site
-          # Only check external links in the official_portal anchors.
-          # Internal links are always valid since we just built the site.
+          # Disable HTML/CSS validation — errors come from Material theme internals
+          # (e.g. autocomplete attributes, scrollbar-gutter CSS) that we don't control.
+          check_html: false
+          check_css: false
           check_external_hash: false
           enforce_https: true
-          # Ignore GitHub itself (edit links) to avoid rate-limiting failures.
-          ignore_urls: |
-            https://github.com/
+          # Ignore GitHub links (private repo returns 404 to unauthenticated crawlers)
+          # and Google Fonts CDN (blocks HEAD requests from CI runners).
+          ignore_url_re: |
+            ^https://github\.com/
+            ^https://fonts\.(gstatic|googleapis)\.com/
+          # 403 = bot-blocking (server alive, just rejecting crawlers).
+          # This is normal for government/embassy websites. Not the same as a dead link.
+          args: --ignore-status-codes 403

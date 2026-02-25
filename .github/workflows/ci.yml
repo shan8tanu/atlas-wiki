@@ -39,11 +39,11 @@ jobs:
           check_css: false
           check_external_hash: false
           enforce_https: true
-          # Ignore GitHub links (private repo returns 404 to unauthenticated crawlers)
-          # and Google Fonts CDN (blocks HEAD requests from CI runners).
+          # Ignore GitHub links (private repo returns 404 to unauthenticated crawlers),
+          # Google Fonts CDN (blocks HEAD requests from CI runners), and Japanese government
+          # domains (.go.jp) — all Japanese govt sites block automated crawlers with 403 by
+          # policy. This is structural bot-blocking, not a dead link.
           ignore_url_re: |
             ^https://github\.com/
             ^https://fonts\.(gstatic|googleapis)\.com
-          # 403 = bot-blocking (server alive, just rejecting crawlers).
-          # This is normal for government/embassy websites. Not the same as a dead link.
-          args: --ignore-status-codes=403
+            \.go\.jp

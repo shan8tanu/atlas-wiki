@@ -5,7 +5,7 @@ authority:
   processor: VFS Global
   official_portal: "https://www.in.emb-japan.go.jp/itprtop_en/index.html"
 requirements:
-  visa_fee_inr: 500
+  visa_fee_inr: 800
   processing_days: 4
   photo_specs:
     dimensions: "35x45mm"

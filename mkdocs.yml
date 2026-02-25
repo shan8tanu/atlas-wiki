@@ -1,0 +1,18 @@
+site_name: Project Codex
+site_description: The verifiable visa database for Indian citizens.
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - gen_pages.py
+
+nav:
+  - Home: index.md
+  - Destinations:
+    - Japan: japan.md

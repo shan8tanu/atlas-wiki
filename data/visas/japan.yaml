@@ -1,0 +1,13 @@
+country: Japan
+iso_code: JP
+authority:
+  name: Embassy of Japan, New Delhi
+  processor: VFS Global
+  official_portal: "https://www.in.emb-japan.go.jp/itprtop_en/index.html"
+requirements:
+  visa_fee_inr: 500
+  processing_days: 4
+  photo_specs:
+    dimensions: "35x45mm"
+    bg_color: "White"
+  financial_proof: "ITR for the last 3 years and 6 months bank statement."

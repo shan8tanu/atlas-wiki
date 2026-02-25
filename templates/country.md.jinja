@@ -1,0 +1,32 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "GovernmentService",
+      "name": "{{ country }} Visa Application Service",
+      "provider": {
+        "@type": "GovernmentOrganization",
+        "name": "{{ authority.name }}"
+      },
+      "areaServed": "India"
+    }
+  ]
+}
+</script>
+
+# {{ country }} Visa Requirements for Indian Citizens
+
+## Section A: Authority & Access
+* **Issuing Authority:** {{ authority.name }}
+* **Authorized Processor:** {{ authority.processor }}
+* **Official Portal:** [Access the official government portal]({{ authority.official_portal }})
+
+## Section C: The Requirement "Hard Facts"
+* **Visa Fee:** ₹{{ requirements.visa_fee_inr }}
+* **Standard Processing Time:** {{ requirements.processing_days }} working days
+* **Photo Specifications:** {{ requirements.photo_specs.dimensions }} with a {{ requirements.photo_specs.bg_color }} background.
+* **Financial Proof:** {{ requirements.financial_proof }}
+
+---
+*Data is verified against official consular sources.*

@@ -43,7 +43,7 @@ jobs:
           # and Google Fonts CDN (blocks HEAD requests from CI runners).
           ignore_url_re: |
             ^https://github\.com/
-            ^https://fonts\.(gstatic|googleapis)\.com/
+            ^https://fonts\.(gstatic|googleapis)\.com
           # 403 = bot-blocking (server alive, just rejecting crawlers).
           # This is normal for government/embassy websites. Not the same as a dead link.
-          args: --ignore-status-codes 403
+          args: --ignore-status-codes=403

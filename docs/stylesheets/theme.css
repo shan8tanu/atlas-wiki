@@ -1,0 +1,288 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Atlas — Visual Identity System
+   Pure CSS + inline SVG. Zero dependencies. ~8 KB uncompressed.
+   ═══════════════════════════════════════════════════════════════════ */
+
+
+/* ── 1. CSS Custom Properties ────────────────────────────────────── */
+
+:root,
+[data-md-color-scheme="default"] {
+  --atlas-accent: #ff3621;
+  --atlas-accent-light: #ff362122;
+  --atlas-accent-lighter: #ff36210d;
+
+  /* Brand color override for Material components */
+  --md-primary-fg-color: #ff3621;
+  --md-primary-fg-color--light: #ff362133;
+  --md-primary-fg-color--dark: #e02e1b;
+  --md-accent-fg-color: #ff3621;
+  --md-typeset-a-color: #ff3621;
+
+  /* Motif visibility */
+  --atlas-motif-opacity: 0.035;
+
+  /* Animation tokens */
+  --atlas-duration-fast: 150ms;
+  --atlas-duration-normal: 300ms;
+  --atlas-duration-slow: 600ms;
+  --atlas-stagger: 80ms;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #ff5a45;
+  --md-primary-fg-color--light: #ff5a4533;
+  --md-primary-fg-color--dark: #ff3621;
+  --md-accent-fg-color: #ff5a45;
+  --md-typeset-a-color: #ff5a45;
+  --atlas-accent: #ff5a45;
+  --atlas-accent-light: #ff5a4522;
+  --atlas-accent-lighter: #ff5a450d;
+  --atlas-motif-opacity: 0.025;
+}
+
+
+/* ── 2. Background Motif Layer ───────────────────────────────────── */
+
+.atlas-motif-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--atlas-motif-opacity);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  transition: opacity var(--atlas-duration-normal) ease;
+}
+
+/* India — Rangoli (concentric circles + petal points) */
+.atlas-motif--rangoli {
+  background-size: 120px 120px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='25' fill='none' stroke='%239e9e9e' stroke-width='0.6'/%3E%3Ccircle cx='60' cy='60' r='40' fill='none' stroke='%239e9e9e' stroke-width='0.4'/%3E%3Ccircle cx='60' cy='60' r='10' fill='none' stroke='%239e9e9e' stroke-width='0.5'/%3E%3Cpath d='M60 20l4 12-4-3-4 3z' fill='%239e9e9e' opacity='.35'/%3E%3Cpath d='M60 100l4-12-4 3-4-3z' fill='%239e9e9e' opacity='.35'/%3E%3Cpath d='M20 60l12-4-3 4 3 4z' fill='%239e9e9e' opacity='.35'/%3E%3Cpath d='M100 60l-12-4 3 4-3 4z' fill='%239e9e9e' opacity='.35'/%3E%3Cpath d='M32 32l10 6-5 0 0 5z' fill='%239e9e9e' opacity='.25'/%3E%3Cpath d='M88 32l-10 6 5 0 0 5z' fill='%239e9e9e' opacity='.25'/%3E%3Cpath d='M32 88l10-6-5 0 0-5z' fill='%239e9e9e' opacity='.25'/%3E%3Cpath d='M88 88l-10-6 5 0 0-5z' fill='%239e9e9e' opacity='.25'/%3E%3C/svg%3E");
+}
+
+/* East Asia — Cherry Blossom (five-petal flowers) */
+.atlas-motif--cherry-blossom {
+  background-size: 100px 100px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%239e9e9e' opacity='.4'%3E%3Cellipse cx='50' cy='38' rx='4' ry='8' transform='rotate(0 50 50)'/%3E%3Cellipse cx='50' cy='38' rx='4' ry='8' transform='rotate(72 50 50)'/%3E%3Cellipse cx='50' cy='38' rx='4' ry='8' transform='rotate(144 50 50)'/%3E%3Cellipse cx='50' cy='38' rx='4' ry='8' transform='rotate(216 50 50)'/%3E%3Cellipse cx='50' cy='38' rx='4' ry='8' transform='rotate(288 50 50)'/%3E%3Ccircle cx='50' cy='50' r='3'/%3E%3C/g%3E%3Cg fill='%239e9e9e' opacity='.2'%3E%3Cellipse cx='15' cy='15' rx='2.5' ry='5' transform='rotate(0 15 15)'/%3E%3Cellipse cx='15' cy='15' rx='2.5' ry='5' transform='rotate(72 15 15)'/%3E%3Cellipse cx='15' cy='15' rx='2.5' ry='5' transform='rotate(144 15 15)'/%3E%3Cellipse cx='15' cy='15' rx='2.5' ry='5' transform='rotate(216 15 15)'/%3E%3Cellipse cx='15' cy='15' rx='2.5' ry='5' transform='rotate(288 15 15)'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Southeast Asia — Tropical Leaves */
+.atlas-motif--tropical-leaves {
+  background-size: 140px 140px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cpath d='M70 20c-20 15-30 40-25 60 2-18 12-35 25-45' fill='none' stroke='%239e9e9e' stroke-width='0.8' opacity='.35'/%3E%3Cpath d='M70 20c20 15 30 40 25 60-2-18-12-35-25-45' fill='none' stroke='%239e9e9e' stroke-width='0.8' opacity='.35'/%3E%3Cpath d='M70 20v60' stroke='%239e9e9e' stroke-width='0.4' opacity='.3'/%3E%3Cpath d='M20 90c10-20 25-30 45-25-15 2-28 10-35 20' fill='none' stroke='%239e9e9e' stroke-width='0.6' opacity='.25'/%3E%3C/svg%3E");
+}
+
+/* Europe — Architecture (arches and columns) */
+.atlas-motif--architecture {
+  background-size: 100px 100px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M20 85V45a30 30 0 0 1 60 0v40' fill='none' stroke='%239e9e9e' stroke-width='0.6' opacity='.35'/%3E%3Cline x1='20' y1='85' x2='80' y2='85' stroke='%239e9e9e' stroke-width='0.4' opacity='.3'/%3E%3Cline x1='35' y1='85' x2='35' y2='55' stroke='%239e9e9e' stroke-width='0.4' opacity='.25'/%3E%3Cline x1='50' y1='85' x2='50' y2='45' stroke='%239e9e9e' stroke-width='0.4' opacity='.25'/%3E%3Cline x1='65' y1='85' x2='65' y2='55' stroke='%239e9e9e' stroke-width='0.4' opacity='.25'/%3E%3C/svg%3E");
+}
+
+/* North America — City Skyline */
+.atlas-motif--city-skyline {
+  background-size: 160px 100px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='100' viewBox='0 0 160 100'%3E%3Cpath d='M0 90h10V55h8V90h12V40h6V90h14V60h10V90h12V30h4V90h16V50h8V90h10V65h6V90h12V45h8V90h24' fill='none' stroke='%239e9e9e' stroke-width='0.6' opacity='.3'/%3E%3C/svg%3E");
+}
+
+/* Middle East — Islamic Geometric (interlocking stars) */
+.atlas-motif--islamic-geometric {
+  background-size: 80px 80px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpolygon points='40,8 47,28 68,28 51,40 58,60 40,48 22,60 29,40 12,28 33,28' fill='none' stroke='%239e9e9e' stroke-width='0.5' opacity='.35'/%3E%3Crect x='20' y='20' width='40' height='40' fill='none' stroke='%239e9e9e' stroke-width='0.3' opacity='.2' transform='rotate(45 40 40)'/%3E%3C/svg%3E");
+}
+
+/* South Asia — Mountain Range */
+.atlas-motif--mountain-range {
+  background-size: 200px 80px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' viewBox='0 0 200 80'%3E%3Cpath d='M0 70l25-35 15 10 20-30 10 15 25-25 15 20 20-15 15 25 20-20 15 15 20-30v70' fill='none' stroke='%239e9e9e' stroke-width='0.6' opacity='.3'/%3E%3Cpath d='M10 70l20-20 10 8 15-18 8 10 20-15 12 12 15-10 10 15' fill='none' stroke='%239e9e9e' stroke-width='0.4' opacity='.2'/%3E%3C/svg%3E");
+}
+
+/* Oceania — Waves */
+.atlas-motif--waves {
+  background-size: 120px 60px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30c10-10 20-10 30 0s20 10 30 0 20-10 30 0 20 10 30 0' fill='none' stroke='%239e9e9e' stroke-width='0.6' opacity='.35'/%3E%3Cpath d='M0 45c10-8 20-8 30 0s20 8 30 0 20-8 30 0 20 8 30 0' fill='none' stroke='%239e9e9e' stroke-width='0.4' opacity='.25'/%3E%3Cpath d='M0 15c10-6 20-6 30 0s20 6 30 0 20-6 30 0 20 6 30 0' fill='none' stroke='%239e9e9e' stroke-width='0.3' opacity='.15'/%3E%3C/svg%3E");
+}
+
+/* Africa — Tribal Pattern (zigzag/diamond) */
+.atlas-motif--tribal-pattern {
+  background-size: 80px 80px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M0 40l20-20 20 20 20-20 20 20' fill='none' stroke='%239e9e9e' stroke-width='0.6' opacity='.3'/%3E%3Cpath d='M0 60l20-20 20 20 20-20 20 20' fill='none' stroke='%239e9e9e' stroke-width='0.4' opacity='.2'/%3E%3Cpath d='M0 20l20-20 20 20 20-20 20 20' fill='none' stroke='%239e9e9e' stroke-width='0.4' opacity='.2'/%3E%3Cpolygon points='40,25 50,40 40,55 30,40' fill='none' stroke='%239e9e9e' stroke-width='0.5' opacity='.25'/%3E%3C/svg%3E");
+}
+
+/* South America — Nature Flora (vine curls) */
+.atlas-motif--nature-flora {
+  background-size: 120px 120px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M30 90c0-30 20-50 40-50' fill='none' stroke='%239e9e9e' stroke-width='0.6' opacity='.3'/%3E%3Cpath d='M50 60c-10-5-10-15 0-20s15-5 15 5' fill='none' stroke='%239e9e9e' stroke-width='0.5' opacity='.25'/%3E%3Cpath d='M70 40c5 10 15 10 20 0s5-15-5-15' fill='none' stroke='%239e9e9e' stroke-width='0.5' opacity='.25'/%3E%3Ccircle cx='30' cy='90' r='2' fill='%239e9e9e' opacity='.2'/%3E%3C/svg%3E");
+}
+
+/* Default — Subtle Grid (dot pattern) */
+.atlas-motif--subtle-grid {
+  background-size: 30px 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='1' fill='%239e9e9e' opacity='.4'/%3E%3C/svg%3E");
+}
+
+
+/* ── 3. Entrance Animations ──────────────────────────────────────── */
+
+@keyframes atlas-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.md-content__inner > * {
+  animation: atlas-fade-up var(--atlas-duration-slow) ease both;
+}
+
+.md-content__inner > *:nth-child(1) { animation-delay: calc(var(--atlas-stagger) * 0); }
+.md-content__inner > *:nth-child(2) { animation-delay: calc(var(--atlas-stagger) * 1); }
+.md-content__inner > *:nth-child(3) { animation-delay: calc(var(--atlas-stagger) * 2); }
+.md-content__inner > *:nth-child(4) { animation-delay: calc(var(--atlas-stagger) * 3); }
+.md-content__inner > *:nth-child(5) { animation-delay: calc(var(--atlas-stagger) * 4); }
+.md-content__inner > *:nth-child(6) { animation-delay: calc(var(--atlas-stagger) * 5); }
+.md-content__inner > *:nth-child(n+7) { animation-delay: calc(var(--atlas-stagger) * 6); }
+
+
+/* ── 4. Scroll-Triggered Reveals ─────────────────────────────────── */
+
+.atlas-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--atlas-duration-slow) ease,
+              transform var(--atlas-duration-slow) ease;
+}
+
+.atlas-reveal.atlas-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ── 5. Hover Micro-interactions ─────────────────────────────────── */
+
+.md-typeset a:not(.md-button):not(.md-nav__link):hover {
+  text-decoration-color: var(--atlas-accent);
+  transition: text-decoration-color var(--atlas-duration-fast) ease;
+}
+
+.md-button {
+  transition: transform var(--atlas-duration-fast) ease,
+              box-shadow var(--atlas-duration-fast) ease;
+}
+
+.md-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--atlas-accent-light);
+}
+
+/* Card lift effect */
+.md-typeset .grid.cards > ul > li {
+  transition: transform var(--atlas-duration-normal) ease,
+              box-shadow var(--atlas-duration-normal) ease;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ── 6. Homepage Hero ────────────────────────────────────────────── */
+
+.atlas-hero {
+  position: relative;
+  padding: 4rem 1rem 3rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+.atlas-hero__bg {
+  position: absolute;
+  inset: 0;
+  opacity: var(--atlas-motif-opacity);
+  pointer-events: none;
+  animation: atlas-bg-drift 60s linear infinite;
+}
+
+@keyframes atlas-bg-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 120px 120px; }
+}
+
+.atlas-hero__content {
+  position: relative;
+  z-index: 1;
+  animation: atlas-fade-up 0.8s ease both;
+}
+
+.atlas-hero__title {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+  color: var(--md-default-fg-color);
+}
+
+.atlas-hero__subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 400;
+  color: var(--md-default-fg-color--light);
+  margin: 0 0 2rem;
+}
+
+.atlas-hero__actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.atlas-hero__btn {
+  font-weight: 600;
+}
+
+/* Gradient separator below hero */
+.atlas-hero__separator {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--md-default-fg-color--lightest),
+    transparent
+  );
+}
+
+
+/* ── 7. Accessibility ────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .md-content__inner > *,
+  .atlas-hero__content,
+  .atlas-hero__bg {
+    animation: none !important;
+  }
+
+  .atlas-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .md-button,
+  .md-typeset .grid.cards > ul > li {
+    transition: none;
+  }
+}

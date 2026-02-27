@@ -1,15 +1,42 @@
-site_name: Project Codex
+site_name: Atlas
 site_description: The verifiable visa database for Indian citizens.
+site_url: https://atlas-wiki.pages.dev/
 
 repo_url: https://github.com/shan8tanu/atlas-wiki
 repo_name: shan8tanu/atlas-wiki
 edit_uri: edit/main/
+
 theme:
   name: material
+  custom_dir: overrides
+  favicon: assets/images/favicon.svg
+  font:
+    text: Montserrat
+    code: JetBrains Mono
+  icon:
+    repo: fontawesome/brands/github
   features:
     - navigation.tabs
     - navigation.sections
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.top
     - content.action.edit
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 plugins:
   - search
@@ -17,11 +44,18 @@ plugins:
       scripts:
         - gen_pages.py
 
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/shan8tanu/atlas-wiki
+
 extra_javascript:
   - javascripts/map.js
+  - javascripts/theme.js
 
 extra_css:
   - stylesheets/map.css
+  - stylesheets/theme.css
 
 nav:
   - Home: index.md

@@ -1,3 +1,9 @@
+---
+name: Data Correction
+about: Report incorrect visa fees, rules, or requirements (Community Edits)
+title: 'fix: update [Country] visa data'
+labels: 'data'
+---
 # Data Correction Report
 
 Thank you for contributing to Project Atlas. Every change to visa data must be backed by an official source.

@@ -1,5 +1,6 @@
 country: Japan
 iso_code: JP
+visa_difficulty: 4
 authority:
   name: Embassy of Japan, New Delhi
   processor: VFS Global

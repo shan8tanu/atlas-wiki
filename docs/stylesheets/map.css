@@ -1,0 +1,126 @@
+/* ── Interactive World Map ────────────────────── */
+
+.map-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.map-container svg {
+  width: 100%;
+  height: auto;
+  max-height: 75vh;
+  display: block;
+}
+
+/* Country paths */
+.map-country {
+  stroke: #fff;
+  stroke-width: 0.4;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+.map-country--active {
+  cursor: pointer;
+}
+
+.map-country--active:hover {
+  filter: brightness(1.2);
+  stroke-width: 1;
+}
+
+.map-country--disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.map-country--disabled:hover {
+  opacity: 0.85;
+}
+
+/* ── Tooltip ─────────────────────────────────── */
+
+#map-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  background: var(--md-default-bg-color, #fff);
+  color: var(--md-default-fg-color, #333);
+  border: 1px solid var(--md-default-fg-color--lightest, #e0e0e0);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  white-space: nowrap;
+}
+
+.map-tooltip__badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.map-tooltip__badge--1 { background: #2ecc71; }
+.map-tooltip__badge--2 { background: #3498db; }
+.map-tooltip__badge--3 { background: #f39c12; }
+.map-tooltip__badge--4 { background: #e74c3c; }
+.map-tooltip__badge--5 { background: #8e44ad; }
+
+/* ── Legend ───────────────────────────────────── */
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 0 8px;
+  font-size: 0.82rem;
+}
+
+.map-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-legend__swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+/* ── Dark mode (Material Slate) ──────────────── */
+
+[data-md-color-scheme="slate"] #map-tooltip {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-md-color-scheme="slate"] .map-country {
+  stroke: #2d2d2d;
+}
+
+[data-md-color-scheme="slate"] .map-country--disabled {
+  opacity: 0.4;
+}
+
+/* ── Responsive ──────────────────────────────── */
+
+@media (max-width: 600px) {
+  .map-legend {
+    gap: 8px;
+    font-size: 0.75rem;
+  }
+
+  .map-legend__swatch {
+    width: 12px;
+    height: 12px;
+  }
+}

@@ -17,8 +17,15 @@ plugins:
       scripts:
         - gen_pages.py
 
+extra_javascript:
+  - javascripts/map.js
+
+extra_css:
+  - stylesheets/map.css
+
 nav:
   - Home: index.md
+  - Explore Map: map.md
   - Destinations:
     - Japan: japan.md
   - Contribute: CONTRIBUTING.md

@@ -1,0 +1,43 @@
+name: Link Health — Weekly Check
+
+# Catches embassy/government link rot between PRs.
+# Government URLs change frequently; this ensures we detect dead links
+# even when no PRs are submitted that week.
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+  workflow_dispatch:        # Allow manual trigger from Actions tab
+
+jobs:
+  link-check:
+    name: Build & Check Links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build site
+        run: mkdocs build --strict
+
+      - name: Check for dead official links (htmlproofer)
+        uses: anishathalye/proof-html@v2
+        with:
+          directory: ./site
+          check_html: false
+          check_css: false
+          check_external_hash: false
+          enforce_https: true
+          ignore_url_re: |
+            ^https://github\.com/
+            ^https://fonts\.(gstatic|googleapis)\.com
+            \.go\.jp

@@ -1,6 +1,9 @@
 country: Japan
 iso_code: JP
 visa_difficulty: 4
+theme:
+  accent: "#c62828"
+  region: "east-asia"
 authority:
   name: Embassy of Japan, New Delhi
   processor: VFS Global

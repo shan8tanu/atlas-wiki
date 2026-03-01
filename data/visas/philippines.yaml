@@ -1,0 +1,25 @@
+country: Philippines
+iso_code: PH
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 30 days
+region: Asia
+authority:
+  name: Embassy of the Philippines, New Delhi
+  processor: Direct
+  official_portal: https://newdelhipe.dfa.gov.ph/
+requirements:
+  visa_fee_inr: 3000
+  processing_days: 7
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 3 months, ITR, confirmed return ticket,
+    and hotel booking.
+  financial_documents:
+  - Bank statements for the last 3 months
+  - ITR for the last year
+health:
+  vaccinations: Hepatitis A, Typhoid, Japanese Encephalitis. Rabies for extended stays.
+  insurance: Travel health insurance recommended — private hospitals preferred.
+  notes: Dengue prevalent year-round. Carry insect repellent.

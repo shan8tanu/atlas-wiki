@@ -11,7 +11,7 @@ theme:
   custom_dir: overrides
   favicon: assets/images/favicon.svg
   font:
-    text: Montserrat
+    text: Inter
     code: JetBrains Mono
   icon:
     repo: fontawesome/brands/github
@@ -24,6 +24,7 @@ theme:
     - content.action.edit
     - search.suggest
     - search.highlight
+    - toc.follow
   palette:
     - scheme: default
       primary: custom
@@ -37,6 +38,13 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 plugins:
   - search
@@ -59,7 +67,37 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Explore Map: map.md
-  - Destinations:
-    - Japan: japan.md
+  - Map: map.md
+  - Countries:
+    - Asia:
+      - Cambodia: cambodia.md
+      - China: china.md
+      - Indonesia: indonesia.md
+      - Japan: japan.md
+      - Laos: laos.md
+      - Malaysia: malaysia.md
+      - Philippines: philippines.md
+      - Singapore: singapore.md
+      - South Korea: south-korea.md
+      - Thailand: thailand.md
+      - Vietnam: vietnam.md
+    - Oceania:
+      - Australia: australia.md
+      - New Zealand: new-zealand.md
+    - Europe:
+      - France: france.md
+      - Germany: germany.md
+      - Greece: greece.md
+      - Italy: italy.md
+      - Netherlands: netherlands.md
+      - Spain: spain.md
+      - Switzerland: switzerland.md
+      - Turkey: turkey.md
+    - Middle East:
+      - Qatar: qatar.md
+      - Saudi Arabia: saudi-arabia.md
+      - UAE: uae.md
+    - Americas:
+      - Brazil: brazil.md
+      - United States: united-states.md
   - Contribute: CONTRIBUTING.md

@@ -1,13 +1,17 @@
+---
+page_type: country
+---
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "GovernmentService",
-      "name": "{{ country }} Visa Application Service",
+      "name": "Brazil Visa Application Service",
       "provider": {
         "@type": "GovernmentOrganization",
-        "name": "{{ authority.name }}"
+        "name": "Embassy of Brazil, New Delhi"
       },
       "areaServed": "India"
     }
@@ -15,41 +19,41 @@
 }
 </script>
 
-# <img src="https://flagcdn.com/48x36/{{ iso_code | default('xx') | lower }}.png" alt="{{ country }} flag" class="atlas-flag"> {{ country }} Visa Requirements for Indian Citizens
+# <img src="https://flagcdn.com/48x36/br.png" alt="Brazil flag" class="atlas-flag"> Brazil Visa Requirements for Indian Citizens
 
 <div class="atlas-country-cards" markdown>
 <div class="atlas-card atlas-card--overview" markdown>
 
 ### Visa Info
 
-* **Visa Type:** {{ visa_type | default("Standard Visa") }}
-* **Maximum Stay:** {{ max_stay | default("Varies") }}
-* **Visa Fee:** ₹{{ requirements.visa_fee_inr }}
-* **Processing Time:** {{ requirements.processing_days }} working days
-* **Photo Spec:** {{ requirements.photo_specs.dimensions }}, {{ requirements.photo_specs.bg_color }} bg
+* **Visa Type:** e-Visa
+* **Maximum Stay:** 90 days
+* **Visa Fee:** ₹6700
+* **Processing Time:** 5 working days
+* **Photo Spec:** 35x45mm, White bg
 
 </div>
 <div class="atlas-card atlas-card--authority" markdown>
 
 ### Authority & Access
 
-* **Issuing Authority:** {{ authority.name }}
-* **Processor:** {{ authority.processor }}
-* **Official Portal:** [Visit portal]({{ authority.official_portal }})
+* **Issuing Authority:** Embassy of Brazil, New Delhi
+* **Processor:** Online
+* **Official Portal:** [Visit portal](https://www.gov.br/mre/)
 
 </div>
 </div>
 
 ## Document Checklist
 
-<div class="atlas-checklist" data-country="{{ country | lower | replace(' ', '-') }}">
+<div class="atlas-checklist" data-country="brazil">
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="passport">
     <span class="atlas-checklist__text">Valid passport — minimum 6 months validity from date of travel, with 2+ blank pages</span>
   </label>
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="photos">
-    <span class="atlas-checklist__text">Passport-size photographs — {{ requirements.photo_specs.dimensions }}, {{ requirements.photo_specs.bg_color }} background</span>
+    <span class="atlas-checklist__text">Passport-size photographs — 35x45mm, White background</span>
   </label>
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="application-form">
@@ -67,15 +71,13 @@
     <input type="checkbox" data-key="travel-insurance">
     <span class="atlas-checklist__text">Travel insurance policy — covering the full duration of stay</span>
   </label>
-{%- for doc in requirements.financial_documents %}
   <label class="atlas-checklist__item">
-    <input type="checkbox" data-key="fin-{{ loop.index }}">
-    <span class="atlas-checklist__text">{{ doc }}</span>
+    <input type="checkbox" data-key="fin-1">
+    <span class="atlas-checklist__text">Bank statements for the last 3 months</span>
   </label>
-{%- endfor %}
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="fee-receipt">
-    <span class="atlas-checklist__text">Visa fee payment — ₹{{ requirements.visa_fee_inr }}</span>
+    <span class="atlas-checklist__text">Visa fee payment — ₹6700</span>
   </label>
 </div>
 
@@ -83,23 +85,11 @@
 
 <div class="atlas-health" markdown>
 
-{% if health and health.vaccinations -%}
-**Recommended Vaccinations:** {{ health.vaccinations }}
-{%- else -%}
-**Recommended Vaccinations:** Routine vaccinations (MMR, DPT, Polio). Hepatitis A and Typhoid recommended for most travellers.
-{%- endif %}
+**Recommended Vaccinations:** Yellow Fever vaccination required if visiting Amazon/Pantanal regions. Hepatitis A, Typhoid recommended.
 
-{% if health and health.insurance -%}
-**Health Insurance:** {{ health.insurance }}
-{%- else -%}
 **Health Insurance:** Comprehensive travel health insurance strongly recommended.
-{%- endif %}
 
-{% if health and health.notes -%}
-**Advisory:** {{ health.notes }}
-{%- else -%}
-**Advisory:** Check the latest entry requirements on the official embassy portal before travel.
-{%- endif %}
+**Advisory:** Dengue and Zika risk in many regions. Good private hospitals in major cities.
 
 </div>
 

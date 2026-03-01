@@ -1,17 +1,25 @@
 country: Japan
 iso_code: JP
 visa_difficulty: 4
-theme:
-  accent: "#c62828"
-  region: "east-asia"
+visa_type: Standard Visa
+max_stay: 90 days
+region: Asia
 authority:
   name: Embassy of Japan, New Delhi
   processor: VFS Global
-  official_portal: "https://www.in.emb-japan.go.jp/itprtop_en/index.html"
+  official_portal: https://www.in.emb-japan.go.jp/itprtop_en/index.html
 requirements:
   visa_fee_inr: 500
   processing_days: 4
   photo_specs:
-    dimensions: "35x45mm"
-    bg_color: "White"
-  financial_proof: "ITR for the last 3 years and 6 months bank statement."
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: ITR for the last 3 years and 6 months bank statement.
+  financial_documents:
+  - Bank statement for the last 6 months
+  - ITR for the last 3 years
+health:
+  vaccinations: Routine vaccinations sufficient. Japanese Encephalitis for extended
+    rural stays.
+  insurance: Travel health insurance strongly recommended — medical costs are high.
+  notes: World-class healthcare. Pharmacies may not stock Western-brand medications.

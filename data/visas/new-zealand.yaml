@@ -1,0 +1,27 @@
+country: New Zealand
+iso_code: NZ
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 9 months
+region: Oceania
+authority:
+  name: New Zealand High Commission, New Delhi
+  processor: VFS Global
+  official_portal: https://www.immigration.govt.nz/
+requirements:
+  visa_fee_inr: 12500
+  processing_days: 25
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 3 months, ITR for 2 years, employment
+    proof, confirmed return ticket, and travel insurance. Apply for Visitor Visa online.
+  financial_documents:
+  - Bank statements for the last 3 months
+  - ITR for 2 years
+  - Employment proof or letter from employer
+health:
+  vaccinations: Routine vaccinations sufficient.
+  insurance: Comprehensive travel insurance strongly recommended.
+  notes: Excellent healthcare system. Adventure activities may need additional insurance
+    coverage.

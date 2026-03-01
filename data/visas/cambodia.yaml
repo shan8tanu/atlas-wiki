@@ -1,0 +1,25 @@
+country: Cambodia
+iso_code: KH
+visa_difficulty: 3
+visa_type: Visa on Arrival
+max_stay: 30 days
+region: Asia
+authority:
+  name: Royal Embassy of Cambodia, New Delhi
+  processor: Online
+  official_portal: https://www.evisa.gov.kh/
+requirements:
+  visa_fee_inr: 2500
+  processing_days: 1
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Return flight ticket, proof of accommodation, and one recent passport-size
+    photograph.
+  financial_documents: []
+health:
+  vaccinations: Hepatitis A & B, Typhoid, Japanese Encephalitis, Rabies (for rural
+    travellers).
+  insurance: Travel health insurance essential — medical facilities limited outside
+    Phnom Penh.
+  notes: Malaria risk in rural and forested areas. Avoid untreated water.

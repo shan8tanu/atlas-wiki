@@ -1,0 +1,29 @@
+country: Switzerland
+iso_code: CH
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 90 days per 180-day period
+region: Europe
+authority:
+  name: Embassy of Switzerland, New Delhi
+  processor: VFS Global
+  official_portal: https://www.eda.admin.ch/
+requirements:
+  visa_fee_inr: 7200
+  processing_days: 15
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 3 months, ITR for 2 years, salary
+    slips, travel insurance (minimum EUR 30,000 coverage), and confirmed hotel booking
+    or invitation letter. Schengen visa.
+  financial_documents:
+  - Bank statements for the last 3 months
+  - ITR for 2 years
+  - Salary slips for the last 3 months
+health:
+  vaccinations: Routine vaccinations sufficient. Tick-borne encephalitis for hiking
+    in forested areas.
+  insurance: Schengen travel insurance mandatory — minimum EUR 30,000 coverage. Swiss
+    medical costs are very high.
+  notes: World-class healthcare but extremely expensive without insurance.

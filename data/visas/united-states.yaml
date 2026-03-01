@@ -1,0 +1,31 @@
+country: United States
+iso_code: US
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 180 days
+region: Americas
+authority:
+  name: Embassy of the United States, New Delhi
+  processor: Direct
+  official_portal: https://www.ustraveldocs.com/in/
+requirements:
+  visa_fee_inr: 15500
+  processing_days: 30
+  photo_specs:
+    dimensions: 51x51mm
+    bg_color: White
+  financial_proof: Bank statements for the last 6 months, ITR for the last 3 years,
+    employment proof, property documents, and strong ties to India. Apply via DS-160
+    form online, then attend an in-person interview at the embassy. B1/B2 tourist
+    visa.
+  financial_documents:
+  - Bank statements for the last 6 months
+  - ITR for the last 3 years
+  - Employment proof or letter from employer
+  - Property documents or fixed deposit certificates
+health:
+  vaccinations: Routine vaccinations sufficient. No mandatory vaccinations.
+  insurance: Travel health insurance essential — US medical costs are extremely high
+    without insurance.
+  notes: World-class but expensive healthcare. Emergency room visits can cost thousands
+    of dollars.

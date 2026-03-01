@@ -1,0 +1,23 @@
+country: Vietnam
+iso_code: VN
+visa_difficulty: 2
+visa_type: e-Visa
+max_stay: 90 days
+region: Asia
+authority:
+  name: Embassy of Vietnam, New Delhi
+  processor: Online
+  official_portal: https://evisa.xuatnhapcanh.gov.vn/
+requirements:
+  visa_fee_inr: 2100
+  processing_days: 3
+  photo_specs:
+    dimensions: 40x60mm
+    bg_color: White
+  financial_proof: Return flight ticket and proof of accommodation. No specific financial
+    threshold for e-Visa.
+  financial_documents: []
+health:
+  vaccinations: Hepatitis A, Typhoid, Japanese Encephalitis. Tetanus booster recommended.
+  insurance: Comprehensive travel health insurance strongly recommended.
+  notes: Dengue and Zika virus risk in southern regions. Drink only bottled water.

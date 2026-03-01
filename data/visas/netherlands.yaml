@@ -1,0 +1,27 @@
+country: Netherlands
+iso_code: NL
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 90 days per 180-day period
+region: Europe
+authority:
+  name: Embassy of the Netherlands, New Delhi
+  processor: VFS Global
+  official_portal: https://www.netherlandsworldwide.nl/visa
+requirements:
+  visa_fee_inr: 7200
+  processing_days: 15
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 3 months, ITR for 2 years, salary
+    slips, travel insurance (minimum EUR 30,000 coverage), and confirmed hotel booking
+    or invitation letter. Schengen visa.
+  financial_documents:
+  - Bank statements for the last 3 months
+  - ITR for 2 years
+  - Salary slips for the last 3 months
+health:
+  vaccinations: Routine vaccinations sufficient.
+  insurance: Schengen travel insurance mandatory — minimum EUR 30,000 medical coverage.
+  notes: Excellent healthcare. GP (huisarts) system — hospital visits need referral.

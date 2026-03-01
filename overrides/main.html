@@ -1,60 +1,38 @@
 {% extends "base.html" %}
 
-{# ── Per-page accent color injection ─────────────────────────────── #}
-{% block extrahead %}
-  {% if page and page.meta and page.meta.theme_accent %}
-    <style id="atlas-theme-style">
-      :root,
-      [data-md-color-scheme="default"],
-      [data-md-color-scheme="slate"] {
-        --md-primary-fg-color: {{ page.meta.theme_accent }};
-        --md-accent-fg-color: {{ page.meta.theme_accent }};
-        --md-typeset-a-color: {{ page.meta.theme_accent }};
-        --atlas-accent: {{ page.meta.theme_accent }};
-      }
-    </style>
-  {% endif %}
-{% endblock %}
-
 {# ── Homepage hero section ───────────────────────────────────────── #}
 {% block hero %}
   {% if page and page.meta and page.meta.page_type == "home" %}
     <section class="atlas-hero">
-      <div class="atlas-hero__bg atlas-motif--rangoli"></div>
       <div class="atlas-hero__content md-grid">
-        <h1 class="atlas-hero__title">
-          The Visa Database for Indian Citizens
-        </h1>
+        <h1 class="atlas-hero__title">Atlas</h1>
         <p class="atlas-hero__subtitle">
+          The visa database for Indian citizens.<br>
           Verified requirements. Official sources. Zero fluff.
         </p>
-        <div class="atlas-hero__actions">
-          <a href="{{ 'map/' | url }}" class="md-button md-button--primary atlas-hero__btn">
-            Explore the Visa Map
-          </a>
-          <a href="#destinations" class="md-button atlas-hero__btn">
-            Browse Destinations
-          </a>
-        </div>
+        <p class="atlas-hero__hint">
+          <a href="{{ 'map/' | url }}">Explore the interactive visa map</a>
+        </p>
       </div>
       <div class="atlas-hero__separator"></div>
     </section>
   {% endif %}
 {% endblock %}
 
-{# ── Content with background motif layer ─────────────────────────── #}
+{# ── Page type marker for CSS/JS targeting ─────────────────────── #}
 {% block content %}
-  {# Country page: use the country-specific motif #}
-  {% if page and page.meta and page.meta.page_type == "country" %}
-    <div class="atlas-motif-layer atlas-motif--{{ page.meta.theme_motif }}"
-         data-atlas-page="country"
-         data-atlas-motif="{{ page.meta.theme_motif }}">
-    </div>
-  {# Non-country, non-home pages: use Indian rangoli default #}
-  {% elif not page or not page.meta or page.meta.page_type != "home" %}
-    <div class="atlas-motif-layer atlas-motif--rangoli"
-         data-atlas-page="standard">
-    </div>
+  {% if page and page.meta and page.meta.page_type == "home" %}
+    <span data-atlas-page="home" hidden></span>
+  {% elif page and page.meta and page.meta.page_type == "country" %}
+    <span data-atlas-page="country" hidden></span>
   {% endif %}
   {{ super() }}
+  {# ── Homepage mini-map (bottom-right) ──────────────────────────── #}
+  {% if page and page.meta and page.meta.page_type == "home" %}
+    <div class="atlas-minimap" id="atlas-minimap" role="button" tabindex="0"
+         aria-label="Open interactive visa map">
+      <div class="atlas-minimap__inner"></div>
+      <span class="atlas-minimap__label">Explore Map →</span>
+    </div>
+  {% endif %}
 {% endblock %}

@@ -1,0 +1,24 @@
+country: Malaysia
+iso_code: MY
+visa_difficulty: 2
+visa_type: e-Visa
+max_stay: 30 days
+region: Asia
+authority:
+  name: High Commission of Malaysia, New Delhi
+  processor: VFS Global
+  official_portal: https://www.windowmalaysia.my/
+requirements:
+  visa_fee_inr: 2000
+  processing_days: 2
+  photo_specs:
+    dimensions: 35x50mm
+    bg_color: White
+  financial_proof: Confirmed return ticket, hotel booking, and bank statement showing
+    minimum ₹50,000 balance. eNTRI (15 days) or eVISA (30 days) available online.
+  financial_documents:
+  - Bank statement showing minimum INR 50,000 balance
+health:
+  vaccinations: Hepatitis A, Typhoid. Japanese Encephalitis for rural Sarawak/Sabah.
+  insurance: Travel health insurance recommended.
+  notes: Good medical facilities in Kuala Lumpur. Dengue risk in urban areas.

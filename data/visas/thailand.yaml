@@ -1,0 +1,25 @@
+country: Thailand
+iso_code: TH
+visa_difficulty: 3
+visa_type: Visa on Arrival
+max_stay: 15 days
+region: Asia
+authority:
+  name: Royal Thai Embassy, New Delhi
+  processor: VFS Global
+  official_portal: https://www.thaievisa.go.th/
+requirements:
+  visa_fee_inr: 4800
+  processing_days: 1
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Proof of accommodation, return flight ticket, and minimum 10,000
+    THB equivalent in cash or traveler's cheques.
+  financial_documents:
+  - Proof of funds — minimum 10,000 THB equivalent in cash or traveller's cheques
+health:
+  vaccinations: Hepatitis A, Typhoid, Japanese Encephalitis. Malaria prophylaxis for
+    rural areas.
+  insurance: Travel health insurance required — minimum $10,000 USD coverage.
+  notes: Dengue risk in urban and rural areas. Carry mosquito repellent.

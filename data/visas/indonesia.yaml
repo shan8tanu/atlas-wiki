@@ -1,0 +1,24 @@
+country: Indonesia
+iso_code: ID
+visa_difficulty: 3
+visa_type: Visa on Arrival
+max_stay: 30 days
+region: Asia
+authority:
+  name: Embassy of Indonesia, New Delhi
+  processor: Online
+  official_portal: https://molina.imigrasi.go.id/
+requirements:
+  visa_fee_inr: 2900
+  processing_days: 1
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Return flight ticket and proof of accommodation. VOA fee payable
+    in USD or IDR at the airport. e-VOA also available online via Molina portal.
+  financial_documents: []
+health:
+  vaccinations: Hepatitis A & B, Typhoid, Japanese Encephalitis. Yellow Fever if arriving
+    from endemic area.
+  insurance: Travel health insurance required for medical evacuation coverage.
+  notes: Dengue and malaria risk varies by island. Bali has good medical facilities.

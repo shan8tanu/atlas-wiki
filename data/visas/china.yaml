@@ -1,0 +1,26 @@
+country: China
+iso_code: CN
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 30 days
+region: Asia
+authority:
+  name: Embassy of China, New Delhi
+  processor: Chinese Visa Application Service Center (CVASC)
+  official_portal: https://www.visaforchina.cn/
+requirements:
+  visa_fee_inr: 5000
+  processing_days: 4
+  photo_specs:
+    dimensions: 33x48mm
+    bg_color: White
+  financial_proof: Bank statements for the last 3 months, confirmed return ticket,
+    hotel booking, and detailed travel itinerary. Apply for L-type (Tourist) visa.
+  financial_documents:
+  - Bank statements for the last 3 months
+  - Detailed day-by-day travel itinerary
+health:
+  vaccinations: Hepatitis A & B, Typhoid, Japanese Encephalitis (rural areas).
+  insurance: Comprehensive travel insurance essential — hospital deposits often required
+    upfront.
+  notes: Air pollution in major cities. Carry prescription medications with documentation.

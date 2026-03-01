@@ -1,0 +1,27 @@
+country: Singapore
+iso_code: SG
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 30 days
+region: Asia
+authority:
+  name: High Commission of Singapore, New Delhi
+  processor: VFS Global
+  official_portal: https://www.mfa.gov.sg/Overseas-Mission/New-Delhi
+requirements:
+  visa_fee_inr: 1900
+  processing_days: 4
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 3 months, confirmed return ticket,
+    hotel booking, and cover letter. Applications must be submitted through a local
+    contact or authorized visa agent.
+  financial_documents:
+  - Bank statements for the last 3 months
+  - Cover letter stating purpose and duration of visit
+health:
+  vaccinations: Routine vaccinations sufficient. Yellow Fever certificate if arriving
+    from endemic area.
+  insurance: Travel health insurance recommended — Singapore has high medical costs.
+  notes: Excellent medical facilities. Dengue occurs but is well-controlled.

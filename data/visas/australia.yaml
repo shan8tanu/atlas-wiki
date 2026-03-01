@@ -1,0 +1,30 @@
+country: Australia
+iso_code: AU
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 12 months
+region: Oceania
+authority:
+  name: Australian High Commission, New Delhi
+  processor: VFS Global
+  official_portal: https://immi.homeaffairs.gov.au/
+requirements:
+  visa_fee_inr: 10500
+  processing_days: 25
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 6 months, ITR for 2 years, employment
+    proof, confirmed return ticket, and travel insurance. Apply for Visitor visa (subclass
+    600) online.
+  financial_documents:
+  - Bank statements for the last 6 months
+  - ITR for 2 years
+  - Employment proof or letter from employer
+health:
+  vaccinations: Routine vaccinations sufficient. Yellow Fever certificate if arriving
+    from endemic area.
+  insurance: Travel health insurance mandatory — no reciprocal healthcare for Indian
+    citizens.
+  notes: Sun protection essential. Be aware of dangerous wildlife in rural/coastal
+    areas.

@@ -1,0 +1,25 @@
+country: Saudi Arabia
+iso_code: SA
+visa_difficulty: 2
+visa_type: e-Visa
+max_stay: 90 days
+region: Middle East
+authority:
+  name: Royal Embassy of Saudi Arabia, New Delhi
+  processor: Online
+  official_portal: https://visa.visitsaudi.com/
+requirements:
+  visa_fee_inr: 12000
+  processing_days: 1
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Valid passport, return flight ticket, and proof of accommodation.
+    e-Visa fee includes mandatory health insurance. Multiple entry visa valid for
+    1 year.
+  financial_documents: []
+health:
+  vaccinations: Meningococcal meningitis (ACWY) mandatory for Hajj/Umrah pilgrims.
+    Routine vaccinations recommended.
+  insurance: Health insurance mandatory — included in e-Visa fee.
+  notes: Good healthcare in major cities. Extreme heat in summer months.

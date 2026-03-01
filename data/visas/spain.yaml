@@ -1,0 +1,28 @@
+country: Spain
+iso_code: ES
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 90 days per 180-day period
+region: Europe
+authority:
+  name: Embassy of Spain, New Delhi
+  processor: BLS International
+  official_portal: https://www.exteriores.gob.es/
+requirements:
+  visa_fee_inr: 7200
+  processing_days: 15
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 3 months, ITR for 2 years, salary
+    slips, travel insurance (minimum EUR 30,000 coverage), and confirmed hotel booking
+    or invitation letter. Schengen visa.
+  financial_documents:
+  - Bank statements for the last 3 months
+  - ITR for 2 years
+  - Salary slips for the last 3 months
+health:
+  vaccinations: Routine vaccinations sufficient. Hepatitis A recommended.
+  insurance: Schengen travel insurance mandatory — minimum EUR 30,000 medical coverage.
+  notes: Good healthcare. Pharmacies are well-stocked and pharmacists can advise on
+    minor issues.

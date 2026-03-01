@@ -1,0 +1,23 @@
+country: Laos
+iso_code: LA
+visa_difficulty: 3
+visa_type: Visa on Arrival
+max_stay: 30 days
+region: Asia
+authority:
+  name: Embassy of Laos, New Delhi
+  processor: Direct
+  official_portal: https://laoevisa.gov.la/
+requirements:
+  visa_fee_inr: 2500
+  processing_days: 1
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Return flight ticket, proof of accommodation, and two recent passport-size
+    photographs.
+  financial_documents: []
+health:
+  vaccinations: Hepatitis A & B, Typhoid, Japanese Encephalitis, Rabies.
+  insurance: Comprehensive medical evacuation insurance strongly recommended.
+  notes: Limited medical infrastructure. Malaria risk in rural provinces.

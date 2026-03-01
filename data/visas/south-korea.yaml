@@ -1,0 +1,28 @@
+country: South Korea
+iso_code: KR
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 90 days
+region: Asia
+authority:
+  name: Embassy of the Republic of Korea, New Delhi
+  processor: VFS Global
+  official_portal: https://overseas.mofa.go.kr/in-en/index.do
+requirements:
+  visa_fee_inr: 3500
+  processing_days: 7
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Bank statements for the last 6 months, ITR for 2 years, employment
+    proof, confirmed return ticket, and hotel booking. K-ETA alone is not sufficient
+    for Indian nationals.
+  financial_documents:
+  - Bank statements for the last 6 months
+  - ITR for 2 years
+  - Employment proof or letter from employer
+health:
+  vaccinations: Routine vaccinations (MMR, DPT). Hepatitis A recommended.
+  insurance: Travel health insurance recommended.
+  notes: Excellent healthcare system. Air quality can be poor in spring (fine dust
+    season).

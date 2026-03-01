@@ -1,0 +1,26 @@
+country: Brazil
+iso_code: BR
+visa_difficulty: 2
+visa_type: e-Visa
+max_stay: 90 days
+region: Americas
+authority:
+  name: Embassy of Brazil, New Delhi
+  processor: Online
+  official_portal: https://www.gov.br/mre/
+requirements:
+  visa_fee_inr: 6700
+  processing_days: 5
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Confirmed return ticket, hotel booking or invitation letter, bank
+    statements for the last 3 months, and travel insurance. Apply for VIVIS e-Visa
+    online.
+  financial_documents:
+  - Bank statements for the last 3 months
+health:
+  vaccinations: Yellow Fever vaccination required if visiting Amazon/Pantanal regions.
+    Hepatitis A, Typhoid recommended.
+  insurance: Comprehensive travel health insurance strongly recommended.
+  notes: Dengue and Zika risk in many regions. Good private hospitals in major cities.

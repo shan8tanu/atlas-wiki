@@ -16,3 +16,10 @@ firebase-debug.log
 
 # Generated validation report
 validation-report.md
+
+# Build artifacts
+build_log.txt
+nul
+
+# Internal documentation (local-only, not for git)
+docs-internal/

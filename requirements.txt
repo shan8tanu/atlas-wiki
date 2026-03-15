@@ -2,3 +2,4 @@ mkdocs-material
 mkdocs-gen-files
 jinja2
 pyyaml
+anthropic

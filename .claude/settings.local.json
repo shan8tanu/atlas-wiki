@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C C:/Users/shant/Downloads/atlas log --oneline -20)",
+      "Bash(find:*)",
+      "Bash(.venv/Scripts/python:*)",
+      "Bash(.venv/Scripts/pip show:*)",
+      "Bash(PYTHONIOENCODING=utf-8 .venv/Scripts/python:*)",
+      "Bash(test:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:squidfunk.github.io)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m mkdocs:*)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

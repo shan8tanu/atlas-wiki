@@ -3,11 +3,41 @@ iso_code: NL
 visa_difficulty: 4
 visa_type: Standard Visa
 max_stay: 90 days per 180-day period
+entry_type: "Single Entry"
+visa_validity: "6 months from issue"
+passport_validity_months: 3
+blank_pages_required: 2
 region: Europe
 authority:
   name: Embassy of the Netherlands, New Delhi
   processor: VFS Global
   official_portal: https://www.netherlandsworldwide.nl/visa
+visa_types:
+  standard_visa:
+    label: Standard Visa
+    documents:
+      - Completed visa application form — printed, signed, and dated
+      - Appointment confirmation slip from VFS Global / BLS / embassy
+      - Confirmed return flight tickets (printed copy)
+      - Proof of accommodation — hotel booking confirmation or invitation letter
+      - Travel insurance covering the full stay duration
+  evisa:
+    label: e-Visa (where available)
+    documents:
+      - Online application form submitted via the official visa portal
+      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
+      - Digital photograph — white background, JPEG, minimum 200 KB
+      - Return flight booking reference number
+      - Hotel or accommodation booking reference number
+  long_term:
+    label: Long-stay Visa
+    documents:
+      - Completed long-stay visa application (consulate-specific form)
+      - Employer NOC confirming leave of absence for the full stay period
+      - Proof of long-term accommodation — lease agreement or host invitation letter
+      - Travel insurance covering the full extended stay duration
+      - Sponsor letter or proof of fixed deposits / investment holdings
+
 requirements:
   visa_fee_inr: 7200
   processing_days: 15
@@ -21,6 +51,36 @@ requirements:
   - Bank statements for the last 3 months
   - ITR for 2 years
   - Salary slips for the last 3 months
+  occupation_documents:
+    self_employed:
+      - Bank statements for the last 3 months
+      - ITR for 2 years (business income)
+      - GST registration certificate + returns for 2 years
+      - Business registration certificate / trade licence
+      - CA-certified audited balance sheet for 2 years
+    business_owner:
+      - Personal + business bank statements for the last 3 months
+      - Personal + company ITR for 2 years
+      - Certificate of incorporation / MSME registration
+      - Company audited financials for 2 years
+      - Director identification proof (DIN)
+    student:
+      - Admission letter or valid student ID card
+      - Sponsoring parent's bank statements (last 3 months)
+      - Sponsoring parent's ITR for 2 years
+      - Notarised affidavit of financial support
+      - NOC from educational institution
+    homemaker:
+      - Spouse's bank statements for the last 3 months
+      - Spouse's ITR for 2 years
+      - Notarised affidavit of financial support from spouse
+      - Marriage certificate
+    retired:
+      - Pension slips for the last 3 months (or pension passbook)
+      - Bank statements for the last 3 months
+      - ITR for 2 years (pension income, if applicable)
+      - Pension sanction letter / retirement proof
+
 health:
   vaccinations: Routine vaccinations sufficient.
   insurance: Schengen travel insurance mandatory — minimum EUR 30,000 medical coverage.

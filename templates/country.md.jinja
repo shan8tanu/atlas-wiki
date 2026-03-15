@@ -23,7 +23,9 @@
 ### Visa Info
 
 * **Visa Type:** {{ visa_type | default("Standard Visa") }}
+* **Entry Type:** {{ entry_type | default("Single Entry") }}
 * **Maximum Stay:** {{ max_stay | default("Varies") }}
+* **Visa Validity:** {{ visa_validity | default("Refer to visa stamp") }}
 * **Visa Fee:** ₹{{ requirements.visa_fee_inr }}
 * **Processing Time:** {{ requirements.processing_days }} working days
 * **Photo Spec:** {{ requirements.photo_specs.dimensions }}, {{ requirements.photo_specs.bg_color }} bg
@@ -42,15 +44,43 @@
 
 ## Document Checklist
 
+{%- if visa_types and visa_types | length > 1 %}
+<div class="atlas-vtype-selector" role="tablist" aria-label="Select visa type" data-country="{{ country | lower | replace(' ', '-') }}">
+  {%- for vtype, vdata in visa_types.items() %}
+  <button class="atlas-vtype-tab{% if loop.first %} atlas-vtype-tab--active{% endif %}" role="tab" data-vtype="{{ vtype }}">{{ vdata.label }}</button>
+  {%- endfor %}
+</div>
+{%- endif %}
+
+<div class="atlas-occ-selector" role="group" aria-label="Select applicant type">
+  <button class="atlas-occ-btn atlas-occ-btn--active" data-occ="salaried">Salaried</button>
+  <button class="atlas-occ-btn" data-occ="self_employed">Self-employed</button>
+  <button class="atlas-occ-btn" data-occ="business_owner">Business owner</button>
+  <button class="atlas-occ-btn" data-occ="student">Student</button>
+  <button class="atlas-occ-btn" data-occ="homemaker">Homemaker</button>
+  <button class="atlas-occ-btn" data-occ="retired">Retired</button>
+</div>
+
 <div class="atlas-checklist" data-country="{{ country | lower | replace(' ', '-') }}">
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="passport">
-    <span class="atlas-checklist__text">Valid passport — minimum 6 months validity from date of travel, with 2+ blank pages</span>
+    <span class="atlas-checklist__text">Valid passport — minimum {{ passport_validity_months | default(6) }} months validity beyond your trip end date, with {{ blank_pages_required | default(2) }}+ blank pages</span>
   </label>
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="photos">
     <span class="atlas-checklist__text">Passport-size photographs — {{ requirements.photo_specs.dimensions }}, {{ requirements.photo_specs.bg_color }} background</span>
   </label>
+{%- if visa_types %}
+  {%- for vtype, vdata in visa_types.items() %}
+    {%- set is_first_type = loop.first %}
+    {%- for doc in vdata.documents %}
+  <label class="atlas-checklist__item atlas-checklist__item--vtype" data-vtype="{{ vtype }}"{% if not is_first_type %} hidden{% endif %}>
+    <input type="checkbox" data-key="vt-{{ vtype }}-{{ loop.index }}">
+    <span class="atlas-checklist__text">{{ doc }}</span>
+  </label>
+    {%- endfor %}
+  {%- endfor %}
+{%- else %}
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="application-form">
     <span class="atlas-checklist__text">Completed visa application form</span>
@@ -67,17 +97,76 @@
     <input type="checkbox" data-key="travel-insurance">
     <span class="atlas-checklist__text">Travel insurance policy — covering the full duration of stay</span>
   </label>
+{%- endif %}
 {%- for doc in requirements.financial_documents %}
-  <label class="atlas-checklist__item">
-    <input type="checkbox" data-key="fin-{{ loop.index }}">
+  <label class="atlas-checklist__item atlas-checklist__item--occ" data-occ="salaried">
+    <input type="checkbox" data-key="fin-salaried-{{ loop.index }}">
     <span class="atlas-checklist__text">{{ doc }}</span>
   </label>
 {%- endfor %}
+{%- if requirements.occupation_documents %}
+  {%- for occ_type, docs in requirements.occupation_documents.items() %}
+    {%- for doc in docs %}
+  <label class="atlas-checklist__item atlas-checklist__item--occ" data-occ="{{ occ_type }}" hidden>
+    <input type="checkbox" data-key="fin-{{ occ_type }}-{{ loop.index }}">
+    <span class="atlas-checklist__text">{{ doc }}</span>
+  </label>
+    {%- endfor %}
+  {%- endfor %}
+{%- endif %}
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="fee-receipt">
     <span class="atlas-checklist__text">Visa fee payment — ₹{{ requirements.visa_fee_inr }}</span>
   </label>
 </div>
+
+<details class="atlas-cover-letter">
+<summary>Sample cover letter for {{ country }} {{ visa_type }}</summary>
+<div class="atlas-cover-letter__body">
+<pre class="atlas-cover-letter__text">
+To,
+The Visa Officer
+{{ authority.name }}
+
+Subject: Application for {{ visa_type }} — {{ country }}
+
+Dear Visa Officer,
+
+I, [YOUR FULL NAME], a citizen of India (Passport No. [XXXXXXXX], valid
+until [DD/MM/YYYY]), respectfully submit my application for a {{ visa_type }}
+to {{ country }}.
+
+PURPOSE OF VISIT
+The purpose of my visit is [tourism / business / attending a conference /
+visiting family or friends]. I plan to travel from [DEPARTURE DATE] to
+[RETURN DATE], a total stay of approximately [XX] days.
+
+ACCOMMODATION
+I will be staying at [Hotel name and address / Name and address of host].
+
+FINANCIAL CAPABILITY
+I have adequate financial resources to support my stay in {{ country }} and
+my return to India. Supporting bank statements and financial documents are
+enclosed.
+
+I solemnly affirm that I will comply with all visa conditions and depart
+from {{ country }} on or before the expiry of my visa. I have strong ties
+to India — [employment / business / property / family] — that ensure my
+timely return.
+
+All required supporting documents are enclosed as per the requirements of
+{{ authority.name }}.
+
+Yours faithfully,
+
+[YOUR FULL NAME]
+[Date]
+[Phone Number]
+[Email Address]
+</pre>
+<button class="atlas-cover-letter__copy" type="button">Copy to clipboard</button>
+</div>
+</details>
 
 ## Public Health & Vaccinations
 

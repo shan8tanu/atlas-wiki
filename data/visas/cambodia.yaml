@@ -3,11 +3,40 @@ iso_code: KH
 visa_difficulty: 3
 visa_type: Visa on Arrival
 max_stay: 30 days
+entry_type: "Single Entry"
+visa_validity: "30 days from entry"
+passport_validity_months: 6
+blank_pages_required: 2
 region: Asia
 authority:
   name: Royal Embassy of Cambodia, New Delhi
   processor: Online
   official_portal: https://www.evisa.gov.kh/
+visa_types:
+  voa:
+    label: Visa on Arrival
+    documents:
+      - Completed arrival card (distributed on aircraft or at immigration counter)
+      - Confirmed return flight ticket — boarding pass or printed itinerary
+      - Proof of accommodation — hotel booking printout
+      - VOA fee in cash — USD or accepted local currency (check current rate before travel)
+  evisa:
+    label: e-Visa
+    documents:
+      - Online application form submitted via the official visa portal
+      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
+      - Digital photograph — white background, JPEG, minimum 200 KB
+      - Return flight booking reference number
+      - Hotel or accommodation booking reference number
+  standard_visa:
+    label: Standard Visa (Embassy)
+    documents:
+      - Completed visa application form — printed, signed, and dated
+      - Appointment confirmation slip from the embassy
+      - Confirmed return flight tickets (printed copy)
+      - Proof of accommodation — hotel booking confirmation or invitation letter
+      - Travel insurance covering the full stay duration
+
 requirements:
   visa_fee_inr: 2500
   processing_days: 1
@@ -17,6 +46,22 @@ requirements:
   financial_proof: Return flight ticket, proof of accommodation, and one recent passport-size
     photograph.
   financial_documents: []
+  occupation_documents:
+    self_employed:
+      - Proof of sufficient funds in cash or card
+      - Business registration certificate (recommended)
+    business_owner:
+      - Proof of sufficient funds in cash or card
+      - Business registration certificate (recommended)
+    student:
+      - Proof of sufficient funds in cash or card
+      - Admission letter or valid student ID card
+      - Notarised affidavit of financial support from sponsor (if applicable)
+    homemaker:
+      - Proof of sufficient funds in cash or card
+    retired:
+      - Proof of sufficient funds in cash or card
+
 health:
   vaccinations: Hepatitis A & B, Typhoid, Japanese Encephalitis, Rabies (for rural
     travellers).

@@ -3,11 +3,41 @@ iso_code: JP
 visa_difficulty: 4
 visa_type: Standard Visa
 max_stay: 90 days
+entry_type: "Single Entry"
+visa_validity: "3 months from issue"
+passport_validity_months: 6
+blank_pages_required: 2
 region: Asia
 authority:
   name: Embassy of Japan, New Delhi
   processor: VFS Global
   official_portal: https://www.in.emb-japan.go.jp/itprtop_en/index.html
+visa_types:
+  standard_visa:
+    label: Standard Visa
+    documents:
+      - Completed visa application form — printed, signed, and dated
+      - Appointment confirmation slip from VFS Global / BLS / embassy
+      - Confirmed return flight tickets (printed copy)
+      - Proof of accommodation — hotel booking confirmation or invitation letter
+      - Travel insurance covering the full stay duration
+  evisa:
+    label: e-Visa (where available)
+    documents:
+      - Online application form submitted via the official visa portal
+      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
+      - Digital photograph — white background, JPEG, minimum 200 KB
+      - Return flight booking reference number
+      - Hotel or accommodation booking reference number
+  long_term:
+    label: Long-stay Visa
+    documents:
+      - Completed long-stay visa application (consulate-specific form)
+      - Employer NOC confirming leave of absence for the full stay period
+      - Proof of long-term accommodation — lease agreement or host invitation letter
+      - Travel insurance covering the full extended stay duration
+      - Sponsor letter or proof of fixed deposits / investment holdings
+
 requirements:
   visa_fee_inr: 500
   processing_days: 4
@@ -18,6 +48,36 @@ requirements:
   financial_documents:
   - Bank statement for the last 6 months
   - ITR for the last 3 years
+  occupation_documents:
+    self_employed:
+      - Bank statements for the last 6 months
+      - ITR for 3 years (business income)
+      - GST registration certificate + returns for 2 years
+      - Business registration certificate / trade licence
+      - CA-certified audited balance sheet for 2 years
+    business_owner:
+      - Personal + business bank statements for the last 6 months
+      - Personal + company ITR for 3 years
+      - Certificate of incorporation / MSME registration
+      - Company audited financials for 2 years
+      - Director identification proof (DIN)
+    student:
+      - Admission letter or valid student ID card
+      - Sponsoring parent's bank statements (last 3 months)
+      - Sponsoring parent's ITR for 3 years
+      - Notarised affidavit of financial support
+      - NOC from educational institution
+    homemaker:
+      - Spouse's bank statements for the last 6 months
+      - Spouse's ITR for 3 years
+      - Notarised affidavit of financial support from spouse
+      - Marriage certificate
+    retired:
+      - Pension slips for the last 3 months (or pension passbook)
+      - Bank statements for the last 6 months
+      - ITR for 3 years (pension income, if applicable)
+      - Pension sanction letter / retirement proof
+
 health:
   vaccinations: Routine vaccinations sufficient. Japanese Encephalitis for extended
     rural stays.

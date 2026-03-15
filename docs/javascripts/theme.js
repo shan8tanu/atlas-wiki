@@ -98,6 +98,122 @@
   }
 
   /**
+   * Visa-type selector — prominent tab strip above the Document Checklist.
+   * Switching tabs shows only the process-specific checklist items for that
+   * visa type. State persists per country: atlas-vtype-{country-slug}
+   */
+  function initVisaTypeSelector() {
+    var selector = document.querySelector(".atlas-vtype-selector");
+    if (!selector) return;
+
+    var countrySlug = selector.dataset.country;
+    var storageKey = "atlas-vtype-" + countrySlug;
+
+    // Find the associated checklist (two siblings down: occ-selector, then checklist)
+    var checklist = null;
+    var sibling = selector.nextElementSibling;
+    while (sibling) {
+      if (sibling.classList.contains("atlas-checklist")) {
+        checklist = sibling;
+        break;
+      }
+      sibling = sibling.nextElementSibling;
+    }
+    if (!checklist) return;
+
+    // Determine the default: first tab's data-vtype
+    var firstBtn = selector.querySelector(".atlas-vtype-tab");
+    var defaultVtype = firstBtn ? firstBtn.dataset.vtype : null;
+    var saved = localStorage.getItem(storageKey) || defaultVtype;
+
+    // Validate saved value is still a real tab (guards against stale data)
+    var validVtypes = Array.from(selector.querySelectorAll(".atlas-vtype-tab"))
+      .map(function (b) { return b.dataset.vtype; });
+    if (validVtypes.indexOf(saved) === -1) saved = defaultVtype;
+
+    function activate(vtype) {
+      // Update tab active state
+      selector.querySelectorAll(".atlas-vtype-tab").forEach(function (btn) {
+        var isActive = btn.dataset.vtype === vtype;
+        btn.classList.toggle("atlas-vtype-tab--active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+      // Show/hide visa-type-specific checklist items
+      checklist.querySelectorAll(".atlas-checklist__item--vtype").forEach(function (item) {
+        item.hidden = item.dataset.vtype !== vtype;
+      });
+      // Uncheck hidden items so they don't pollute saved state
+      checklist.querySelectorAll(".atlas-checklist__item--vtype[hidden] input").forEach(function (cb) {
+        cb.checked = false;
+      });
+      localStorage.setItem(storageKey, vtype);
+    }
+
+    // Restore saved selection
+    activate(saved);
+
+    // Wire tab clicks
+    selector.querySelectorAll(".atlas-vtype-tab").forEach(function (btn) {
+      btn.addEventListener("click", function () { activate(btn.dataset.vtype); });
+    });
+  }
+
+  /**
+   * Occupation-type selector — pill tabs above the Document Checklist.
+   * Switches which financial proof items are visible. Selection persists
+   * in localStorage per country using key: atlas-occ-{country-slug}
+   */
+  function initOccupationSelector() {
+    var selector = document.querySelector(".atlas-occ-selector");
+    if (!selector) return;
+
+    var checklist = selector.nextElementSibling; // .atlas-checklist
+    if (!checklist) return;
+
+    var countrySlug = checklist.dataset.country;
+    var storageKey = "atlas-occ-" + countrySlug;
+    var saved = localStorage.getItem(storageKey) || "salaried";
+
+    function activate(occ) {
+      // Update button active state
+      selector.querySelectorAll(".atlas-occ-btn").forEach(function (btn) {
+        btn.classList.toggle("atlas-occ-btn--active", btn.dataset.occ === occ);
+      });
+      // Show/hide checklist items by occupation type
+      checklist.querySelectorAll(".atlas-checklist__item--occ").forEach(function (item) {
+        item.hidden = item.dataset.occ !== occ;
+      });
+      localStorage.setItem(storageKey, occ);
+    }
+
+    // Restore saved selection on page load
+    activate(saved);
+
+    // Wire button clicks
+    selector.querySelectorAll(".atlas-occ-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () { activate(btn.dataset.occ); });
+    });
+  }
+
+  /**
+   * Cover letter copy-to-clipboard button.
+   * Copies the <pre> text and flashes "Copied!" for 2 seconds.
+   */
+  function initCoverLetter() {
+    var btn = document.querySelector(".atlas-cover-letter__copy");
+    if (!btn) return;
+
+    btn.addEventListener("click", function () {
+      var text = btn.closest(".atlas-cover-letter__body")
+                    .querySelector(".atlas-cover-letter__text").innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = "Copied!";
+        setTimeout(function () { btn.textContent = "Copy to clipboard"; }, 2000);
+      });
+    });
+  }
+
+  /**
    * Homepage mini-map: fetches the SVG world map and map-data.json,
    * renders a small colored preview in the bottom-right corner.
    * Clicking it navigates to the full /map/ page.
@@ -199,6 +315,9 @@
     initScrollReveals();
     updatePageClass();
     initChecklist();
+    initVisaTypeSelector();
+    initOccupationSelector();
+    initCoverLetter();
     initMiniMap();
   });
 
@@ -210,6 +329,9 @@
       initScrollReveals();
       updatePageClass();
       initChecklist();
+      initVisaTypeSelector();
+      initOccupationSelector();
+      initCoverLetter();
       initMiniMap();
     });
   }

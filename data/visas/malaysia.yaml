@@ -3,11 +3,41 @@ iso_code: MY
 visa_difficulty: 2
 visa_type: e-Visa
 max_stay: 30 days
+entry_type: "Multiple Entry"
+visa_validity: "3 months from issue"
+passport_validity_months: 6
+blank_pages_required: 2
 region: Asia
 authority:
   name: High Commission of Malaysia, New Delhi
   processor: VFS Global
   official_portal: https://www.windowmalaysia.my/
+visa_types:
+  evisa:
+    label: e-Visa
+    documents:
+      - Online application form submitted via the official visa portal
+      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
+      - Digital photograph — white background, JPEG, minimum 200 KB
+      - Return flight booking reference number
+      - Hotel or accommodation booking reference number
+  standard_visa:
+    label: Standard Visa (Embassy)
+    documents:
+      - Completed visa application form — printed, signed, and dated
+      - Appointment confirmation slip from the embassy or authorised agent
+      - Confirmed return flight tickets (printed copy)
+      - Proof of accommodation — hotel booking confirmation or invitation letter
+      - Travel insurance covering the full stay duration
+  long_term:
+    label: Long-stay Visa
+    documents:
+      - Completed long-stay visa application (consulate-specific form)
+      - Employer NOC confirming leave of absence for the full stay period
+      - Proof of long-term accommodation — lease agreement or host invitation letter
+      - Travel insurance covering the full extended stay duration
+      - Sponsor letter or proof of fixed deposits / investment holdings
+
 requirements:
   visa_fee_inr: 2000
   processing_days: 2
@@ -18,6 +48,22 @@ requirements:
     minimum ₹50,000 balance. eNTRI (15 days) or eVISA (30 days) available online.
   financial_documents:
   - Bank statement showing minimum INR 50,000 balance
+  occupation_documents:
+    self_employed:
+      - Bank statement showing minimum INR 50,000 balance
+      - Business registration certificate (recommended)
+    business_owner:
+      - Bank statement showing minimum INR 50,000 balance
+      - Business registration certificate (recommended)
+    student:
+      - Bank statement showing minimum INR 50,000 balance
+      - Admission letter or valid student ID card
+      - Notarised affidavit of financial support from sponsor (if applicable)
+    homemaker:
+      - Bank statement showing minimum INR 50,000 balance
+    retired:
+      - Bank statement showing minimum INR 50,000 balance
+
 health:
   vaccinations: Hepatitis A, Typhoid. Japanese Encephalitis for rural Sarawak/Sabah.
   insurance: Travel health insurance recommended.

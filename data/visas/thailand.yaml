@@ -3,11 +3,40 @@ iso_code: TH
 visa_difficulty: 3
 visa_type: Visa on Arrival
 max_stay: 15 days
+entry_type: "Single Entry"
+visa_validity: "15 days from entry"
+passport_validity_months: 6
+blank_pages_required: 2
 region: Asia
 authority:
   name: Royal Thai Embassy, New Delhi
   processor: VFS Global
   official_portal: https://www.thaievisa.go.th/
+visa_types:
+  voa:
+    label: Visa on Arrival
+    documents:
+      - Completed arrival card (distributed on aircraft or at immigration counter)
+      - Confirmed return flight ticket — boarding pass or printed itinerary
+      - Proof of accommodation — hotel booking printout
+      - VOA fee in cash — USD or accepted local currency (check current rate before travel)
+  evisa:
+    label: e-Visa
+    documents:
+      - Online application form submitted via the official visa portal
+      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
+      - Digital photograph — white background, JPEG, minimum 200 KB
+      - Return flight booking reference number
+      - Hotel or accommodation booking reference number
+  standard_visa:
+    label: Standard Visa (Embassy)
+    documents:
+      - Completed visa application form — printed, signed, and dated
+      - Appointment confirmation slip from the embassy
+      - Confirmed return flight tickets (printed copy)
+      - Proof of accommodation — hotel booking confirmation or invitation letter
+      - Travel insurance covering the full stay duration
+
 requirements:
   visa_fee_inr: 4800
   processing_days: 1
@@ -18,6 +47,22 @@ requirements:
     THB equivalent in cash or traveler's cheques.
   financial_documents:
   - Proof of funds — minimum 10,000 THB equivalent in cash or traveller's cheques
+  occupation_documents:
+    self_employed:
+      - Proof of sufficient funds — minimum 10,000 THB equivalent in cash or card
+      - Business registration certificate (recommended)
+    business_owner:
+      - Proof of sufficient funds — minimum 10,000 THB equivalent in cash or card
+      - Business registration certificate (recommended)
+    student:
+      - Proof of sufficient funds — minimum 10,000 THB equivalent in cash or card
+      - Admission letter or valid student ID card
+      - Notarised affidavit of financial support from sponsor (if applicable)
+    homemaker:
+      - Proof of sufficient funds — minimum 10,000 THB equivalent in cash or card
+    retired:
+      - Proof of sufficient funds — minimum 10,000 THB equivalent in cash or card
+
 health:
   vaccinations: Hepatitis A, Typhoid, Japanese Encephalitis. Malaria prophylaxis for
     rural areas.

@@ -3,11 +3,41 @@ iso_code: TR
 visa_difficulty: 2
 visa_type: e-Visa
 max_stay: 30 days
+entry_type: "Single Entry"
+visa_validity: "3 months from issue"
+passport_validity_months: 6
+blank_pages_required: 2
 region: Europe
 authority:
   name: Embassy of Turkey, New Delhi
   processor: Online
   official_portal: https://www.evisa.gov.tr/
+visa_types:
+  evisa:
+    label: e-Visa
+    documents:
+      - Online application form submitted via the official visa portal
+      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
+      - Digital photograph — white background, JPEG, minimum 200 KB
+      - Return flight booking reference number
+      - Hotel or accommodation booking reference number
+  standard_visa:
+    label: Standard Visa (Embassy)
+    documents:
+      - Completed visa application form — printed, signed, and dated
+      - Appointment confirmation slip from the embassy or authorised agent
+      - Confirmed return flight tickets (printed copy)
+      - Proof of accommodation — hotel booking confirmation or invitation letter
+      - Travel insurance covering the full stay duration
+  long_term:
+    label: Long-stay Visa
+    documents:
+      - Completed long-stay visa application (consulate-specific form)
+      - Employer NOC confirming leave of absence for the full stay period
+      - Proof of long-term accommodation — lease agreement or host invitation letter
+      - Travel insurance covering the full extended stay duration
+      - Sponsor letter or proof of fixed deposits / investment holdings
+
 requirements:
   visa_fee_inr: 4200
   processing_days: 1
@@ -17,6 +47,22 @@ requirements:
   financial_proof: Return flight ticket and proof of accommodation. e-Visa is issued
     instantly online. Valid passport with at least 6 months validity required.
   financial_documents: []
+  occupation_documents:
+    self_employed:
+      - Proof of sufficient funds in cash or card
+      - Business registration certificate (recommended)
+    business_owner:
+      - Proof of sufficient funds in cash or card
+      - Business registration certificate (recommended)
+    student:
+      - Proof of sufficient funds in cash or card
+      - Admission letter or valid student ID card
+      - Notarised affidavit of financial support from sponsor (if applicable)
+    homemaker:
+      - Proof of sufficient funds in cash or card
+    retired:
+      - Proof of sufficient funds in cash or card
+
 health:
   vaccinations: Hepatitis A, Typhoid recommended. Routine vaccinations sufficient
     for Istanbul.

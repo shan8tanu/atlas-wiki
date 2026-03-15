@@ -365,7 +365,161 @@ body.atlas-page--country .md-grid {
 }
 
 
-/* ── 13. Homepage Mini-Map ────────────────────────────────────── */
+/* ── 13. Visa Type Selector ────────────────────────────────────────── */
+
+.atlas-vtype-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 2px solid var(--atlas-border);
+  margin-bottom: 0.75rem;
+}
+
+.atlas-vtype-tab {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px; /* overlap the container border */
+  background: transparent;
+  color: var(--atlas-muted);
+  cursor: pointer;
+  transition: color var(--atlas-duration-fast) ease,
+              border-color var(--atlas-duration-fast) ease;
+  white-space: nowrap;
+}
+
+.atlas-vtype-tab:hover {
+  color: var(--atlas-text);
+}
+
+.atlas-vtype-tab--active {
+  color: var(--atlas-link);
+  border-bottom-color: var(--atlas-link);
+}
+
+@media (max-width: 600px) {
+  .atlas-vtype-tab {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.82rem;
+  }
+}
+
+
+/* ── 14. Occupation Selector (pills) ──────────────────────────────── */
+
+.atlas-occ-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.atlas-occ-btn {
+  padding: 0.3rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border: 1px solid var(--atlas-border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--atlas-muted);
+  cursor: pointer;
+  transition: background var(--atlas-duration-fast) ease,
+              color var(--atlas-duration-fast) ease,
+              border-color var(--atlas-duration-fast) ease;
+}
+
+.atlas-occ-btn:hover {
+  border-color: var(--atlas-link);
+  color: var(--atlas-link);
+}
+
+.atlas-occ-btn--active {
+  background: var(--atlas-link);
+  border-color: var(--atlas-link);
+  color: #fff;
+}
+
+[data-md-color-scheme="slate"] .atlas-occ-btn--active {
+  color: #fff;
+}
+
+
+/* ── 15. Cover Letter Template ────────────────────────────────────── */
+
+.atlas-cover-letter {
+  border: 1px solid var(--atlas-border);
+  border-radius: 8px;
+  background: var(--atlas-surface);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.atlas-cover-letter summary {
+  padding: 0.85rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--atlas-link);
+}
+
+.atlas-cover-letter summary::before {
+  content: '▶';
+  font-size: 0.65rem;
+  transition: transform var(--atlas-duration-fast) ease;
+}
+
+.atlas-cover-letter[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.atlas-cover-letter__body {
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid var(--atlas-border);
+}
+
+.atlas-cover-letter__text {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: transparent;
+  border: none;
+  padding: 1rem 0;
+  margin: 0;
+  color: var(--atlas-text);
+}
+
+.atlas-cover-letter__copy {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid var(--atlas-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--atlas-link);
+  cursor: pointer;
+  transition: background var(--atlas-duration-fast) ease,
+              color var(--atlas-duration-fast) ease;
+}
+
+.atlas-cover-letter__copy:hover {
+  background: var(--atlas-link);
+  color: #fff;
+  border-color: var(--atlas-link);
+}
+
+
+/* ── 15. Homepage Mini-Map ────────────────────────────────────── */
 
 .atlas-minimap {
   position: fixed;
@@ -431,7 +585,7 @@ body.atlas-page--country .md-grid {
 }
 
 
-/* ── 14. Homepage: hide auto-generated title ───────────────────── */
+/* ── 16. Homepage: hide auto-generated title ───────────────────── */
 /* The hero block already has the h1, so hide Material's auto-title */
 
 body.atlas-page--home .md-content__inner > h1:first-of-type {
@@ -439,7 +593,7 @@ body.atlas-page--home .md-content__inner > h1:first-of-type {
 }
 
 
-/* ── 15. Accessibility ────────────────────────────────────────── */
+/* ── 17. Accessibility ────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .md-content__inner > *,

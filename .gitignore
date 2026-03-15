@@ -13,3 +13,6 @@ Thumbs.db
 
 # Firebase debug artifacts
 firebase-debug.log
+
+# Generated validation report
+validation-report.md

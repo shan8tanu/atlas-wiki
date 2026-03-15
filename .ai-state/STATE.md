@@ -197,3 +197,39 @@ atlas/
 - `docs-internal/01-architecture-and-data-flow.md` — created
 - `CLAUDE.md` — created
 - `.gitignore` — added docs-internal/ entry
+
+### Session: 2026-03-15 — Claude (Opus 4.6) [continued]
+**Branch:** feat/country-pages-v2
+**What changed:**
+- Created `docs-internal/02-frontend-system.md` — Part 2 documentation (map, theme, interactive components)
+- Created `docs-internal/03-data-schema-and-country-pages.md` — Part 3 documentation (detailed YAML schema, Jinja2 template anatomy, validation matrix, how-to-add-a-country guide, edge cases)
+- Committed validation system, state file, CLAUDE.md to git (commit `3bfd862`)
+- Added `build_log.txt` and `nul` to `.gitignore` (build artifacts)
+**Files touched:**
+- `docs-internal/02-frontend-system.md` — created
+- `docs-internal/03-data-schema-and-country-pages.md` — created
+- `docs-internal/README.md` — updated status for Parts 2 and 3
+- `.gitignore` — added build_log.txt and nul exclusions
+
+### Session: 2026-03-15 — Claude (Opus 4.6) [continued]
+**Branch:** feat/country-pages-v2
+**What changed:**
+- Created `docs-internal/04-validation-and-safeguards.md` — Part 4 documentation (most detailed part yet: 14 sections covering defense-in-depth model, structural validation internals, AI accuracy audit, admin update tool safeguards, CI/CD pipelines, governance, security posture, failure scenarios)
+**Files touched:**
+- `docs-internal/04-validation-and-safeguards.md` — created
+- `docs-internal/README.md` — updated status for Part 4
+
+### Session: 2026-03-15 — Claude (Opus 4.6) [continued]
+**Branch:** feat/country-pages-v2
+**What changed:**
+- Created `docs-internal/05-developer-workflows.md` — Part 5 (final part, maximum detail: 20 sections covering local setup, dev server, build pipeline, all 5 scripts with CLI flags/exit codes/internal flows, validate/ package internals, environment variables, contribution flow, CI/CD step-by-step, governance, .claude/ and .ai-state/ directories, legacy files, git workflow, 5 common task walkthroughs, troubleshooting guide, dependency reference)
+- Expanded `docs-internal/01-architecture-and-data-flow.md` — Added deep dives: complete mkdocs.yml config (every feature flag, palette, extensions, plugins, nav), gen_pages.py internals (iso_to_flag Unicode algorithm, uppercase vs lowercase ISO, error handling table, set_edit_path trick, minified JSON), production security headers (docs/_headers), SEO (robots.txt)
+- Expanded `docs-internal/02-frontend-system.md` — Added deep dives: map.js internals (constants, readyState guard, URL prefix, tooltip positioning edge cases), theme.js internals (regex class cleanup, sibling-walking algorithm, stale-data guard, initMiniMap fetch-parse-clone algorithm, initialization order), complete CSS inventory (border-radius, z-index stack, all animations with durations/easings, dark mode adaptation table, responsive breakpoints, prefers-reduced-motion, full class inventory)
+- Expanded `docs-internal/03-data-schema-and-country-pages.md` — Added 3 new gotchas (#9 sibling-walking, #10 misleading function name, #11 Python YAML tags), accessibility attributes section (ARIA roles/labels on visa selector, occupation selector, mini-map), complete data-attribute inventory (all data-* attrs with who sets/reads them), template-to-CSS class mapping diagram
+- All 5 parts complete — documentation finished
+**Files touched:**
+- `docs-internal/05-developer-workflows.md` — created
+- `docs-internal/01-architecture-and-data-flow.md` — expanded with deep dives
+- `docs-internal/02-frontend-system.md` — expanded with deep dives
+- `docs-internal/03-data-schema-and-country-pages.md` — expanded with new sections
+- `docs-internal/README.md` — marked Parts 4 and 5 as Done

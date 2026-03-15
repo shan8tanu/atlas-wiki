@@ -168,6 +168,93 @@ Yours faithfully,
 </div>
 </details>
 
+{%- if jurisdiction %}
+
+## Where to Apply
+
+<div class="atlas-jurisdiction" markdown>
+
+Your application must be submitted to the consular office responsible for your **Indian state of residence**.
+
+{%- for office in jurisdiction %}
+
+<div class="atlas-jurisdiction__office" markdown>
+
+**{{ office.office }}**
+
+{{ office.covers | join(" · ") }}
+
+</div>
+{%- endfor %}
+
+</div>
+{%- endif %}
+
+{%- if transit %}
+
+## Transit Rules
+
+<div class="atlas-transit" markdown>
+
+**Transit visa required:** {{ "Yes" if transit.visa_required else "No" }}
+
+{%- if transit.exceptions %}
+
+**Exceptions:**
+
+{%- for exc in transit.exceptions %}
+- {{ exc }}
+{%- endfor %}
+{%- endif %}
+
+{%- if transit.notes %}
+
+**Note:** {{ transit.notes }}
+{%- endif %}
+
+</div>
+{%- endif %}
+
+{%- if exemptions %}
+
+## Visa Exemptions & Indian Privilege
+
+<div class="atlas-exemptions" markdown>
+
+Indian passport holders may qualify for simplified or waived visa requirements if they hold certain third-party visas or travel documents.
+
+{%- for ex in exemptions %}
+
+<div class="atlas-exemption-card" markdown>
+
+| | |
+|---|---|
+| **If you hold** | {{ ex.holding }} |
+| **You get** | {{ ex.grants }} |
+| **Conditions** | {{ ex.conditions }} |
+{%- if ex.source %}
+| **Source** | [Verify ↗]({{ ex.source }}) |
+{%- endif %}
+
+</div>
+{%- endfor %}
+
+</div>
+{%- endif %}
+
+{%- if ecr %}
+
+## ECR / Non-ECR Passport
+
+<div class="atlas-ecr atlas-ecr--{{ 'active' if ecr.applies else 'inactive' }}" markdown>
+
+**ECR rules apply:** {{ "Yes — read carefully" if ecr.applies else "No" }}
+
+{{ ecr.note }}
+
+</div>
+{%- endif %}
+
 ## Public Health & Vaccinations
 
 <div class="atlas-health" markdown>
@@ -191,6 +278,38 @@ Yours faithfully,
 {%- endif %}
 
 </div>
+
+{%- if biometrics %}
+
+## Biometrics
+
+<div class="atlas-biometrics" markdown>
+
+**Biometrics required:** {{ "Yes" if biometrics.required else "No" }}
+{%- if biometrics.validity_months %}
+
+**Validity:** {{ biometrics.validity_months }} months — if previously captured within this period at any participating center, you may not need to appear in person.
+{%- endif %}
+
+{{ biometrics.note }}
+
+</div>
+{%- endif %}
+
+{%- if changelog %}
+
+## Change Log
+
+<div class="atlas-changelog" markdown>
+
+| Date | Type | Change | Source |
+|------|------|--------|--------|
+{%- for entry in changelog %}
+| {{ entry.date }} | <span class="atlas-changelog__tag atlas-changelog__tag--{{ entry.type | lower }}">{{ entry.type }}</span> | {{ entry.description }} | [↗]({{ entry.source }}) |
+{%- endfor %}
+
+</div>
+{%- endif %}
 
 ---
 *Data is verified against official consular sources.*

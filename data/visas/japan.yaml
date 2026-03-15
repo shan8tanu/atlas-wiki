@@ -83,3 +83,91 @@ health:
     rural stays.
   insurance: Travel health insurance strongly recommended — medical costs are high.
   notes: World-class healthcare. Pharmacies may not stock Western-brand medications.
+
+# ── Section A: Jurisdiction Map ──────────────────────────────────
+jurisdiction:
+  - office: "Embassy of Japan, New Delhi"
+    covers:
+      - Delhi
+      - Haryana
+      - Himachal Pradesh
+      - Jammu & Kashmir
+      - Ladakh
+      - Punjab
+      - Rajasthan
+      - Uttar Pradesh
+      - Uttarakhand
+  - office: "Consulate General of Japan, Mumbai"
+    covers:
+      - Goa
+      - Gujarat
+      - Maharashtra
+      - Madhya Pradesh
+      - Chhattisgarh
+  - office: "Consulate General of Japan, Chennai"
+    covers:
+      - Andhra Pradesh
+      - Karnataka
+      - Kerala
+      - Tamil Nadu
+      - Telangana
+      - Puducherry
+  - office: "Consulate General of Japan, Kolkata"
+    covers:
+      - Assam
+      - Bihar
+      - Jharkhand
+      - Meghalaya
+      - Manipur
+      - Mizoram
+      - Nagaland
+      - Odisha
+      - Sikkim
+      - Tripura
+      - West Bengal
+      - Arunachal Pradesh
+
+# ── Section B: Transit Rules ─────────────────────────────────────
+transit:
+  visa_required: true
+  exceptions:
+    - "Shore pass available for cruise ship passengers (up to 72 hours)"
+    - "Transit without visa if holding confirmed onward ticket departing within 24 hours and not leaving the airside transit area"
+  notes: "Narita and Haneda airports have designated transit areas. Transit visa required if overnight stay is needed between flights."
+
+# ── Section B: Visa Exemptions / Indian Privilege ────────────────
+exemptions:
+  - holding: "Valid US Visa (B1/B2)"
+    grants: "Simplified processing — reduced document requirements"
+    conditions: "Must be a valid, unexpired US B1/B2 visa with at least 6 months validity"
+    source: https://www.in.emb-japan.go.jp/itprtop_en/index.html
+  - holding: "Previous Japan visa (within 3 years)"
+    grants: "Eligible for multiple-entry visa on next application"
+    conditions: "Must have completed previous trip without overstay"
+    source: https://www.in.emb-japan.go.jp/itprtop_en/index.html
+
+# ── Section B: ECR / Non-ECR Rules ──────────────────────────────
+ecr:
+  applies: false
+  note: "Japan does not require Emigration Clearance for Indian ECR passport holders on tourist visas."
+
+# ── Section C: Biometrics ────────────────────────────────────────
+biometrics:
+  required: true
+  validity_months: null
+  note: "Biometrics (fingerprints and photograph) collected at the VFS Global application center. All applicants must appear in person."
+
+# ── Section D: Change Log ────────────────────────────────────────
+changelog:
+  - date: "2026-01-15"
+    type: Fee
+    description: "Visa fee revised from ₹400 to ₹500"
+    source: https://www.in.emb-japan.go.jp/itprtop_en/index.html
+  - date: "2025-11-01"
+    type: Process
+    description: "VFS Global appointed as new visa processing partner for North India"
+    source: https://www.vfsglobal.com/japan/india/
+  - date: "2025-08-20"
+    type: Document
+    description: "ITR requirement increased from 2 years to 3 years for tourist visa"
+    source: https://www.in.emb-japan.go.jp/itprtop_en/index.html

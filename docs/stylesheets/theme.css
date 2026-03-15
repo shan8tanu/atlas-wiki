@@ -585,7 +585,219 @@ body.atlas-page--country .md-grid {
 }
 
 
-/* ── 16. Homepage: hide auto-generated title ───────────────────── */
+/* ── 16. Jurisdiction Map ───────────────────────────────────────── */
+
+.atlas-jurisdiction {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--atlas-border);
+  border-radius: 8px;
+  background: var(--atlas-surface);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.atlas-jurisdiction__office {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--atlas-border);
+}
+
+.atlas-jurisdiction__office:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.atlas-jurisdiction__office p:last-child {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--atlas-muted);
+  line-height: 1.8;
+}
+
+
+/* ── 17. Transit Rules ─────────────────────────────────────────── */
+
+.atlas-transit {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--atlas-border);
+  border-radius: 8px;
+  background: var(--atlas-surface);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.atlas-transit p {
+  margin: 0.4rem 0;
+}
+
+.atlas-transit ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.atlas-transit li {
+  margin-bottom: 0.3rem;
+}
+
+
+/* ── 18. Visa Exemptions / Indian Privilege ────────────────────── */
+
+.atlas-exemptions {
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.atlas-exemption-card {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--atlas-border);
+  border-radius: 8px;
+  background: var(--atlas-surface);
+  margin-bottom: 0.75rem;
+  transition: border-color var(--atlas-duration-fast) ease;
+}
+
+.atlas-exemption-card:hover {
+  border-color: var(--atlas-link);
+}
+
+.atlas-exemption-card table {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.atlas-exemption-card th {
+  display: none;
+}
+
+.atlas-exemption-card td:first-child {
+  width: 110px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--atlas-muted);
+  vertical-align: top;
+}
+
+
+/* ── 19. ECR / Non-ECR Passport ────────────────────────────────── */
+
+.atlas-ecr {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.atlas-ecr p {
+  margin: 0.4rem 0;
+}
+
+.atlas-ecr--active {
+  border: 1px solid #e74c3c;
+  background: rgba(231, 76, 60, 0.04);
+}
+
+[data-md-color-scheme="slate"] .atlas-ecr--active {
+  background: rgba(231, 76, 60, 0.08);
+}
+
+.atlas-ecr--inactive {
+  border: 1px solid var(--atlas-border);
+  background: var(--atlas-surface);
+}
+
+
+/* ── 20. Biometrics ────────────────────────────────────────────── */
+
+.atlas-biometrics {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--atlas-border);
+  border-radius: 8px;
+  background: var(--atlas-surface);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.atlas-biometrics p {
+  margin: 0.4rem 0;
+}
+
+
+/* ── 21. Change Log ────────────────────────────────────────────── */
+
+.atlas-changelog {
+  font-size: 0.88rem;
+}
+
+.atlas-changelog table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.atlas-changelog th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--atlas-muted);
+  font-weight: 700;
+}
+
+.atlas-changelog td {
+  font-size: 0.85rem;
+  vertical-align: top;
+}
+
+.atlas-changelog__tag {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.atlas-changelog__tag--fee {
+  background: rgba(243, 156, 18, 0.12);
+  color: #b7791f;
+}
+
+.atlas-changelog__tag--document {
+  background: rgba(52, 152, 219, 0.12);
+  color: #2471a3;
+}
+
+.atlas-changelog__tag--process {
+  background: rgba(142, 68, 173, 0.12);
+  color: #7d3c98;
+}
+
+.atlas-changelog__tag--policy {
+  background: rgba(46, 204, 113, 0.12);
+  color: #1e8449;
+}
+
+[data-md-color-scheme="slate"] .atlas-changelog__tag--fee {
+  background: rgba(243, 156, 18, 0.18);
+  color: #f0c040;
+}
+
+[data-md-color-scheme="slate"] .atlas-changelog__tag--document {
+  background: rgba(52, 152, 219, 0.18);
+  color: #5dade2;
+}
+
+[data-md-color-scheme="slate"] .atlas-changelog__tag--process {
+  background: rgba(142, 68, 173, 0.18);
+  color: #bb8fce;
+}
+
+[data-md-color-scheme="slate"] .atlas-changelog__tag--policy {
+  background: rgba(46, 204, 113, 0.18);
+  color: #58d68d;
+}
+
+
+/* ── 22. Homepage: hide auto-generated title ───────────────────── */
 /* The hero block already has the h1, so hide Material's auto-title */
 
 body.atlas-page--home .md-content__inner > h1:first-of-type {

@@ -12,10 +12,12 @@ from typing import Any, Dict, List, Optional, Tuple
 import yaml
 
 from validate.schema import (
+    ALLOWED_CHANGELOG_TYPES,
     ALLOWED_REGIONS,
     ALLOWED_VISA_DIFFICULTIES,
     ALLOWED_VISA_TYPES,
     ISO_3166_1_ALPHA2,
+    KNOWN_INDIAN_STATES,
     KNOWN_PROCESSORS,
     PLACEHOLDER_VALUES,
 )
@@ -468,5 +470,159 @@ def check_f(
 
     if not missing_yaml:
         results.append(_ok("F4", "cross-file", "All mkdocs.yml nav entries have matching YAML files"))
+
+    return results
+
+
+# ── Group G: New feature validation (changelog, jurisdiction, transit, etc.) ──
+
+def check_g(filepath: str, data: dict) -> List[CheckResult]:
+    """
+    G1-G10: Validate new Section A-D fields (optional — only checked if present).
+    All new fields are optional, so missing fields are silently skipped.
+    """
+    short = os.path.basename(filepath)
+    results = []
+
+    # ── G1: changelog entries must have date, type, description, source ──
+    changelog = _get(data, "changelog")
+    if changelog is not None:
+        if not isinstance(changelog, list):
+            results.append(_err("G1", short, "changelog must be a list"))
+        else:
+            for i, entry in enumerate(changelog):
+                if not isinstance(entry, dict):
+                    results.append(_err("G1", short, f"changelog[{i}] must be a dict"))
+                    continue
+                for required_key in ("date", "type", "description", "source"):
+                    if required_key not in entry:
+                        results.append(_err("G1", short,
+                            f"changelog[{i}] missing required key: {required_key}"))
+                # G2: changelog type must be in allowed set
+                ctype = entry.get("type")
+                if ctype is not None and ctype not in ALLOWED_CHANGELOG_TYPES:
+                    results.append(_err("G2", short,
+                        f"changelog[{i}].type {ctype!r} not in {sorted(ALLOWED_CHANGELOG_TYPES)}"))
+
+            if not any(r.check_id in ("G1", "G2") and not r.passed for r in results):
+                results.append(_ok("G1", short, f"changelog has {len(changelog)} valid entries"))
+
+    # ── G3: jurisdiction offices must have office name and covers list ──
+    jurisdiction = _get(data, "jurisdiction")
+    if jurisdiction is not None:
+        if not isinstance(jurisdiction, list):
+            results.append(_err("G3", short, "jurisdiction must be a list"))
+        else:
+            all_states = set()
+            for i, office in enumerate(jurisdiction):
+                if not isinstance(office, dict):
+                    results.append(_err("G3", short, f"jurisdiction[{i}] must be a dict"))
+                    continue
+                if "office" not in office:
+                    results.append(_err("G3", short, f"jurisdiction[{i}] missing 'office' name"))
+                covers = office.get("covers")
+                if not isinstance(covers, list) or len(covers) == 0:
+                    results.append(_err("G3", short, f"jurisdiction[{i}] missing or empty 'covers' list"))
+                else:
+                    for state in covers:
+                        # G4: warn if state not in known set
+                        if state not in KNOWN_INDIAN_STATES:
+                            results.append(_warn("G4", short,
+                                f"jurisdiction[{i}] state {state!r} not in known Indian states set"))
+                        # Check for duplicates across offices
+                        if state in all_states:
+                            results.append(_warn("G4", short,
+                                f"jurisdiction: state {state!r} appears in multiple offices"))
+                        all_states.add(state)
+
+            if not any(r.check_id == "G3" and not r.passed for r in results):
+                results.append(_ok("G3", short,
+                    f"jurisdiction has {len(jurisdiction)} valid offices covering {len(all_states)} states"))
+
+    # ── G5: transit must have visa_required (bool) ──
+    transit = _get(data, "transit")
+    if transit is not None:
+        if not isinstance(transit, dict):
+            results.append(_err("G5", short, "transit must be a dict"))
+        else:
+            vr = transit.get("visa_required")
+            if vr is None:
+                results.append(_err("G5", short, "transit missing required field: visa_required"))
+            elif not isinstance(vr, bool):
+                results.append(_err("G5", short,
+                    f"transit.visa_required must be bool, got {type(vr).__name__}"))
+            else:
+                results.append(_ok("G5", short, f"transit.visa_required={vr}"))
+
+            # G6: transit.exceptions should be a list of strings
+            exc = transit.get("exceptions")
+            if exc is not None:
+                if not isinstance(exc, list):
+                    results.append(_err("G6", short, "transit.exceptions must be a list"))
+                else:
+                    results.append(_ok("G6", short,
+                        f"transit.exceptions has {len(exc)} entries"))
+
+    # ── G7: exemptions must be a list of dicts with required keys ──
+    exemptions = _get(data, "exemptions")
+    if exemptions is not None:
+        if not isinstance(exemptions, list):
+            results.append(_err("G7", short, "exemptions must be a list"))
+        else:
+            for i, ex in enumerate(exemptions):
+                if not isinstance(ex, dict):
+                    results.append(_err("G7", short, f"exemptions[{i}] must be a dict"))
+                    continue
+                for required_key in ("holding", "grants", "conditions"):
+                    if required_key not in ex:
+                        results.append(_err("G7", short,
+                            f"exemptions[{i}] missing required key: {required_key}"))
+
+            if not any(r.check_id == "G7" and not r.passed for r in results):
+                results.append(_ok("G7", short, f"exemptions has {len(exemptions)} valid entries"))
+
+    # ── G8: ecr must have applies (bool) and note (str) ──
+    ecr = _get(data, "ecr")
+    if ecr is not None:
+        if not isinstance(ecr, dict):
+            results.append(_err("G8", short, "ecr must be a dict"))
+        else:
+            applies = ecr.get("applies")
+            if applies is None:
+                results.append(_err("G8", short, "ecr missing required field: applies"))
+            elif not isinstance(applies, bool):
+                results.append(_err("G8", short,
+                    f"ecr.applies must be bool, got {type(applies).__name__}"))
+            else:
+                results.append(_ok("G8", short, f"ecr.applies={applies}"))
+
+            note = ecr.get("note")
+            if note is None:
+                results.append(_err("G8", short, "ecr missing required field: note"))
+
+    # ── G9: biometrics must have required (bool) and note (str) ──
+    biometrics = _get(data, "biometrics")
+    if biometrics is not None:
+        if not isinstance(biometrics, dict):
+            results.append(_err("G9", short, "biometrics must be a dict"))
+        else:
+            req = biometrics.get("required")
+            if req is None:
+                results.append(_err("G9", short, "biometrics missing required field: required"))
+            elif not isinstance(req, bool):
+                results.append(_err("G9", short,
+                    f"biometrics.required must be bool, got {type(req).__name__}"))
+            else:
+                results.append(_ok("G9", short, f"biometrics.required={req}"))
+
+            note = biometrics.get("note")
+            if note is None:
+                results.append(_err("G9", short, "biometrics missing required field: note"))
+
+            # validity_months can be null or int
+            vm = biometrics.get("validity_months")
+            if vm is not None and not isinstance(vm, int):
+                results.append(_err("G9", short,
+                    f"biometrics.validity_months must be int or null, got {type(vm).__name__}"))
 
     return results

@@ -3,7 +3,7 @@ Allowed values, ISO code set, and field contracts for the Atlas visa data.
 All constants are hardcoded — no network access required.
 """
 
-ALLOWED_VISA_DIFFICULTIES = {1, 2, 3, 4}
+ALLOWED_VISA_DIFFICULTIES = {1, 2, 3, 4, 5}
 
 ALLOWED_VISA_TYPES = {"Standard Visa", "e-Visa", "Visa on Arrival"}
 
@@ -13,6 +13,7 @@ ALLOWED_REGIONS = {"Asia", "Europe", "Americas", "Oceania", "Middle East"}
 KNOWN_PROCESSORS = {
     "VFS Global",
     "BLS International",
+    "TLScontact",
     "Online",
     "Embassy",
     "High Commission",
@@ -20,6 +21,22 @@ KNOWN_PROCESSORS = {
 }
 
 PLACEHOLDER_VALUES = {"TBD", "N/A", "TODO", ""}
+
+# Allowed changelog entry types
+ALLOWED_CHANGELOG_TYPES = {"Fee", "Document", "Process", "Policy"}
+
+# Known Indian states/UTs for jurisdiction validation
+KNOWN_INDIAN_STATES = {
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+    "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu & Kashmir",
+    "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Madhya Pradesh", "Maharashtra",
+    "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Puducherry",
+    "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+    "Uttar Pradesh", "Uttarakhand", "West Bengal",
+    # UTs
+    "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep",
+}
 
 # ISO 3166-1 alpha-2 two-letter country codes (hardcoded, no network)
 ISO_3166_1_ALPHA2 = {

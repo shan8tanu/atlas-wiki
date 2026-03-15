@@ -168,6 +168,13 @@ atlas/
 | 16 | Community edit routing (YAML, not MD) | Active | `gen_pages.py` (set_edit_path), `.github/CODEOWNERS` | Feb 2026 |
 | 17 | Flag emoji generation from ISO codes | Active | `gen_pages.py` (iso_to_flag), flagcdn.com in template | Feb 2026 |
 | 18 | Scroll-triggered reveal animations | Active | `docs/javascripts/theme.js` (IntersectionObserver) | Feb 2026 |
+| 19 | Change Log (per-country audit trail) | Active (sample) | `data/visas/*.yaml` (changelog), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
+| 20 | Visa Exemptions / Indian Privilege Check | Active (sample) | `data/visas/*.yaml` (exemptions), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
+| 21 | Transit Rules | Active (sample) | `data/visas/*.yaml` (transit), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
+| 22 | Jurisdiction Map (state → consulate) | Active (sample) | `data/visas/*.yaml` (jurisdiction), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
+| 23 | ECR / Non-ECR Passport Rules | Active (sample) | `data/visas/*.yaml` (ecr), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
+| 24 | Biometrics Tracking | Active (sample) | `data/visas/*.yaml` (biometrics), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
+| 25 | Group G validation (new field checks) | Active | `validate/checks.py` (check_g), `validate/schema.py` | Mar 2026 |
 
 ---
 
@@ -233,3 +240,29 @@ atlas/
 - `docs-internal/02-frontend-system.md` — expanded with deep dives
 - `docs-internal/03-data-schema-and-country-pages.md` — expanded with new sections
 - `docs-internal/README.md` — marked Parts 4 and 5 as Done
+
+### Session: 2026-03-15 — Claude (Opus 4.6) [continued]
+**Branch:** feat/country-pages-v2
+**What changed:**
+- Built 6 new features from the product vision gap analysis, all with sample data on Japan and France:
+  1. **Change Log (Section D)** — per-country changelog with date, type (Fee/Document/Process/Policy), description, and source link. Rendered as a styled table with color-coded type tags.
+  2. **Visa Exemptions / Indian Privilege (Section B)** — third-party visas that unlock simplified entry. Each exemption is a card with holding, grants, conditions, and verify-source link.
+  3. **Transit Rules (Section B)** — transit visa requirements with exceptions list. Simple info-box layout.
+  4. **Jurisdiction Map (Section A)** — maps Indian states to consular offices. Card-per-office layout with dot-separated state lists.
+  5. **ECR / Non-ECR Rules (Section B)** — conditional red-border warning when ECR rules apply. Green for no-ECR countries.
+  6. **Biometrics Tracking (Section C)** — biometrics required flag, validity period (e.g. 59 months for Schengen VIS), and notes.
+- All 6 features use conditional Jinja2 blocks (`{% if field %}`) for backward compatibility — 24 countries without new fields render unchanged.
+- Added Group G validation checks (G1–G9) for all new YAML fields.
+- Added `TLScontact` to known processors, `ALLOWED_CHANGELOG_TYPES`, `KNOWN_INDIAN_STATES` to schema.
+- Added `visa_difficulty: 5` to allowed set (for future use with hardest-tier countries).
+- Full validation passes: 1184 checks across 26 files, 0 errors, 4 pre-existing warnings.
+- MkDocs `--strict` build succeeds for all 26 countries.
+**Files touched:**
+- `data/visas/japan.yaml` — added jurisdiction, transit, exemptions, ecr, biometrics, changelog sections
+- `data/visas/france.yaml` — added jurisdiction, transit, exemptions, ecr, biometrics, changelog sections
+- `templates/country.md.jinja` — added 6 new conditional template sections (jurisdiction, transit, exemptions, ECR, biometrics, changelog)
+- `docs/stylesheets/theme.css` — added CSS for sections 16–21 (jurisdiction, transit, exemptions, ECR, biometrics, changelog) with dark mode support
+- `validate/schema.py` — added ALLOWED_CHANGELOG_TYPES, KNOWN_INDIAN_STATES, TLScontact, visa_difficulty 5
+- `validate/checks.py` — added check_g() with G1–G9 validation for all new fields
+- `validate.py` — wired check_g into per-file validation pipeline
+- `.ai-state/STATE.md` — appended this session log

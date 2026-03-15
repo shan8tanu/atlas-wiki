@@ -23,6 +23,7 @@ from validate.checks import (
     check_d,
     check_e,
     check_f,
+    check_g,
 )
 from validate.report import print_report
 
@@ -82,6 +83,7 @@ def main() -> int:
         all_results.extend(check_c(filepath, data))
         all_results.extend(check_d(filepath, data))
         all_results.extend(check_e(filepath, data))
+        all_results.extend(check_g(filepath, data))
 
     # ── Cross-file checks (F) ────────────────────────────────────────────────
     if len(parsed_files) > 1 or (len(parsed_files) == 1 and not args.file):

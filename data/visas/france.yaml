@@ -86,3 +86,95 @@ health:
     travellers.
   insurance: Schengen travel insurance mandatory — minimum EUR 30,000 medical coverage.
   notes: Excellent healthcare. Pharmacies (green cross) widely available.
+
+# ── Section A: Jurisdiction Map ──────────────────────────────────
+jurisdiction:
+  - office: "Embassy of France, New Delhi (via TLScontact)"
+    covers:
+      - Delhi
+      - Haryana
+      - Himachal Pradesh
+      - Jammu & Kashmir
+      - Ladakh
+      - Punjab
+      - Rajasthan
+      - Uttar Pradesh
+      - Uttarakhand
+  - office: "Consulate General of France, Mumbai (via TLScontact)"
+    covers:
+      - Goa
+      - Gujarat
+      - Maharashtra
+      - Madhya Pradesh
+      - Chhattisgarh
+  - office: "Consulate General of France, Bengaluru (via TLScontact)"
+    covers:
+      - Karnataka
+      - Kerala
+      - Tamil Nadu
+      - Andhra Pradesh
+      - Telangana
+      - Puducherry
+  - office: "Consulate General of France, Kolkata (via TLScontact)"
+    covers:
+      - Assam
+      - Bihar
+      - Jharkhand
+      - Odisha
+      - West Bengal
+      - Sikkim
+      - Meghalaya
+      - Manipur
+      - Mizoram
+      - Nagaland
+      - Tripura
+      - Arunachal Pradesh
+
+# ── Section B: Transit Rules ─────────────────────────────────────
+transit:
+  visa_required: true
+  exceptions:
+    - "Airside Transit Visa (ATV) exemption if holding valid visa or residence permit from EU/EEA, US, Canada, Japan, or UK"
+    - "Transit without visa if connecting flight departs within 24 hours and passenger does not leave the international zone"
+  notes: "Paris CDG has an international transit zone. Passengers transiting to non-Schengen destinations may not need to clear immigration."
+
+# ── Section B: Visa Exemptions / Indian Privilege ────────────────
+exemptions:
+  - holding: "Valid Schengen Visa (any country)"
+    grants: "Can enter France without a separate French visa"
+    conditions: "Schengen visa must be valid and issued by any Schengen member state"
+    source: https://france-visas.gouv.fr/
+  - holding: "Valid US Visa + France transit"
+    grants: "Airside transit without visa for flights to/from the Americas"
+    conditions: "Must hold a valid US visa and transit within 24 hours. Cannot leave the international zone."
+    source: https://france-visas.gouv.fr/
+  - holding: "French Residence Permit (Titre de Séjour)"
+    grants: "Re-entry without visa during permit validity"
+    conditions: "Residence permit must be valid. Does not apply to récépissé (receipt)."
+    source: https://france-visas.gouv.fr/
+
+# ── Section B: ECR / Non-ECR Rules ──────────────────────────────
+ecr:
+  applies: true
+  note: "ECR passport holders travelling to France for employment must obtain Emigration Clearance from the Protector of Emigrants. Tourist and business visa applicants are not affected."
+
+# ── Section C: Biometrics ────────────────────────────────────────
+biometrics:
+  required: true
+  validity_months: 59
+  note: "Schengen VIS biometrics (10 fingerprints + photograph) valid for 59 months. If captured within the last 59 months at any Schengen consulate, you do not need to appear in person again."
+
+# ── Section D: Change Log ────────────────────────────────────────
+changelog:
+  - date: "2026-02-01"
+    type: Fee
+    description: "Schengen short-stay visa fee increased to €90 (~₹7,200)"
+    source: https://france-visas.gouv.fr/
+  - date: "2025-12-15"
+    type: Policy
+    description: "Schengen visa validity extended to 5 years for frequent Indian travellers with clean record"
+    source: https://france-visas.gouv.fr/
+  - date: "2025-09-01"
+    type: Process
+    description: "TLScontact online appointment system updated — new slot booking interface"
+    source: https://fr.tlscontact.com/in/

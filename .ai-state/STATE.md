@@ -266,3 +266,14 @@ atlas/
 - `validate/checks.py` — added check_g() with G1–G9 validation for all new fields
 - `validate.py` — wired check_g into per-file validation pipeline
 - `.ai-state/STATE.md` — appended this session log
+
+### Session: 2026-03-15 — Claude (Opus 4.6) [Session 6 — Dossily scaffolding]
+**Branch:** main (Atlas), first-commit-fresh (Dossily)
+**What changed:**
+- Set up AI agent scaffolding for sibling project Dossily (Vertical 2 — mobile app)
+- Dossily repo: [shan8tanu/dossily-app](https://github.com/shan8tanu/dossily-app)
+- Created in Dossily: CLAUDE.md, .ai-state/STATE.md, docs-internal/ (vision Parts 1 & 2 + prerequisites), .claude/, .github/, services/, types/, utils/ with READMEs
+- Updated Dossily .gitignore and README.md
+- Committed and pushed to dossily-app `first-commit-fresh` branch
+**Files touched (in Atlas):**
+- `.ai-state/STATE.md` — appended this session log entry

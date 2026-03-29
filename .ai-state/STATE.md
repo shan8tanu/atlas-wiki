@@ -55,6 +55,8 @@ atlas/
 │       ├── ci.yml                # PR validation: validate.py → mkdocs build --strict → htmlproofer
 │       └── link-check.yml        # Weekly link health check (Mondays 6 AM UTC)
 ├── data/
+│   ├── transit/                  # Transit guide data
+│   │   └── transit_rules.yaml   # 6 airport hubs (FRA, CDG, LHR, DXB, SIN, IST)
 │   └── visas/                    # SOURCE OF TRUTH — 26 country YAML files
 │       ├── australia.yaml
 │       ├── brazil.yaml
@@ -104,7 +106,8 @@ atlas/
 ├── overrides/
 │   └── main.html                 # Material theme override: hero section, mini-map widget
 ├── templates/
-│   └── country.md.jinja          # THE template for all 26 country pages
+│   ├── country.md.jinja          # THE template for all 26 country pages
+│   └── transit-guide.md.jinja    # Template for Transit Rules Guide page
 ├── validate/                     # Validation module
 │   ├── __init__.py
 │   ├── checks.py                 # Validation checks A–F
@@ -168,6 +171,7 @@ atlas/
 | 16 | Community edit routing (YAML, not MD) | Active | `gen_pages.py` (set_edit_path), `.github/CODEOWNERS` | Feb 2026 |
 | 17 | Flag emoji generation from ISO codes | Active | `gen_pages.py` (iso_to_flag), flagcdn.com in template | Feb 2026 |
 | 18 | Scroll-triggered reveal animations | Active | `docs/javascripts/theme.js` (IntersectionObserver) | Feb 2026 |
+| 19 | Transit Rules Guide (cross-destination) | Active | `data/transit/transit_rules.yaml`, `templates/transit-guide.md.jinja`, `gen_pages.py` | Mar 2026 |
 | 19 | Change Log (per-country audit trail) | Active (sample) | `data/visas/*.yaml` (changelog), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
 | 20 | Visa Exemptions / Indian Privilege Check | Active (sample) | `data/visas/*.yaml` (exemptions), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
 | 21 | Transit Rules | Active (sample) | `data/visas/*.yaml` (transit), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
@@ -277,3 +281,36 @@ atlas/
 - Committed and pushed to dossily-app `first-commit-fresh` branch
 **Files touched (in Atlas):**
 - `.ai-state/STATE.md` — appended this session log entry
+
+### Session: 2026-03-27 — Claude (Opus 4.6)
+**Branch:** feat/transit-guide (from main)
+**What changed:**
+- Built Transit Rules Guide — first non-country data-driven page in Atlas
+- Created `data/transit/transit_rules.yaml` with 6 airport hubs: FRA, CDG, LHR, DXB, SIN, IST
+- Created `templates/transit-guide.md.jinja` — Jinja2 template rendering all hubs as a single wiki page
+- Extended `gen_pages.py` to generate transit guide page (with graceful skip if YAML missing)
+- Added `Guides` nav section to `mkdocs.yml` between Countries and Contribute
+- Added `guide` page type marker to `overrides/main.html` (enables `body.atlas-page--guide` CSS targeting)
+- Git cleanup: committed stale STATE.md/settings changes on main, deleted 2 stale local branches
+- `mkdocs build --strict` passes, all 6 hubs render with atlas-card styling, edit link points to YAML source
+- Source URLs are placeholders — marked for verification before production
+**Files touched:**
+- `data/transit/transit_rules.yaml` — created (6 hubs, ~120 lines)
+- `templates/transit-guide.md.jinja` — created (transit guide template)
+- `gen_pages.py` — added transit guide generation block (~20 lines after map-data.json)
+- `mkdocs.yml` — added Guides nav section
+- `overrides/main.html` — added guide page type elif branch
+- `.ai-state/STATE.md` — updated folder structure, feature registry, appended this log
+
+### Session: 2026-03-29 — Claude (Opus 4.6)
+**Branch:** feat/transit-guide
+**What changed:**
+- Created Weekly Data Validation & Completeness Operations Manual — comprehensive human-in-the-loop data quality process
+- Created `docs-internal/weekly-validation-plan.md` — 9-section operations manual covering: API key setup, executive summary, one-time baseline audit, weekly 7-step recurring checklist, 3-tier country rotation schedule (4-week cycle), field-by-method validation matrix with source URLs, future country population workflow (24 new countries in 4 batches), anti-bot mitigation strategies, cross-session planning protocol
+- Created `docs-internal/audit-log.md` — running audit log with: baseline audit tracker (26 countries), Section A-D population tracker (24 countries pending), weekly entry template with per-country results table, blocker taxonomy (6 categories: ANTI_BOT, PORTAL_DOWN, PDF_MISSING, NO_SOURCE, CONFLICTING_SOURCES, LANGUAGE_BARRIER) with mitigation and follow-up fields
+- No code changes — pure documentation deliverable that works with existing validate.py, validate_accuracy.py, and admin_update.py tooling
+- Key finding: AI accuracy audit (validate_accuracy.py) only covers 8 of 30+ YAML fields. Document checklists, occupation documents, jurisdiction, transit, exemptions, ECR, biometrics all require manual validation.
+**Files touched:**
+- `docs-internal/weekly-validation-plan.md` — created (~600 lines)
+- `docs-internal/audit-log.md` — created (~150 lines)
+- `.ai-state/STATE.md` — appended this session log

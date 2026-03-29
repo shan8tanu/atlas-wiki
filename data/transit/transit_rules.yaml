@@ -1,0 +1,128 @@
+# Transit Visa Rules for Indian Passport Holders
+# This file is the data source for the Transit Rules Guide page.
+# YAML → Jinja2 template (transit-guide.md.jinja) → generated wiki page.
+
+hubs:
+  # ── Schengen Hubs ──────────────────────────────────────────────
+
+  - airport_name: "Frankfurt Airport"
+    iata_code: "FRA"
+    country: "Germany"
+    iso_code: "DE"
+    transit_zone: "Schengen"
+    default_rule: "Indian passport holders require an Airport Transit Visa (ATV) for airside transit through Frankfurt unless an exemption applies."
+    exemptions:
+      - description: "Hold a valid visa or residence permit issued by a Schengen member state"
+      - description: "Hold a valid visa or residence permit issued by the United States, Canada, or Japan"
+      - description: "Hold a valid visa or residence permit issued by the United Kingdom or Ireland"
+      - description: "Hold a valid visa issued by Andorra, Monaco, or San Marino"
+      - description: "Are a family member of an EU/EEA citizen exercising freedom of movement rights"
+      - description: "Hold a diplomatic or service passport"
+    terminal_change_note: "If your connection requires changing terminals via landside (outside the secure area), a full Schengen short-stay visa is required regardless of exemptions above."
+    same_ticket_note: "Exemptions apply only when both flights are on the same booking (single PNR). Separate tickets may require a Schengen visa even for airside transit."
+    max_transit_hours: null
+    source_name: "Federal Foreign Office of Germany"
+    source_url: "https://placeholder.example.com/germany-transit"  # PLACEHOLDER — verify before production
+    last_verified: "2026-03-27"  # Date of sample data creation
+    notes: null
+
+  - airport_name: "Paris Charles de Gaulle Airport"
+    iata_code: "CDG"
+    country: "France"
+    iso_code: "FR"
+    transit_zone: "Schengen"
+    default_rule: "Indian passport holders require an Airport Transit Visa (ATV) for airside transit through Paris CDG unless an exemption applies."
+    exemptions:
+      - description: "Hold a valid visa or residence permit issued by a Schengen member state"
+      - description: "Hold a valid visa or residence permit issued by the United States, Canada, or Japan"
+      - description: "Hold a valid visa or residence permit issued by the United Kingdom or Ireland"
+      - description: "Hold a valid visa issued by Andorra, Monaco, or San Marino"
+      - description: "Are a family member of an EU/EEA citizen exercising freedom of movement rights"
+      - description: "Hold a diplomatic or service passport"
+    terminal_change_note: "Connections within Terminal 2E and 2F can be made airside. All other terminal changes (e.g., Terminal 1 to Terminal 2) require passing through French border control — a full Schengen short-stay visa is needed."
+    same_ticket_note: "Exemptions apply only when both flights are on the same booking (single PNR). Separate tickets may require a Schengen visa even for airside transit."
+    max_transit_hours: null
+    source_name: "Ministry for Europe and Foreign Affairs (France)"
+    source_url: "https://placeholder.example.com/france-transit"  # PLACEHOLDER — verify before production
+    last_verified: "2026-03-27"
+    notes: "Air France connections within Terminal 2E/2F are the most common airside transit scenario for India–Europe routes."
+
+  # ── UK Hub ─────────────────────────────────────────────────────
+
+  - airport_name: "London Heathrow Airport"
+    iata_code: "LHR"
+    country: "United Kingdom"
+    iso_code: "GB"
+    transit_zone: "UK Landside"
+    default_rule: "Indian passport holders require a Direct Airside Transit Visa (DATV) to transit through London Heathrow without passing through UK border control."
+    exemptions:
+      - description: "Hold a valid visa issued by the United States, Canada, Australia, or New Zealand"
+      - description: "Hold a valid residence permit issued by the United States (I-551 / Green Card)"
+      - description: "Hold a valid uniform-format residence permit issued by an EU/EEA country"
+      - description: "Hold a valid Irish biometric visa (marked 'BC' or 'BC BIVS')"
+      - description: "Hold a valid residence permit issued by Canada (issued after 28 June 2002)"
+      - description: "Hold a diplomatic or official passport"
+    terminal_change_note: "Most terminal changes at Heathrow require passing through UK border control (landside). If your connection requires a terminal change, you will likely need a Visitor in Transit visa rather than a DATV."
+    same_ticket_note: "DATV exemptions apply only when you have a confirmed onward flight departing the same day or within 24 hours."
+    max_transit_hours: 24
+    source_name: "UK Government (Home Office)"
+    source_url: "https://placeholder.example.com/uk-transit"  # PLACEHOLDER — verify before production
+    last_verified: "2026-03-27"
+    notes: "The UK uses a separate DATV system — do not confuse with Schengen ATVs. Heathrow Terminal 5 (British Airways hub) and Terminal 2 (Star Alliance) handle most transit traffic."
+
+  # ── Middle East Hub ────────────────────────────────────────────
+
+  - airport_name: "Dubai International Airport"
+    iata_code: "DXB"
+    country: "United Arab Emirates"
+    iso_code: "AE"
+    transit_zone: "Non-Schengen"
+    default_rule: "Indian passport holders do not require a transit visa for airside transit through Dubai if they have a confirmed onward ticket departing within 24 hours."
+    exemptions:
+      - description: "No transit visa is required for airside transit with a confirmed onward ticket within 24 hours"
+      - description: "96-hour transit visa available on arrival for passengers with a confirmed onward ticket (fee applies)"
+    terminal_change_note: "Dubai International has Terminals 1, 2, and 3. Terminal 3 is exclusively for Emirates. Transit between Terminal 1 and Terminal 3 can be done airside. Transit involving Terminal 2 may require immigration clearance."
+    same_ticket_note: "For airside transit without a visa, both flights should ideally be on the same booking. Separate tickets may require you to collect and re-check luggage, which requires immigration clearance."
+    max_transit_hours: 24
+    source_name: "General Directorate of Residency and Foreigners Affairs (UAE)"
+    source_url: "https://placeholder.example.com/uae-transit"  # PLACEHOLDER — verify before production
+    last_verified: "2026-03-27"
+    notes: "Dubai is one of the most transit-friendly hubs for Indian passport holders. A paid 96-hour transit visa can be arranged through the airline for longer layovers."
+
+  # ── Southeast Asia Hub ─────────────────────────────────────────
+
+  - airport_name: "Singapore Changi Airport"
+    iata_code: "SIN"
+    country: "Singapore"
+    iso_code: "SG"
+    transit_zone: "Non-Schengen"
+    default_rule: "Indian passport holders can transit through Singapore Changi without a visa for up to 96 hours, provided they hold a valid visa from an eligible country."
+    exemptions:
+      - description: "Hold a valid visa issued by Australia, Canada, Germany, Japan, New Zealand, Switzerland, the United Kingdom, or the United States"
+      - description: "Hold a valid residence permit (equivalent to a long-term visa) from any of the above countries"
+    terminal_change_note: "All four terminals at Changi are connected airside via the Skytrain. No immigration clearance is needed for terminal transfers."
+    same_ticket_note: "The 96-hour Visa-Free Transit Facility (VFTF) requires a confirmed onward ticket to a third country (not back to India) departing within 96 hours."
+    max_transit_hours: 96
+    source_name: "Immigration & Checkpoints Authority (Singapore)"
+    source_url: "https://placeholder.example.com/singapore-transit"  # PLACEHOLDER — verify before production
+    last_verified: "2026-03-27"
+    notes: "Singapore's 96-hour VFTF is unusually generous. You can clear immigration and explore Singapore during the layover — it's not limited to airside."
+
+  # ── Turkey Hub ─────────────────────────────────────────────────
+
+  - airport_name: "Istanbul Airport"
+    iata_code: "IST"
+    country: "Turkey"
+    iso_code: "TR"
+    transit_zone: "Non-Schengen"
+    default_rule: "Indian passport holders do not require a transit visa for international airside transit through Istanbul Airport if they have a confirmed onward ticket departing within 24 hours."
+    exemptions:
+      - description: "No transit visa required for airside international-to-international connections with a confirmed onward ticket within 24 hours"
+      - description: "Passengers wishing to leave the airport or enter Turkey will need a Turkish e-Visa or sticker visa"
+    terminal_change_note: "Istanbul Airport is a single-terminal facility. All international connections are handled airside within the same terminal — no landside transfer is required."
+    same_ticket_note: "For visa-free airside transit, a confirmed onward ticket is mandatory. Without a confirmed ticket, you may be denied boarding at the origin."
+    max_transit_hours: 24
+    source_name: "Ministry of Foreign Affairs (Turkey)"
+    source_url: "https://placeholder.example.com/turkey-transit"  # PLACEHOLDER — verify before production
+    last_verified: "2026-03-27"
+    notes: "Turkish Airlines offers free hotel accommodation for layovers exceeding 6 hours on international connections (TourIstanbul program) — but this requires clearing immigration with a valid visa."

@@ -72,3 +72,28 @@ for filename in os.listdir(data_dir):
 # Write map-data.json for the interactive world map
 with mkdocs_gen_files.open("map-data.json", "w") as f:
     json.dump(map_data, f, separators=(',', ':'))
+
+
+# ── Generate transit guide (if data exists) ─────────────────────
+transit_yaml = os.path.join('data', 'transit', 'transit_rules.yaml')
+if os.path.exists(transit_yaml):
+    print("[gen] Generating transit guide")
+    with open(transit_yaml, 'r', encoding='utf-8') as f:
+        transit_data = yaml.safe_load(f)
+
+    transit_template = env.get_template('transit-guide.md.jinja')
+    rendered = transit_template.render(transit_data)
+
+    front_matter = (
+        "---\n"
+        "page_type: guide\n"
+        "---\n\n"
+    )
+
+    with mkdocs_gen_files.open("guides/transit-visa-rules.md", "w") as fd:
+        fd.write(front_matter + rendered)
+
+    mkdocs_gen_files.set_edit_path(
+        "guides/transit-visa-rules.md",
+        "data/transit/transit_rules.yaml"
+    )

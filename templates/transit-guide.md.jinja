@@ -1,0 +1,60 @@
+# ✈️ Airport Transit Visa Rules for Indian Passport Holders
+
+Connecting through a foreign airport? Even if you never leave the secure transit area, **Indian passport holders may need a transit visa** depending on the airport.
+
+This page covers transit visa requirements at major international hubs commonly used on routes from India. Rules vary by airport, transit zone, and what other visas you hold. "Airside transit" means staying within the airport's international transit area without passing through immigration or border control.
+
+**Always verify rules with the airline and the embassy before booking.** Transit rules change frequently, and airlines enforce them at check-in — you may be denied boarding if you don't meet the requirements.
+
+---
+
+{% for hub in hubs %}
+## <img src="https://flagcdn.com/48x36/{{ hub.iso_code | lower }}.png" alt="{{ hub.country }} flag" class="atlas-flag"> {{ hub.airport_name }} ({{ hub.iata_code }})
+
+<div class="atlas-card" markdown>
+
+* **Country:** {{ hub.country }}
+* **Transit Zone:** {{ hub.transit_zone }}
+{%- if hub.max_transit_hours %}
+* **Max Airside Transit:** {{ hub.max_transit_hours }} hours
+{%- endif %}
+
+</div>
+
+### Default Rule
+
+{{ hub.default_rule }}
+
+{% if hub.exemptions %}
+### Exemptions
+
+You do **not** need a transit visa if you:
+
+{% for ex in hub.exemptions %}
+- {{ ex.description }}
+{%- endfor %}
+{% endif %}
+
+{% if hub.terminal_change_note %}
+**⚠️ Terminal Change:** {{ hub.terminal_change_note }}
+{% endif %}
+
+{% if hub.same_ticket_note %}
+**📋 Booking Note:** {{ hub.same_ticket_note }}
+{% endif %}
+
+{% if hub.notes %}
+**ℹ️ Note:** {{ hub.notes }}
+{% endif %}
+
+<small>Source: <a href="{{ hub.source_url }}">{{ hub.source_name }}</a> · Last verified: {{ hub.last_verified }}</small>
+
+{% if not loop.last %}
+---
+{% endif %}
+
+{% endfor %}
+
+---
+
+*Source URLs are placeholders pending verification. This page is generated from `data/transit/transit_rules.yaml` — to suggest corrections, edit the YAML source file.*

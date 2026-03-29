@@ -100,4 +100,6 @@ nav:
     - Americas:
       - Brazil: brazil.md
       - United States: united-states.md
+  - Guides:
+    - Transit Visa Rules: guides/transit-visa-rules.md
   - Contribute: CONTRIBUTING.md

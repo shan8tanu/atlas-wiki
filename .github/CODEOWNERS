@@ -1,5 +1,0 @@
-# CODEOWNERS — Atlas Wiki
-# Every change to a YAML data file requires approval from the project librarian.
-# This blocks merges until the founder explicitly reviews and approves.
-
-data/visas/  @shan8tanu

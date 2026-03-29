@@ -1,8 +1,11 @@
-name: CI — Validate Pull Request
+name: CI — Validate & Build
 
-# Runs on every PR targeting main.
-# Blocks the merge until the build succeeds and all official links are healthy.
+# Runs on every push to main (local merges) and on PRs (community contributions).
+# Catches broken YAML, template crashes, and dead links before Cloudflare deploys.
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main

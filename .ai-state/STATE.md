@@ -314,3 +314,20 @@ atlas/
 - `docs-internal/weekly-validation-plan.md` — created (~600 lines)
 - `docs-internal/audit-log.md` — created (~150 lines)
 - `.ai-state/STATE.md` — appended this session log
+
+### Session: 2026-04-12 — Claude (Opus 4.6)
+**Branch:** main
+**What changed:**
+- Switched Atlas to system fonts and dropped dark mode to match the editorial feel of https://fabs.pranaykotas.com/ (Pandoc+Bootstrap reference)
+- `mkdocs.yml`: `font:` block replaced with `font: false` (the Material sentinel that disables the Google Fonts `<link>` loader entirely — no `fonts.googleapis.com` requests). Palette collapsed to a single `default` entry with no `toggle:` key so Material never renders the scheme switcher
+- `theme.css`: system font stacks added on `body` (NOT `:root` — see note below), heading catch-all rule, `.md-typeset { line-height: 1.75 }` body-prose bump, `color-scheme: light`, full deletion of all `[data-md-color-scheme="slate"]` blocks (7 selectors), deletion of `.md-header__option` chrome rule, hardcoded Inter/JetBrains references removed, cover letter `<pre>` switched to `var(--md-code-font-family)`
+- Editorial polish: card border-radius `8px → 4px` on 9 component selectors (card, checklist, health, cover-letter, jurisdiction, transit, exemption-card, ecr, biometrics) plus minimap `12px → 6px`; `--atlas-surface` `#f8f9fa → #fcfcfc`; button hover flat (no `translateY`, color-shift only); minimap shadow softened + no hover bounce; hero weight `800 → 700`, padding tightened, animation duration `600ms → 220ms`, stagger `80ms → 0ms`
+- `map.css`: full slate dark-mode block deleted (tooltip, country, disabled rules)
+- **IMPORTANT for future agents:** Material's compiled `main.css` sets `--md-text-font-family` on the `body` selector using `var(--md-text-font, _)` with a sentinel fallback. A `:root` override is shadowed by that more-specific body-level declaration — the font vars MUST live on `body` in `theme.css` for the cascade to win. First commit put them on `:root` and the override silently failed verification (computed font was `_, -apple-system, ...`); the fix commit moved them to `body`. Don't put font custom-property overrides on `:root` when overriding Material tokens.
+- Verification: `mkdocs build --strict` passes twice, `validate.py` passes, `preview_network` shows zero Google Fonts requests, `preview_eval` confirms `getComputedStyle(document.body).fontFamily` starts with `system-ui` and `<pre>.atlas-cover-letter__text` font starts with `ui-monospace`, card border-radius computes to `4px` site-wide, `.atlas-card` background is `rgb(252, 252, 252)`, `data-md-color-scheme=default`, Japan/transit-guide/map/homepage all render correctly
+- Three commits: `50d64be` font swap + dark mode removal, `def8cdc` editorial polish, `939ab47` font scope fix (`:root` → `body`)
+**Files touched:**
+- `mkdocs.yml` — `font: false`, palette collapsed to single light entry with no toggle
+- `docs/stylesheets/theme.css` — system font vars on `body`, heading catch-all, line-height bump, all slate blocks deleted, radii flattened, animation tokens quieted, hero softened, minimap shadow softened, cover-letter pre uses code-font token
+- `docs/stylesheets/map.css` — slate dark-mode block deleted
+- `.ai-state/STATE.md` — appended this session log

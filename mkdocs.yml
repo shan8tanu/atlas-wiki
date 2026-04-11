@@ -10,9 +10,7 @@ theme:
   name: material
   custom_dir: overrides
   favicon: assets/images/favicon.svg
-  font:
-    text: Inter
-    code: JetBrains Mono
+  font: false
   icon:
     repo: fontawesome/brands/github
   features:
@@ -29,15 +27,6 @@ theme:
     - scheme: default
       primary: custom
       accent: custom
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
 
 markdown_extensions:
   - attr_list

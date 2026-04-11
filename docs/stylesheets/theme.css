@@ -1,16 +1,19 @@
 /* ═══════════════════════════════════════════════════════════════════
    Atlas — Wiki Design System
-   Clean, institutional, trust-first. Inter + Merriweather.
+   Clean, institutional, trust-first. System fonts.
    ═══════════════════════════════════════════════════════════════════ */
-
-
-/* NOTE: Merriweather import removed — headings now use Inter (site font) */
 
 
 /* ── 1. CSS Custom Properties ──────────────────────────────────── */
 
-:root,
-[data-md-color-scheme="default"] {
+:root {
+  /* System font stacks — matches Bootstrap 5 defaults, adds emoji tail */
+  --md-text-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --md-code-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Keep native form controls/scrollbars in light mode regardless of OS */
+  color-scheme: light;
+
   /* Header & navigation — off-white */
   --md-primary-fg-color: #f8f9fa;
   --md-primary-fg-color--light: #f8f9fa;
@@ -36,32 +39,17 @@
   --atlas-stagger: 80ms;
 }
 
-[data-md-color-scheme="slate"] {
-  /* Header — dark surface */
-  --md-primary-fg-color: #161b22;
-  --md-primary-fg-color--light: #1c2128;
-  --md-primary-fg-color--dark: #0d1117;
-  --md-primary-bg-color: #e6edf3;
-  --md-primary-bg-color--light: #8b949e;
-
-  /* Links */
-  --md-accent-fg-color: #58a6ff;
-  --md-typeset-a-color: #58a6ff;
-
-  /* Atlas tokens */
-  --atlas-link: #58a6ff;
-  --atlas-text: #e6edf3;
-  --atlas-muted: #8b949e;
-  --atlas-border: #30363d;
-  --atlas-surface: #161b22;
-}
-
-
 /* ── 2. Typography ─────────────────────────────────────────────── */
 
-/* Country page heading — Inter for clean, modern feel */
+/* Headings — catch-all ensuring the system font stack cascades even if
+   Material has explicit font-family declarations on some heading selectors. */
+.md-typeset h1, .md-typeset h2, .md-typeset h3,
+.md-typeset h4, .md-typeset h5, .md-typeset h6 {
+  font-family: var(--md-text-font-family);
+}
+
+/* Country page heading — editorial weight and tight tracking */
 body.atlas-page--country .md-typeset h1 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.3;
@@ -115,14 +103,6 @@ body.atlas-page--country .md-typeset h1 {
 
 .md-search__input {
   border-radius: 20px;
-}
-
-
-/* ── 5. Dark Mode Toggle — Extreme Right ─────────────────────── */
-
-.md-header__option {
-  order: 10;
-  margin-left: 0.4rem;
 }
 
 
@@ -328,10 +308,6 @@ body.atlas-page--country .md-grid {
   background: rgba(0, 0, 0, 0.015);
 }
 
-[data-md-color-scheme="slate"] .atlas-checklist__item:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
 .atlas-checklist__item input[type="checkbox"] {
   width: 20px;
   height: 20px;
@@ -441,10 +417,6 @@ body.atlas-page--country .md-grid {
   color: #fff;
 }
 
-[data-md-color-scheme="slate"] .atlas-occ-btn--active {
-  color: #fff;
-}
-
 
 /* ── 15. Cover Letter Template ────────────────────────────────────── */
 
@@ -485,7 +457,7 @@ body.atlas-page--country .md-grid {
 }
 
 .atlas-cover-letter__text {
-  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-family: var(--md-code-font-family);
   font-size: 0.8rem;
   line-height: 1.65;
   white-space: pre-wrap;
@@ -695,10 +667,6 @@ body.atlas-page--country .md-grid {
   background: rgba(231, 76, 60, 0.04);
 }
 
-[data-md-color-scheme="slate"] .atlas-ecr--active {
-  background: rgba(231, 76, 60, 0.08);
-}
-
 .atlas-ecr--inactive {
   border: 1px solid var(--atlas-border);
   background: var(--atlas-surface);
@@ -774,26 +742,6 @@ body.atlas-page--country .md-grid {
 .atlas-changelog__tag--policy {
   background: rgba(46, 204, 113, 0.12);
   color: #1e8449;
-}
-
-[data-md-color-scheme="slate"] .atlas-changelog__tag--fee {
-  background: rgba(243, 156, 18, 0.18);
-  color: #f0c040;
-}
-
-[data-md-color-scheme="slate"] .atlas-changelog__tag--document {
-  background: rgba(52, 152, 219, 0.18);
-  color: #5dade2;
-}
-
-[data-md-color-scheme="slate"] .atlas-changelog__tag--process {
-  background: rgba(142, 68, 173, 0.18);
-  color: #bb8fce;
-}
-
-[data-md-color-scheme="slate"] .atlas-changelog__tag--policy {
-  background: rgba(46, 204, 113, 0.18);
-  color: #58d68d;
 }
 
 

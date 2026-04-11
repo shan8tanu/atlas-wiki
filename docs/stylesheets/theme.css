@@ -7,10 +7,6 @@
 /* ── 1. CSS Custom Properties ──────────────────────────────────── */
 
 :root {
-  /* System font stacks — matches Bootstrap 5 defaults, adds emoji tail */
-  --md-text-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --md-code-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
   /* Keep native form controls/scrollbars in light mode regardless of OS */
   color-scheme: light;
 
@@ -38,6 +34,15 @@
   --atlas-duration-slow: 220ms;
   --atlas-stagger: 0ms;
 }
+
+/* System font stacks — overridden on `body` (not :root) because Material's
+   main.css sets --md-text-font-family on `body` using `var(--md-text-font,_)`
+   and a body-level declaration wins the cascade. Bootstrap 5 stacks + emoji. */
+body {
+  --md-text-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --md-code-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
 
 /* ── 2. Typography ─────────────────────────────────────────────── */
 

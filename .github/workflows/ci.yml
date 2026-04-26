@@ -1,7 +1,13 @@
 name: CI — Validate & Build
 
-# Runs on every push to main (local merges) and on PRs (community contributions).
-# Catches broken YAML, template crashes, and dead links before Cloudflare deploys.
+# Push to main: fast checks only (validate.py + mkdocs build, ~30s, no external requests).
+# Pull requests: full checks including htmlproofer dead-link scan.
+# Weekly dead-link scan: handled separately by link-check.yml (runs every Monday).
+#
+# Rationale: htmlproofer makes external HTTP requests to every portal URL.
+# If an embassy site is down, it blocks ALL pushes to main — including unrelated
+# tool/config changes. Keeping htmlproofer out of the push path means a dead
+# portal never blocks a Python fix or a CSS tweak.
 on:
   push:
     branches:
@@ -12,7 +18,7 @@ on:
 
 jobs:
   build-and-validate:
-    name: Build & Link Health Check
+    name: Build & Validate
     runs-on: ubuntu-latest
 
     steps:
@@ -37,6 +43,10 @@ jobs:
         run: mkdocs build --strict
 
       - name: Check for dead official links (htmlproofer)
+        # Only runs on pull_request events — not on direct pushes to main.
+        # This keeps the push-to-main path fast and unblocked by external link failures.
+        # The weekly link-check.yml cron handles ongoing link health monitoring.
+        if: github.event_name == 'pull_request'
         uses: anishathalye/proof-html@v2
         with:
           directory: ./site

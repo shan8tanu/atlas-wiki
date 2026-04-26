@@ -40,7 +40,7 @@ visa_types:
 
 requirements:
   visa_fee_inr: 7200
-  processing_days: 15
+  processing_days: 10
   photo_specs:
     dimensions: 35x45mm
     bg_color: White

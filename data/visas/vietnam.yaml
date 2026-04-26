@@ -11,7 +11,7 @@ region: Asia
 authority:
   name: Embassy of Vietnam, New Delhi
   processor: Online
-  official_portal: https://evisa.xuatnhapcanh.gov.vn/
+  official_portal: https://evisa.gov.vn
 visa_types:
   evisa:
     label: e-Visa

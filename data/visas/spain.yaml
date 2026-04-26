@@ -39,7 +39,7 @@ visa_types:
       - Sponsor letter or proof of fixed deposits / investment holdings
 
 requirements:
-  visa_fee_inr: 7200
+  visa_fee_inr: 8500
   processing_days: 15
   photo_specs:
     dimensions: 35x45mm

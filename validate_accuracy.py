@@ -199,7 +199,7 @@ def main() -> int:
     brave_key = os.environ.get("BRAVE_SEARCH_API_KEY")
     if not brave_key:
         print(
-            "⚠️  BRAVE_SEARCH_API_KEY not set — running in degraded mode "
+            "WARNING: BRAVE_SEARCH_API_KEY not set -- running in degraded mode "
             "(Claude will use training data only, no live web search).\n"
         )
 

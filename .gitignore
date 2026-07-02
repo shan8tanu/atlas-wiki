@@ -23,3 +23,6 @@ nul
 
 # Internal documentation (local-only, not for git)
 docs-internal/
+
+# Claude Code per-machine permission overrides (never share)
+.claude/settings.local.json

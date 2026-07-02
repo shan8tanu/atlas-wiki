@@ -11,7 +11,7 @@ region: Europe
 authority:
   name: Embassy of the Netherlands, New Delhi
   processor: VFS Global
-  official_portal: https://www.netherlandsworldwide.nl/visa
+  official_portal: https://www.netherlandsworldwide.nl
 visa_types:
   standard_visa:
     label: Standard Visa

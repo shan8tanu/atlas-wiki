@@ -46,7 +46,7 @@ requirements:
   processing_days: 15
   photo_specs:
     dimensions: 35x45mm
-    bg_color: White
+    bg_color: White or light grey
   financial_proof: Six months of bank statements demonstrating sufficient funds for the entire trip, supported by ITR acknowledgements for 2–3 years and proof of regular employment or business income.
   financial_documents:
     - Bank statements for the last 6 months (all savings and current accounts)

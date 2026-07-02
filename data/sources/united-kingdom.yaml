@@ -39,7 +39,7 @@ visa_types:
   note: Only standard_visa and long_term tabs included. No e-Visa or Visa on Arrival pathway exists for Indian citizens visiting the UK.
 
 visa_fee_inr:
-  source: https://www.bankbazaar.com/visa/uk-visa-fees-in-indian-rupees.html
+  source: https://www.gov.uk/visa-fees
   confidence: web
   note: ₹17,551 verified by the founder against the official UKVI fee schedule on 2026-07-02 (was ₹15,726, the £115 government fee alone). Total reflects the realistic amount an applicant pays including the mandatory VFS Global service charge, per schema convention.
 

@@ -372,3 +372,17 @@ atlas/
 - `docs/stylesheets/theme.css` — system font vars on `body`, heading catch-all, line-height bump, all slate blocks deleted, radii flattened, animation tokens quieted, hero softened, minimap shadow softened, cover-letter pre uses code-font token
 - `docs/stylesheets/map.css` — slate dark-mode block deleted
 - `.ai-state/STATE.md` — appended this session log
+
+### Session: 2026-07-02 — Claude (Fable 5) [continued 2 — Greptile review fixes]
+**Branch:** main + 4 PR branches
+**What changed:**
+- Triaged Greptile reviews on PRs #10-#13 and applied all mechanical fixes:
+  - main: .claude/settings.local.json gitignored + untracked (security hygiene — committed allowlist contained an API-key-injecting command)
+  - #10 Sri Lanka: official_portal -> https://www.eta.gov.lk/ (application entry point), processing_days 2 -> 3
+  - #11 UK: bg_color -> "White or light grey"; fee/processing discrepancies REMAIN OPEN pending founder check vs UKVI fee schedule (audit says ~Rs.21,399 vs stored Rs.15,726)
+  - #12 Canada: processing_days 45 -> 33 working days (calendar/working-day unit conversion)
+  - All 4 sidecars: corrected hallucinated _meta.generated dates (root cause already fixed in add_country.py)
+- Posted resolution comments on all 4 PRs
+**Files touched:**
+- .gitignore — added settings.local.json exclusion (main)
+- data/visas + data/sources for sri-lanka, united-kingdom, canada, maldives — on their PR branches

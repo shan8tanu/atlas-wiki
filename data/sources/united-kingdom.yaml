@@ -1,0 +1,69 @@
+_meta:
+  generated: "2025-07-24"
+  method: ai-draft-v1
+  model: claude-sonnet-4-6
+
+visa_type:
+  source: https://www.gov.uk/browse/visas-immigration
+  confidence: web
+  note: Indian citizens require a Standard Visitor Visa; no e-Visa or VOA scheme exists for Indian passport holders. The UK ETA applies only to certain currently visa-exempt nationalities — not India.
+
+visa_difficulty:
+  source: null
+  confidence: unverified
+  note: Rated 4/5 based on known strict financial and immigration-ties scrutiny; one research snippet cited an 82% approval rate for well-prepared Indian applicants, but refusals for insufficient financial ties remain common.
+
+max_stay:
+  source: https://www.y-axis.com/visa/visit/uk/
+  confidence: web
+  note: Standard Visitor Visa permits stays of up to 6 months per visit; multiple entries are allowed within the validity window.
+
+entry_type:
+  source: https://www.airindia.com/in/en/travel-information/visa-services/uk-visa.html
+  confidence: web
+  note: UK Standard Visitor Visa is issued as multiple entry by default; holders may enter and exit Great Britain multiple times during the validity period.
+
+visa_validity:
+  source: https://www.bankbazaar.com/visa/uk-visa-fees-in-indian-rupees.html
+  confidence: web
+  note: Standard application results in a 6-month visa from issue date. Long-term options (2, 5, or 10 year) exist but are not the default for first-time or standard applicants.
+
+authority:
+  source: https://www.happyfares.in/blog/uk-visa-for-indians-2026-complete-guide/
+  confidence: web
+  note: VFS Global operates biometric submission centres across India for UK visa applications; online application via UKVI portal (gov.uk) is mandatory before the VFS appointment can be booked.
+
+visa_types:
+  source: https://www.gov.uk/apply-uk-visa
+  confidence: web
+  note: Only standard_visa and long_term tabs included. No e-Visa or Visa on Arrival pathway exists for Indian citizens visiting the UK.
+
+visa_fee_inr:
+  source: https://www.bankbazaar.com/visa/uk-visa-fees-in-indian-rupees.html
+  confidence: web
+  note: ₹15,726 is the UKVI Standard Visitor Visa government fee (£115 at the official Home Office INR exchange rate for 2026). VFS Global levies a mandatory service charge of approximately ₹1,500–2,000 payable separately; realistic total out-of-pocket cost is approximately ₹17,000–18,000. Fee quoted is UKVI only.
+
+processing_days:
+  source: https://instaviza.com/uk-visa-processing-time-for-indians-2026-latest-update/
+  confidence: web
+  note: Standard processing is 15 working days (approximately 3 weeks) after biometrics submission. Priority service (£500 surcharge) takes approximately 5 working days; Super Priority (£1,000 surcharge) delivers a decision by the end of the next working day.
+
+photo_specs:
+  source: null
+  confidence: pattern
+  note: UK government photo specification requires 35 mm wide × 45 mm high, white or light grey plain background, taken within the last 6 months. Consistent with standard UK guidance; no conflicting source found in research snippets.
+
+financial_documents:
+  source: https://www.tripleibusiness.com/blog/uk-tourist-visa-document-checklist-eligibility-indian-applicants
+  confidence: web
+  note: Six-month bank statements and ITR acknowledgements are universally cited requirements for Indian applicants; Form 16 and employment letter are standard additions confirmed by multiple snippet sources.
+
+occupation_documents:
+  source: null
+  confidence: pattern
+  note: Occupation-specific document lists derived from standard UK Standard Visitor Visa logic and are consistent with patterns used for comparably high-scrutiny destinations (e.g., Schengen, US). No single research snippet enumerated all five occupation categories explicitly.
+
+health:
+  source: https://www.gov.uk/foreign-travel-advice/india/health
+  confidence: web
+  note: No mandatory vaccination certificate required for entry to the UK from India. Indian visitors on a Standard Visitor Visa are not covered by the NHS without having paid the Immigration Health Surcharge (IHS), which applies to visa applicants staying over 6 months; short-stay visitors are not charged IHS but must pay privately for non-emergency NHS care.

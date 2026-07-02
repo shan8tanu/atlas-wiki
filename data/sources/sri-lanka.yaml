@@ -1,5 +1,5 @@
 _meta:
-  generated: "2026-06-15"
+  generated: "2026-07-02"
   method: ai-draft-v1
   model: claude-sonnet-4-6
 
@@ -46,7 +46,7 @@ visa_fee_inr:
 processing_days:
   source: https://useteleport.com/blog/srilanka-visa-for-indians
   confidence: web
-  note: Teleport cites "typically 48 hours"; VisaGo cites "Instant–24 hours". Set to 2 working days as a safe realistic estimate; many applicants receive approval within hours.
+  note: Teleport cites "typically 48 hours"; VisaGo cites "Instant–24 hours"; another web source reports 3 business days. Set to 3 working days as the conservative realistic estimate per Greptile review on PR #10; many applicants receive approval within hours.
 
 photo_specs:
   source: null

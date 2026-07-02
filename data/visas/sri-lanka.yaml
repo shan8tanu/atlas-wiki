@@ -12,7 +12,7 @@ region: Asia
 authority:
   name: Department of Immigration and Emigration, Sri Lanka
   processor: Online
-  official_portal: https://www.eta.gov.lk/slvisa/visainfo/center.jsp?locale=en_US
+  official_portal: https://www.eta.gov.lk/
 
 visa_types:
   evisa:
@@ -36,7 +36,7 @@ visa_types:
 
 requirements:
   visa_fee_inr: 0
-  processing_days: 2
+  processing_days: 3
   photo_specs:
     dimensions: 35x45mm
     bg_color: White

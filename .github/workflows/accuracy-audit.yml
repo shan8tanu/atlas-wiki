@@ -1,0 +1,72 @@
+name: Weekly Accuracy Audit
+
+# Runs the AI accuracy audit (Claude + Brave Search) against all 26 countries
+# every Monday, one hour after the link-check workflow. Manual runs via the
+# Actions tab (workflow_dispatch) are also supported.
+#
+# Requires two repository secrets (Settings → Secrets and variables → Actions):
+#   ANTHROPIC_API_KEY    — powers the Claude comparison calls (~$0.05/run)
+#   BRAVE_SEARCH_API_KEY — live web search context (free tier: 2000 queries/mo)
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays 7 AM UTC (12:30 PM IST)
+  workflow_dispatch:
+
+jobs:
+  accuracy-audit:
+    name: AI Accuracy Audit (26 countries)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify secrets are configured
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY repository secret is not set — audit cannot run."
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run accuracy audit
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BRAVE_SEARCH_API_KEY: ${{ secrets.BRAVE_SEARCH_API_KEY }}
+          PYTHONIOENCODING: utf-8
+        # Exit code 2 means "flags found" — that's a report to read, not a
+        # pipeline failure. Exit code 1 (crash/missing key) still fails the job.
+        run: |
+          set +e
+          python validate_accuracy.py
+          code=$?
+          if [ "$code" = "1" ]; then
+            echo "::error::validate_accuracy.py failed to run (exit 1)."
+            exit 1
+          fi
+          exit 0
+
+      - name: Publish report to job summary
+        if: always()
+        run: |
+          if [ -f validation-report.md ]; then
+            cat validation-report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: validation-report.md
+          retention-days: 90

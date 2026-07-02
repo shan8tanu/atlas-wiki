@@ -11,7 +11,7 @@ region: Middle East
 authority:
   name: Embassy of Qatar, New Delhi
   processor: Online
-  official_portal: https://portal.moi.gov.qa/
+  official_portal: https://portal.moi.gov.qa/wps/portal
 visa_types:
   evisa:
     label: e-Visa

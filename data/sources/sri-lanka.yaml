@@ -1,0 +1,69 @@
+_meta:
+  generated: "2026-06-15"
+  method: ai-draft-v1
+  model: claude-sonnet-4-6
+
+visa_type:
+  source: https://www.eta.gov.lk/slvisa/visainfo/center.jsp?locale=en_US
+  confidence: web
+  note: Primary route is the online ETA (Electronic Travel Authorization), classified as e-Visa per Atlas schema; airport ETA at BIA included as documented secondary VOA tab.
+
+visa_difficulty:
+  source: null
+  confidence: pattern
+  note: Rated 2 — free and fast, but online pre-application is required; 1 is reserved for true walk-up VOA with zero pre-travel action needed.
+
+max_stay:
+  source: https://www.eta.gov.lk/slvisa/visainfo/fees.jsp?locale=en_US
+  confidence: web
+  note: Free 30-day tourist ETA confirmed for Indian passport holders effective 25 May 2026; stay can be extended in-country via the Department of Immigration.
+
+entry_type:
+  source: null
+  confidence: unverified
+  note: Single Entry is conventional for Sri Lanka tourist ETAs; multiple-entry variant may exist for business category but is not confirmed for Indian tourists in the research.
+
+visa_validity:
+  source: null
+  confidence: unverified
+  note: 6-month validity from issue date is standard Sri Lanka ETA convention per training knowledge; no research snippet explicitly confirmed this figure.
+
+authority:
+  source: https://www.eta.gov.lk/slvisa/visainfo/center.jsp?locale=en_US
+  confidence: web
+  note: Official portal operated by the Department of Immigration and Emigration, Government of Sri Lanka.
+
+visa_types:
+  source: https://useteleport.com/blog/srilanka-visa-for-indians
+  confidence: web
+  note: Online ETA (evisa tab) is the recommended primary route per all official and third-party sources; airport ETA counter at BIA documented as genuine secondary option for travellers arriving without prior ETA.
+
+visa_fee_inr:
+  source: https://www.eta.gov.lk/slvisa/visainfo/fees.jsp?locale=en_US
+  confidence: web
+  note: Fee is INR 0 — India is among 40 nationalities granted free tourist ETA effective 25 May 2026 per the official fee schedule page. Airport ETA may carry a USD fee if this policy changes; applicants should verify at time of travel.
+
+processing_days:
+  source: https://useteleport.com/blog/srilanka-visa-for-indians
+  confidence: web
+  note: Teleport cites "typically 48 hours"; VisaGo cites "Instant–24 hours". Set to 2 working days as a safe realistic estimate; many applicants receive approval within hours.
+
+photo_specs:
+  source: null
+  confidence: pattern
+  note: Standard 35x45mm passport photo dimensions used as the ETA portal does not publish explicit pixel/dimension requirements in the scraped research; verify on portal before submitting.
+
+financial_documents:
+  source: null
+  confidence: pattern
+  note: Sri Lanka ETA for Indians does not publish a formal financial document checklist; list reflects the minimum standard for comparable easy e-Visa destinations in Asia.
+
+occupation_documents:
+  source: null
+  confidence: pattern
+  note: No occupation-specific document requirements are published by Sri Lanka immigration for the tourist ETA; lists are light-touch and consistent with the free, low-scrutiny nature of this visa category.
+
+health:
+  source: https://wwwnc.cdc.gov/travel/destinations/traveler/none/sri-lanka
+  confidence: web
+  note: Yellow fever entry requirement sourced from US State Dept travel advisory; dengue endemic status and tap water caution are from training knowledge, consistent with CDC and NaTHNaC guidance referenced in snippets.

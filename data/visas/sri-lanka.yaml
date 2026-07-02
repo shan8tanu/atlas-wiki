@@ -1,0 +1,71 @@
+country: Sri Lanka
+iso_code: LK
+visa_difficulty: 2
+visa_type: e-Visa
+max_stay: 30 days
+entry_type: "Single Entry"
+visa_validity: "6 months from issue"
+passport_validity_months: 6
+blank_pages_required: 2
+region: Asia
+
+authority:
+  name: Department of Immigration and Emigration, Sri Lanka
+  processor: Online
+  official_portal: https://www.eta.gov.lk/slvisa/visainfo/center.jsp?locale=en_US
+
+visa_types:
+  evisa:
+    label: e-Visa (ETA — Free for Indians)
+    documents:
+      - Completed online ETA application form at eta.gov.lk — submit before departure
+      - Scanned copy of passport bio page — colour, clearly legible, JPEG or PDF
+      - Digital passport-size photograph — white background, taken within the last 6 months
+      - Confirmed return or onward flight booking confirmation
+      - Proof of accommodation — hotel reservation confirmation or host invitation letter
+      - Travel insurance covering the full stay duration (strongly recommended)
+  voa:
+    label: ETA on Arrival (Bandaranaike International Airport)
+    documents:
+      - Valid Indian passport with at least 6 months validity from date of arrival
+      - Completed ETA application form obtained at the ETA issuing counter at BIA
+      - Confirmed return or onward flight ticket (printed copy or digital)
+      - Proof of accommodation — hotel booking confirmation or host invitation letter
+      - Sufficient funds in cash or card to cover the entire stay duration
+      - Fee payment in USD by cash or card if ETA charge applies at time of travel
+
+requirements:
+  visa_fee_inr: 0
+  processing_days: 2
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Sufficient funds for the full trip duration; a bank statement or credit card statement showing adequate balance to cover accommodation, meals, local transport, and return travel costs in Sri Lanka.
+  financial_documents:
+    - Bank statement for the last 3 months
+    - Latest 2 salary slips as proof of regular income
+  occupation_documents:
+    self_employed:
+      - Bank statements for the last 3 months
+      - GST registration certificate or business registration document
+      - ITR for the last 2 years showing business income
+    business_owner:
+      - Personal and business bank statements for the last 3 months
+      - Certificate of incorporation or MSME/business registration certificate
+      - ITR for the last 2 years (personal and business)
+    student:
+      - Valid student ID card or current admission letter from educational institution
+      - Sponsoring parent's or guardian's bank statements for the last 3 months
+      - NOC from educational institution confirming approved leave or vacation period
+    homemaker:
+      - Spouse's bank statements for the last 3 months
+      - Marriage certificate as proof of spousal relationship
+      - Spouse's recent salary slips or ITR as evidence of financial support
+    retired:
+      - Pension slips or pension passbook entries for the last 3 months
+      - Bank statements for the last 3 months reflecting regular pension credits
+
+health:
+  vaccinations: Routine vaccinations (MMR, Hepatitis A, Typhoid) are recommended for all travellers to Sri Lanka. Yellow fever vaccination certificate is mandatory only when arriving from a country with active yellow fever transmission risk.
+  insurance: Comprehensive travel health insurance covering medical treatment, hospitalisation, and emergency evacuation is strongly recommended, as healthcare quality varies significantly outside Colombo and can be expensive for tourists.
+  notes: Dengue fever is endemic throughout Sri Lanka, especially during and after monsoon seasons — use DEET-based insect repellent and wear long sleeves at dusk. Tap water is not reliably safe to drink; stick to sealed bottled water for the entire stay.

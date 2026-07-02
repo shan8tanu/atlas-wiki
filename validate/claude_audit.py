@@ -10,6 +10,7 @@ import os
 import urllib.request
 import urllib.parse
 import urllib.error
+from datetime import date
 from typing import Any, Dict, List, Optional, Tuple
 
 import anthropic
@@ -145,7 +146,7 @@ def fetch_web_context(country_data: dict, brave_api_key: Optional[str]) -> Tuple
         return "", False
 
     country = country_data.get("country", "")
-    year = 2025  # Use a fixed recent year for search queries
+    year = date.today().year  # Current year keeps search queries fresh
 
     portal = _get_nested(country_data, "authority.official_portal") or ""
     portal_domain = urllib.parse.urlparse(portal).netloc if portal else ""

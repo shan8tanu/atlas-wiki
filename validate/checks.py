@@ -335,6 +335,25 @@ def check_e(filepath: str, data: dict) -> List[CheckResult]:
         else:
             results.append(_ok("E6", short, "financial_proof is not a placeholder"))
 
+    # E8: visa_type must match the first visa_types key (key order = tab order,
+    # so the first tab is what users see by default — it must agree with the
+    # primary visa_type shown in the overview card)
+    primary_type_keys = {
+        "Standard Visa": "standard_visa",
+        "e-Visa": "evisa",
+        "Visa on Arrival": "voa",
+    }
+    vtypes = _get(data, "visa_types")
+    if vtype in primary_type_keys and isinstance(vtypes, dict) and vtypes:
+        first_key = next(iter(vtypes))
+        expected_key = primary_type_keys[vtype]
+        if first_key != expected_key:
+            results.append(_warn("E8", short,
+                f"visa_type is {vtype!r} but the first visa_types tab is {first_key!r} "
+                f"(expected {expected_key!r}) — default tab contradicts the primary visa type"))
+        else:
+            results.append(_ok("E8", short, "visa_type matches first visa_types tab"))
+
     # E7: country field matches filename stem (copy-paste guard)
     country = _get(data, "country")
     if country is not None:
@@ -441,10 +460,13 @@ def check_f(
 
     extract_nav_files(mkdocs_data.get("nav", []))
 
-    # Strip .md to get stems of referenced pages (exclude non-country pages)
+    # Strip .md to get stems of referenced pages (exclude non-country pages).
+    # Country pages are flat (japan.md); anything in a subdirectory (guides/...)
+    # is a non-country page generated from other data sources.
     non_country_pages = {"index.md", "map.md", "CONTRIBUTING.md"}
     nav_country_stems = {
-        p[:-3] for p in nav_md_files if p not in non_country_pages
+        p[:-3] for p in nav_md_files
+        if p not in non_country_pages and "/" not in p
     }
 
     # YAML file stems

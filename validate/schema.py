@@ -10,6 +10,8 @@ ALLOWED_VISA_TYPES = {"Standard Visa", "e-Visa", "Visa on Arrival"}
 ALLOWED_REGIONS = {"Asia", "Europe", "Americas", "Oceania", "Middle East"}
 
 # Well-known processors; anything else triggers a D6 WARNING (not an error).
+# D6 does case-insensitive substring matching, so "CVASC" matches the full
+# "Chinese Visa Application Service Center (CVASC)" string.
 KNOWN_PROCESSORS = {
     "VFS Global",
     "BLS International",
@@ -18,6 +20,8 @@ KNOWN_PROCESSORS = {
     "Embassy",
     "High Commission",
     "Consulate",
+    "CVASC",
+    "Direct",
 }
 
 PLACEHOLDER_VALUES = {"TBD", "N/A", "TODO", ""}

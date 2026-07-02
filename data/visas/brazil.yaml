@@ -13,14 +13,6 @@ authority:
   processor: Embassy
   official_portal: https://www.gov.br/mre/
 visa_types:
-  evisa:
-    label: e-Visa
-    documents:
-      - Online application form submitted via the official visa portal
-      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
-      - Digital photograph — white background, JPEG, minimum 200 KB
-      - Return flight booking reference number
-      - Hotel or accommodation booking reference number
   standard_visa:
     label: Standard Visa (Embassy)
     documents:

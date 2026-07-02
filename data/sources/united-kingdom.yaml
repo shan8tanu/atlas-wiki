@@ -41,12 +41,12 @@ visa_types:
 visa_fee_inr:
   source: https://www.bankbazaar.com/visa/uk-visa-fees-in-indian-rupees.html
   confidence: web
-  note: ₹15,726 is the UKVI Standard Visitor Visa government fee (£115 at the official Home Office INR exchange rate for 2026). VFS Global levies a mandatory service charge of approximately ₹1,500–2,000 payable separately; realistic total out-of-pocket cost is approximately ₹17,000–18,000. Fee quoted is UKVI only.
+  note: ₹17,551 verified by the founder against the official UKVI fee schedule on 2026-07-02 (was ₹15,726, the £115 government fee alone). Total reflects the realistic amount an applicant pays including the mandatory VFS Global service charge, per schema convention.
 
 processing_days:
   source: https://instaviza.com/uk-visa-processing-time-for-indians-2026-latest-update/
   confidence: web
-  note: Standard processing is 15 working days (approximately 3 weeks) after biometrics submission. Priority service (£500 surcharge) takes approximately 5 working days; Super Priority (£1,000 surcharge) delivers a decision by the end of the next working day.
+  note: Standard processing is 15 WORKING days = UKVI's official "3 weeks" (~21 calendar days) after biometrics submission — the audit's "21 days" figure is the same window in calendar days, not a discrepancy. Priority service (£500 surcharge) takes approximately 5 working days; Super Priority (£1,000 surcharge) delivers a decision by the end of the next working day.
 
 photo_specs:
   source: null

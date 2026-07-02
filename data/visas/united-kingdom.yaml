@@ -42,7 +42,7 @@ visa_types:
       - Detailed cover letter explaining the need for long-term multiple-entry validity
 
 requirements:
-  visa_fee_inr: 15726
+  visa_fee_inr: 17551
   processing_days: 15
   photo_specs:
     dimensions: 35x45mm

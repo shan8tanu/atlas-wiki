@@ -1,0 +1,69 @@
+_meta:
+  generated: "2026-05-31"
+  method: ai-draft-v1
+  model: claude-sonnet-4-6
+
+visa_type:
+  source: https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/apply-visitor-visa.html
+  confidence: web
+  note: Indian citizens are not visa-exempt and cannot use the Electronic Travel Authorization (eTA); a full Temporary Resident Visa (TRV) is mandatory. No e-Visa or VOA exists for Indians.
+
+visa_difficulty:
+  source: null
+  confidence: pattern
+  note: Rated 4/5 — high refusal rates for Indian applicants, mandatory biometrics, lengthy processing (8–12 weeks common), and strong ties scrutiny place this among the harder tourist visas.
+
+max_stay:
+  source: https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/apply-visitor-visa.html
+  confidence: web
+  note: Default grant by the border officer is 6 months; actual duration stamped at port of entry may vary.
+
+entry_type:
+  source: null
+  confidence: pattern
+  note: IRCC typically issues multiple-entry TRVs to Indian applicants who demonstrate sufficient ties; single-entry issuances are possible but uncommon for tourists.
+
+visa_validity:
+  source: null
+  confidence: pattern
+  note: TRVs routinely issued for up to 10 years or passport expiry (whichever is earlier); shorter validities are possible at IRCC discretion.
+
+authority:
+  source: https://visa.vfsglobal.com/ind/en/can
+  confidence: web
+  note: Application submitted online via IRCC portal; biometric enrollment and document drop-off handled at VFS Global VACs in New Delhi, Mumbai, Bangalore, Chandigarh, and other Indian cities.
+
+visa_types:
+  source: https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/apply-visitor-visa.html
+  confidence: web
+  note: Only standard_visa tab included. Canada's eTA is exclusively for visa-exempt nationalities; Indians are not eligible. No VOA exists. Inclusion of any other tab would be factually incorrect.
+
+visa_fee_inr:
+  source: https://terratern.com/blog/canada-visitor-visa-fees-in-indian-rupees/
+  confidence: web
+  note: "Breakdown: CAD 100 visitor visa fee (~INR 6,100) + CAD 85 mandatory biometrics fee (~INR 5,400) = ~INR 11,500 total. IRCC official fee list confirms CAD 100 application fee; exchange rate as of mid-2026 approximately 1 CAD = INR 61."
+
+processing_days:
+  source: https://ggims.com/blog/visa-programs/canada-visitor-visa-processing-time-after-biometrics
+  confidence: web
+  note: "Wide variability reported across sources: 27 calendar days (ggims, Apr 2026), 88 calendar days (Atlys, early 2026), 8–12 weeks (ircc.com), 20–45 days post-biometrics (sernexuss). 45 working days (~9 calendar weeks) used as a realistic mid-range estimate for Indian applicants; check live IRCC processing-time tool before applying."
+
+photo_specs:
+  source: null
+  confidence: pattern
+  note: 35×45 mm white background is the standard format accepted at VFS Global centres for Canada TRV submissions; consistent with IRCC document checklist conventions.
+
+financial_documents:
+  source: https://www.tataaig.com/knowledge-center/travel-insurance/documents-required-for-canada-tourist-visa
+  confidence: web
+  note: IRCC does not publish a single mandatory checklist; these documents are consistently cited by registered immigration consultants and practitioner guides for salaried Indian applicants.
+
+occupation_documents:
+  source: null
+  confidence: pattern
+  note: Derived from IRCC's general financial-ties and supporting-document guidance plus common Canadian visa practitioner checklists for Indian applicants; not directly listed on Canada.ca.
+
+health:
+  source: https://travel.gc.ca/travelling/health-safety/vaccines
+  confidence: web
+  note: No mandatory entry vaccinations per Canada.ca travel health pages; travel insurance not legally required for entry but strongly advised given high medical costs for uninsured visitors.

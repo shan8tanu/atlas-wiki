@@ -330,6 +330,19 @@ atlas/
 - `data/visas/brazil.yaml` — removed evisa block
 - `.github/workflows/accuracy-audit.yml` — created (local only, pending workflow scope)
 
+### Session: 2026-07-02 — Claude (Fable 5) [continued]
+**Branch:** main + 4 PR branches (add/sri-lanka, add/united-kingdom, add/canada, add/maldives)
+**What changed:**
+- Weekly accuracy audit is fully operational: workflow scope granted, ANTHROPIC_API_KEY + BRAVE_SEARCH_API_KEY set as repo secrets via gh, accuracy-audit.yml pushed, manual test run succeeded end-to-end (run 28565064673)
+- Built `add_country.py` — 4-stage AI country pipeline: Brave research → Sonnet draft (prompt-cached system block: schema contract + japan.yaml gold example) → validate.py self-check with one repair pass → mkdocs nav insert + branch + PR via gh. New provenance convention: `data/sources/<slug>.yaml` sidecar records source/confidence (web|pattern|unverified) per fact group; PR body turns pattern/unverified fields into a human verification checklist; --audit embeds an independent validate_accuracy.py second opinion
+- Ran pilot on 4 new countries → PRs #10 Sri Lanka, #11 United Kingdom, #12 Canada, #13 Maldives. All passed structural validation first-try. NOT merged — awaiting founder field-by-field review. Note: #10 and #13 both touch the Asia nav section of mkdocs.yml; expect a trivial one-line conflict when merging the second one
+**Files touched:**
+- `add_country.py` — created (the pipeline tool)
+- `.github/workflows/accuracy-audit.yml` — pushed to main
+- `data/visas/{sri-lanka,united-kingdom,canada,maldives}.yaml` — created on PR branches only
+- `data/sources/{sri-lanka,united-kingdom,canada,maldives}.yaml` — provenance sidecars, PR branches only
+- `mkdocs.yml` — nav entries, PR branches only
+
 ### Session: 2026-03-29 — Claude (Opus 4.6)
 **Branch:** feat/transit-guide
 **What changed:**

@@ -195,7 +195,7 @@ def draft_country(
 
     response = client.messages.create(
         model=ANTHROPIC_MODEL,
-        max_tokens=8192,
+        max_tokens=16000,
         thinking={"type": "adaptive"},
         system=[{
             "type": "text",
@@ -204,6 +204,8 @@ def draft_country(
         }],
         messages=messages,
     )
+    if response.stop_reason == "max_tokens":
+        raise RuntimeError("Response truncated at max_tokens — increase the limit.")
 
     text = _response_text(response)
     blocks = _extract_yaml_blocks(text)

@@ -316,6 +316,20 @@ atlas/
 - `.github/workflows/ci.yml` — gated htmlproofer to PR events only
 - `validation-report.md` — generated (not committed, gitignored)
 
+### Session: 2026-07-02 — Claude (Fable 5)
+**Branch:** main (direct push)
+**What changed:**
+- Validator hardening: F4 now ignores subdirectory nav pages (guides/), new E8 check enforces visa_type ↔ first visa_types tab agreement, KNOWN_PROCESSORS gained CVASC and Direct, claude_audit search year is now dynamic (was hardcoded 2025)
+- Brazil: removed the e-Visa visa_types block entirely (audit confirmed no e-Visa for Indian citizens) — Standard Visa (Embassy) is now the default tab
+- validate.py now reports 1214 checks, 0 errors, 0 warnings (previously 5 recurring warnings)
+- Created `.github/workflows/accuracy-audit.yml` — weekly cron (Mondays 7 AM UTC) for validate_accuracy.py with job-summary report + 90-day artifact. **NOT yet pushed:** git token lacks `workflow` OAuth scope; file exists locally only. Also requires ANTHROPIC_API_KEY + BRAVE_SEARCH_API_KEY repo secrets before it can run.
+**Files touched:**
+- `validate/checks.py` — F4 fix, new E8 check
+- `validate/schema.py` — KNOWN_PROCESSORS additions
+- `validate/claude_audit.py` — dynamic search year
+- `data/visas/brazil.yaml` — removed evisa block
+- `.github/workflows/accuracy-audit.yml` — created (local only, pending workflow scope)
+
 ### Session: 2026-03-29 — Claude (Opus 4.6)
 **Branch:** feat/transit-guide
 **What changed:**

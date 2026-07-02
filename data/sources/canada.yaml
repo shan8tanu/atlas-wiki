@@ -1,5 +1,5 @@
 _meta:
-  generated: "2026-05-31"
+  generated: "2026-07-02"
   method: ai-draft-v1
   model: claude-sonnet-4-6
 
@@ -46,7 +46,7 @@ visa_fee_inr:
 processing_days:
   source: https://ggims.com/blog/visa-programs/canada-visitor-visa-processing-time-after-biometrics
   confidence: web
-  note: "Wide variability reported across sources: 27 calendar days (ggims, Apr 2026), 88 calendar days (Atlys, early 2026), 8–12 weeks (ircc.com), 20–45 days post-biometrics (sernexuss). 45 working days (~9 calendar weeks) used as a realistic mid-range estimate for Indian applicants; check live IRCC processing-time tool before applying."
+  note: "Wide variability reported across sources, all in CALENDAR days: 27 (ggims, Apr 2026), 88 (Atlys, early 2026), 8–12 weeks (ircc.com), 20–45 post-biometrics (sernexuss). Schema field is WORKING days: 33 working days ≈ 45 calendar days, matching the high end of the 20–45 range (unit conversion per Greptile review on PR #12); check live IRCC processing-time tool before applying."
 
 photo_specs:
   source: null

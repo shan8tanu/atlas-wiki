@@ -22,7 +22,10 @@
       "Bash(python3 -c \":*)",
       "Bash(python -c \":*)",
       "Bash(echo $ANTHROPIC_API_KEY)",
-      "Bash(python validate_accuracy.py)"
+      "Bash(python validate_accuracy.py)",
+      "Bash(powershell -Command \"[System.Environment]::GetEnvironmentVariable\\('BRAVE_SEARCH_API_KEY', 'User'\\)\")",
+      "Bash(powershell -Command \"[System.Environment]::GetEnvironmentVariable\\('ANTHROPIC_API_KEY', 'User'\\)\")",
+      "Bash(ANTHROPIC_API_KEY=$\\(powershell -Command \"[System.Environment]::GetEnvironmentVariable\\('ANTHROPIC_API_KEY', 'User'\\)\"\\) BRAVE_SEARCH_API_KEY=$\\(powershell -Command \"[System.Environment]::GetEnvironmentVariable\\('BRAVE_SEARCH_API_KEY', 'User'\\)\"\\) PYTHONIOENCODING=utf-8 python validate_accuracy.py)"
     ]
   }
 }

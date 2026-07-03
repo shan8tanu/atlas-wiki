@@ -56,11 +56,30 @@ jobs:
           check_css: false
           check_external_hash: false
           enforce_https: true
-          # Ignore GitHub links (private repo returns 404 to unauthenticated crawlers),
-          # Google Fonts CDN (blocks HEAD requests from CI runners), and Japanese government
-          # domains (.go.jp) — all Japanese govt sites block automated crawlers with 403 by
-          # policy. This is structural bot-blocking, not a dead link.
+          # Ignored URL classes (structural, not dead links):
+          # - GitHub (private repo 404s to unauthenticated crawlers), Google Fonts CDN
+          # - Own domain: canonical URLs of new pages 404 until the PR merges (chicken-and-egg)
+          # - placeholder.example.com: transit guide source placeholders — tracked data debt
+          # - Government/processor portals that bot-block CI runners with 403/timeouts:
+          #   .go.jp, VFS Global, TLScontact, france-visas, Swiss EDA, Greek MFA, Philippine
+          #   DFA, Korean MOFA, Italian embassy, gov.br, Indonesian imigrasi, Vietnam evisa,
+          #   Qatar MOI. Their content accuracy is covered by the weekly AI accuracy audit.
           ignore_url_re: |
             ^https://github\.com/
             ^https://fonts\.(gstatic|googleapis)\.com
+            ^https://atlas-wiki\.pages\.dev/
+            ^https://placeholder\.example\.com/
             \.go\.jp
+            vfsglobal\.com
+            tlscontact\.com
+            ^https://france-visas\.gouv\.fr
+            ^https://www\.eda\.admin\.ch
+            ^https://www\.mfa\.gr
+            \.dfa\.gov\.ph
+            \.mofa\.go\.kr
+            \.esteri\.it
+            ^https://www\.gov\.br
+            \.imigrasi\.go\.id
+            ^https://evisa\.gov\.vn
+            \.moi\.gov\.qa
+            ^https://www\.evisa\.gov\.tr

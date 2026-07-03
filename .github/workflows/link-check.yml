@@ -37,7 +37,23 @@ jobs:
           check_css: false
           check_external_hash: false
           enforce_https: true
+          # Keep this list in sync with ci.yml — same structural bot-blockers.
           ignore_url_re: |
             ^https://github\.com/
             ^https://fonts\.(gstatic|googleapis)\.com
+            ^https://atlas-wiki\.pages\.dev/
+            ^https://placeholder\.example\.com/
             \.go\.jp
+            vfsglobal\.com
+            tlscontact\.com
+            ^https://france-visas\.gouv\.fr
+            ^https://www\.eda\.admin\.ch
+            ^https://www\.mfa\.gr
+            \.dfa\.gov\.ph
+            \.mofa\.go\.kr
+            \.esteri\.it
+            ^https://www\.gov\.br
+            \.imigrasi\.go\.id
+            ^https://evisa\.gov\.vn
+            \.moi\.gov\.qa
+            ^https://www\.evisa\.gov\.tr

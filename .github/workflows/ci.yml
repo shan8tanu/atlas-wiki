@@ -82,3 +82,4 @@ jobs:
             \.imigrasi\.go\.id
             ^https://evisa\.gov\.vn
             \.moi\.gov\.qa
+            ^https://www\.evisa\.gov\.tr

@@ -120,6 +120,23 @@ requirements block:
 health block (each string MINIMUM 20 characters):
 - vaccinations, insurance, notes
 
+PER-CLAIM CITATIONS (validation group H) — every citable fact block must carry provenance.
+Add a `sources` list INSIDE each of: requirements, health, each visa_types.<key> entry,
+transit, ecr, biometrics. For the list-shaped blocks, use PARALLEL top-level keys instead:
+`jurisdiction_sources` / `exemptions_sources`. Each source entry has exactly:
+- url: direct https deep link (official government or processor page — NEVER a homepage or a
+  travel-agency blog)
+- tier: 1 = government/embassy · 2 = official processor (VFS/BLS/TLScontact) · 3 = verified secondary
+- label: short human name, e.g. "Embassy of X — fee schedule"
+- accessed: today's date (YYYY-MM-DD)
+Derive citations straight from the provenance sidecar you produce in block 2:
+- a fact group with confidence `web` AND a real source URL -> one `sources` entry (tier by URL:
+  official government domain = 1, known processor = 2, otherwise 3); accessed = today's date
+- a fact group with confidence `pattern`/`unverified`, or with no source URL -> DO NOT invent a
+  citation. Instead set `unverified: true` on that block. Emit `sources: []` with a `# TODO: cite`
+  comment only as empty scaffolding. Honesty beats coverage — an unverified flag is correct and
+  passes validation; a fabricated URL/tier/date is the worst possible error.
+
 Never use placeholder values: TBD, N/A, TODO, or empty strings.
 """
 

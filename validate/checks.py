@@ -7,6 +7,7 @@ import os
 import re
 import urllib.parse
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
@@ -14,12 +15,16 @@ import yaml
 from validate.schema import (
     ALLOWED_CHANGELOG_TYPES,
     ALLOWED_REGIONS,
+    ALLOWED_SOURCE_TIERS,
     ALLOWED_VISA_DIFFICULTIES,
     ALLOWED_VISA_TYPES,
+    CITABLE_BLOCKS,
     ISO_3166_1_ALPHA2,
     KNOWN_INDIAN_STATES,
     KNOWN_PROCESSORS,
     PLACEHOLDER_VALUES,
+    SOURCE_DATE_FORMAT,
+    SOURCE_REQUIRED_FIELDS,
 )
 
 
@@ -646,5 +651,123 @@ def check_g(filepath: str, data: dict) -> List[CheckResult]:
             if vm is not None and not isinstance(vm, int):
                 results.append(_err("G9", short,
                     f"biometrics.validity_months must be int or null, got {type(vm).__name__}"))
+
+    return results
+
+
+# ── Group H: Per-claim citations ─────────────────────────────────────────────
+# Every "citable fact block" (see CITABLE_BLOCKS in schema.py) that is present on
+# a country page should carry either a `sources` list or `unverified: true`.
+#   H1  — `sources` is a list and `unverified` (if present) is a bool
+#   H2  — every source entry has all four required fields
+#   H3  — source `url` is a well-formed https URL
+#   H4  — source `tier` is one of {1, 2, 3}
+#   H5  — source `accessed` parses as a YYYY-MM-DD date
+#   H6  — completeness: a present block has neither `sources` nor `unverified: true`
+#         → WARNING by default, ERROR when strict_citations is enabled. This lets
+#         un-migrated countries pass normal CI while `--strict-citations` (used to
+#         flip enforcement on later) fails on them.
+
+def _iter_present_citable_blocks(data: dict):
+    """
+    Yield (block_id, label, sources, unverified) for every citable fact block
+    that is actually present in `data`.
+    """
+    for spec in CITABLE_BLOCKS:
+        key, kind = spec["key"], spec["kind"]
+        val = data.get(key)
+
+        if kind == "dict":
+            if isinstance(val, dict):
+                yield (key, spec["label"], val.get("sources"), val.get("unverified"))
+
+        elif kind == "dict_items":
+            if isinstance(val, dict):
+                for sub_key, sub in val.items():
+                    if isinstance(sub, dict):
+                        label = f"{spec['label']} - {sub.get('label', sub_key)}"
+                        yield (f"{key}.{sub_key}", label,
+                               sub.get("sources"), sub.get("unverified"))
+
+        elif kind == "list":
+            if isinstance(val, list) and len(val) > 0:
+                yield (key, spec["label"],
+                       data.get(spec["sources_key"]), data.get(spec["unverified_key"]))
+
+
+def check_h(filepath: str, data: dict, strict_citations: bool = False) -> List[CheckResult]:
+    short = os.path.basename(filepath)
+    results = []
+
+    def _validate_sources(block_id: str, sources: Any) -> None:
+        # H1: sources must be a list
+        if not isinstance(sources, list):
+            results.append(_err("H1", short,
+                f"{block_id}.sources must be a list, got {type(sources).__name__}"))
+            return
+        for i, entry in enumerate(sources):
+            loc = f"{block_id}.sources[{i}]"
+            if not isinstance(entry, dict):
+                results.append(_err("H2", short, f"{loc} must be a dict"))
+                continue
+
+            # H2: all four required fields present
+            missing = [k for k in SOURCE_REQUIRED_FIELDS if k not in entry]
+            if missing:
+                results.append(_err("H2", short,
+                    f"{loc} missing required field(s): {', '.join(missing)}"))
+
+            # H3: url is a well-formed https URL
+            url = entry.get("url")
+            if url is not None:
+                if not str(url).startswith("https://"):
+                    results.append(_err("H3", short,
+                        f"{loc}.url must start with https://, got {url!r}"))
+                else:
+                    try:
+                        parsed = urllib.parse.urlparse(str(url))
+                        if not (parsed.scheme and parsed.netloc):
+                            raise ValueError("missing scheme or netloc")
+                    except Exception as exc:
+                        results.append(_err("H3", short, f"{loc}.url is not a valid URL: {exc}"))
+
+            # H4: tier in {1, 2, 3}
+            tier = entry.get("tier")
+            if tier is not None and tier not in ALLOWED_SOURCE_TIERS:
+                results.append(_err("H4", short,
+                    f"{loc}.tier {tier!r} not in {sorted(ALLOWED_SOURCE_TIERS)}"))
+
+            # H5: accessed parses as a date
+            accessed = entry.get("accessed")
+            if accessed is not None:
+                try:
+                    datetime.strptime(str(accessed), SOURCE_DATE_FORMAT)
+                except ValueError:
+                    results.append(_err("H5", short,
+                        f"{loc}.accessed {accessed!r} is not a valid "
+                        f"{SOURCE_DATE_FORMAT} date"))
+
+    for block_id, label, sources, unverified in _iter_present_citable_blocks(data):
+        # H1: unverified, if present, must be a bool
+        if unverified is not None and not isinstance(unverified, bool):
+            results.append(_err("H1", short,
+                f"{block_id}.unverified must be bool, got {type(unverified).__name__}"))
+
+        if sources is not None:
+            _validate_sources(block_id, sources)
+
+        # H6: completeness
+        has_sources = isinstance(sources, list) and len(sources) > 0
+        is_unverified = unverified is True
+        if not has_sources and not is_unverified:
+            msg = (f"{block_id} ({label}) has neither a `sources` list nor "
+                   f"`unverified: true` -- add a citation or mark it unverified")
+            results.append(
+                _err("H6", short, msg) if strict_citations else _warn("H6", short, msg)
+            )
+
+    if not any(r.check_id.startswith("H") and not r.passed for r in results):
+        results.append(_ok("H", short,
+            "citations valid; all present blocks are cited or flagged unverified"))
 
     return results

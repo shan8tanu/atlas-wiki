@@ -78,3 +78,41 @@ ACCURACY_AUDIT_FIELDS = [
     "health.vaccinations",
     "health.insurance",
 ]
+
+# ── Per-claim citations (check group H) ───────────────────────────────────────
+# Authority tiers for a `sources` entry:
+#   1 = government / embassy / consulate (most authoritative)
+#   2 = official processor (VFS Global / BLS International / TLScontact)
+#   3 = verified secondary source
+ALLOWED_SOURCE_TIERS = {1, 2, 3}
+
+# Every entry in a `sources` list must carry all four of these keys.
+SOURCE_REQUIRED_FIELDS = ("url", "tier", "label", "accessed")
+
+# Date format for a source's `accessed` field.
+SOURCE_DATE_FORMAT = "%Y-%m-%d"
+
+# The "citable fact blocks" — the single source of truth shared by check_h and
+# (mirrored by) templates/country.md.jinja. Each block, when present on a
+# country page, should carry either a `sources` list or `unverified: true`.
+#
+# kind:
+#   "dict"       — the block is a mapping; sources/unverified live INSIDE it
+#                  (e.g. requirements.sources, requirements.unverified).
+#   "dict_items" — the block is a mapping of sub-entries, each a citable dict
+#                  (e.g. every visa_types.<key>).
+#   "list"       — the block is a bare list, which cannot hold a sibling key, so
+#                  its citations live in PARALLEL top-level keys
+#                  (sources_key / unverified_key).
+CITABLE_BLOCKS = [
+    {"key": "requirements", "label": "Requirements & Fees",     "kind": "dict"},
+    {"key": "health",       "label": "Health & Vaccinations",   "kind": "dict"},
+    {"key": "transit",      "label": "Transit Rules",           "kind": "dict"},
+    {"key": "ecr",          "label": "ECR / Non-ECR Passport",  "kind": "dict"},
+    {"key": "biometrics",   "label": "Biometrics",              "kind": "dict"},
+    {"key": "visa_types",   "label": "Document Checklist",      "kind": "dict_items"},
+    {"key": "jurisdiction", "label": "Where to Apply",          "kind": "list",
+     "sources_key": "jurisdiction_sources", "unverified_key": "jurisdiction_unverified"},
+    {"key": "exemptions",   "label": "Visa Exemptions",         "kind": "list",
+     "sources_key": "exemptions_sources",   "unverified_key": "exemptions_unverified"},
+]

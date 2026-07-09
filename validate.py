@@ -5,6 +5,14 @@ validate.py — Structural + exhaustiveness checks for Atlas visa YAML files.
 Fast, deterministic, zero new dependencies beyond pyyaml (already in requirements.txt).
 Safe to run in CI with no API keys required.
 
+Check groups (see validate/checks.py):
+  A parse · B required fields · C types · D values · E exhaustiveness ·
+  F cross-file parity · G optional feature blocks · H per-claim citations.
+
+Group H (per-claim citations) warns when a citable fact block has neither a
+`sources` list nor `unverified: true`. Pass --strict-citations to upgrade that
+warning to an error — used to gate CI once every country has been migrated.
+
 Exit codes:
   0 — all checks passed (warnings may be present)
   1 — one or more ERROR-level checks failed
@@ -24,6 +32,7 @@ from validate.checks import (
     check_e,
     check_f,
     check_g,
+    check_h,
 )
 from validate.report import print_report
 
@@ -55,6 +64,12 @@ def main() -> int:
         "--file", "-f",
         help="Validate a single YAML file instead of the whole directory.",
     )
+    parser.add_argument(
+        "--strict-citations",
+        action="store_true",
+        help="Upgrade the H6 'missing citation' warning to an error. Use this to "
+             "gate CI once every country has been migrated to per-claim citations.",
+    )
     args = parser.parse_args()
 
     all_results: list[CheckResult] = []
@@ -84,6 +99,7 @@ def main() -> int:
         all_results.extend(check_d(filepath, data))
         all_results.extend(check_e(filepath, data))
         all_results.extend(check_g(filepath, data))
+        all_results.extend(check_h(filepath, data, strict_citations=args.strict_citations))
 
     # ── Cross-file checks (F) ────────────────────────────────────────────────
     if len(parsed_files) > 1 or (len(parsed_files) == 1 and not args.file):

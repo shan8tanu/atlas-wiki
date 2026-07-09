@@ -21,8 +21,16 @@ visa_types:
       - Confirmed return flight tickets (printed copy)
       - Proof of accommodation — hotel booking confirmation or invitation letter
       - Travel insurance covering the full stay duration
+    sources:
+      - url: https://www.in.emb-japan.go.jp/itpr_en/Visa.html
+        tier: 1
+        label: "Embassy of Japan in India — Visa page (required documents)"
+        accessed: "2026-07-09"
   evisa:
     label: e-Visa (where available)
+    # No confirmed e-Visa route for Indian tourists — Japan eVISA availability is
+    # limited and unconfirmed for this audience. Flagged pending official confirmation.
+    unverified: true
     documents:
       - Online application form submitted via the official visa portal
       - Scanned copy of passport bio page — JPEG or PDF, clearly legible
@@ -31,6 +39,7 @@ visa_types:
       - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
+    unverified: true
     documents:
       - Completed long-stay visa application (consulate-specific form)
       - Employer NOC confirming leave of absence for the full stay period
@@ -77,8 +86,19 @@ requirements:
       - Bank statements for the last 6 months
       - ITR for 3 years (pension income, if applicable)
       - Pension sanction letter / retirement proof
+  sources:
+    - url: https://www.in.emb-japan.go.jp/itpr_en/Visa.html
+      tier: 1
+      label: "Embassy of Japan in India — Visa page (fees & requirements)"
+      accessed: "2026-07-09"
+    - url: https://www.vfsglobal.com/one-pager/japan/india/bengaluru/index.html
+      tier: 2
+      label: "VFS Global — Japan visa service charges (India)"
+      accessed: "2026-07-09"
 
 health:
+  # No Japan-specific official public-health source located; guidance is general.
+  unverified: true
   vaccinations: Routine vaccinations sufficient. Japanese Encephalitis for extended
     rural stays.
   insurance: Travel health insurance strongly recommended — medical costs are high.
@@ -126,9 +146,13 @@ jurisdiction:
       - Tripura
       - West Bengal
       - Arunachal Pradesh
+# Consular jurisdiction mapping not yet confirmed against the embassy's official
+# jurisdiction notice (in.emb-japan.go.jp bot-blocks automated verification).
+jurisdiction_unverified: true
 
 # ── Section B: Transit Rules ─────────────────────────────────────
 transit:
+  unverified: true
   visa_required: true
   exceptions:
     - "Shore pass available for cruise ship passengers (up to 72 hours)"
@@ -145,14 +169,19 @@ exemptions:
     grants: "Eligible for multiple-entry visa on next application"
     conditions: "Must have completed previous trip without overstay"
     source: https://www.in.emb-japan.go.jp/itprtop_en/index.html
+# US-visa "simplified processing" privilege is unconfirmed for Japan and likely
+# inaccurate — flagged for human verification against the embassy before relying on it.
+exemptions_unverified: true
 
 # ── Section B: ECR / Non-ECR Rules ──────────────────────────────
 ecr:
+  unverified: true
   applies: false
   note: "Japan does not require Emigration Clearance for Indian ECR passport holders on tourist visas."
 
 # ── Section C: Biometrics ────────────────────────────────────────
 biometrics:
+  unverified: true
   required: true
   validity_months: null
   note: "Biometrics (fingerprints and photograph) collected at the VFS Global application center. All applicants must appear in person."

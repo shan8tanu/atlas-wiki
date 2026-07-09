@@ -764,6 +764,71 @@ body.atlas-page--home .md-content__inner > h1:first-of-type {
 }
 
 
+/* ── 23. Per-claim citations & unverified caveat ───────────────── */
+/* Compact, Wikipedia-like provenance line rendered under a fact block. */
+
+.atlas-sources {
+  margin: 0.35rem 0 1.25rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--atlas-muted);
+}
+
+.atlas-sources__label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.72rem;
+  margin-right: 0.15rem;
+}
+
+.atlas-source a {
+  color: var(--atlas-link);
+}
+
+.atlas-source__tier {
+  display: inline-block;
+  padding: 0.02rem 0.32rem;
+  border-radius: 3px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Tier colours reuse the changelog-tag language: green = authoritative. */
+.atlas-source__tier--1 { background: rgba(46, 204, 113, 0.14); color: #1e8449; }  /* govt / embassy */
+.atlas-source__tier--2 { background: rgba(52, 152, 219, 0.14); color: #2471a3; }  /* official processor */
+.atlas-source__tier--3 { background: rgba(243, 156, 18, 0.14); color: #b7791f; }  /* verified secondary */
+
+.atlas-source__date {
+  color: var(--atlas-muted);
+  font-style: italic;
+}
+
+.atlas-source__sep {
+  color: var(--atlas-border);
+}
+
+/* Unverified / community-reported caveat — visually distinct, amber. */
+.atlas-unverified {
+  margin: 0.35rem 0 1.25rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid #e0a800;
+  border-left-width: 3px;
+  border-radius: 4px;
+  background: rgba(243, 156, 18, 0.06);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--atlas-text);
+}
+
+.atlas-unverified__report {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--atlas-link);
+}
+
+
 /* ── 17. Accessibility ────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

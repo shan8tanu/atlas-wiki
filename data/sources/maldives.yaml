@@ -1,0 +1,69 @@
+_meta:
+  generated: "2026-07-02"
+  method: ai-draft-v1
+  model: claude-sonnet-4-6
+
+visa_type:
+  source: https://www.happyfares.in/blog/maldives-visa-for-indians-2026-free-voa-travel-guide/
+  confidence: web
+  note: "Confirmed free Visa on Arrival for all nationalities including Indians; no prior embassy application required."
+
+visa_difficulty:
+  source: https://timesofvisa.com/maldives-visa-for-indians/fees/
+  confidence: web
+  note: "Rated 1 — free VOA with minimal requirements; easiest possible category."
+
+max_stay:
+  source: https://www.happyfares.in/visa/maldives-visa-for-indians
+  confidence: web
+  note: "30-day VOA confirmed; extendable for up to a further 60 days on payment of an extension fee (cited as approx. INR 3,045 by acko.com)."
+
+entry_type:
+  source: null
+  confidence: pattern
+  note: "VOA is single entry by nature; no conflicting source found."
+
+visa_validity:
+  source: https://www.goindigo.in/information/visa-information/maldives-mv-visa.html
+  confidence: web
+  note: "Visa on arrival valid for one month from date of arrival."
+
+authority:
+  source: https://imuga.immigration.gov.mv/
+  confidence: web
+  note: "Imuga is the official Maldives Immigration portal; mandatory Traveller Declaration must be submitted here within 96 hours before departure per foreign.gov.mv."
+
+visa_types:
+  source: https://foreign.gov.mv/index.php/en/consular/for-foreigners-visiting-maldives/maldives-visa
+  confidence: web
+  note: "Only VOA is applicable for Indian tourist travel; no e-Visa tourist route for Indians confirmed. Standard visa tabs not included to avoid misleading users."
+
+visa_fee_inr:
+  source: https://timesofvisa.com/maldives-visa-for-indians/fees/
+  confidence: web
+  note: "Tourist VOA is completely free (INR 0). Extension fee separately cited as ~INR 3,045 but not included here as it is not the primary entry fee."
+
+processing_days:
+  source: https://www.goindigo.in/information/visa-information/maldives-mv-visa.html
+  confidence: web
+  note: "No advance processing — VOA is issued at the immigration counter on arrival, typically within 20 minutes (per akbartravels.com). Set to 1 as schema minimum; intended to convey same-day airport issuance."
+
+photo_specs:
+  source: null
+  confidence: pattern
+  note: "No specific Maldives government photo specification found in research. Standard 35x45mm white-background format applied as per regional convention."
+
+financial_documents:
+  source: https://www.goindigo.in/information/visa-information/maldives-mv-visa.html
+  confidence: web
+  note: "Sufficient funds requirement confirmed; no formal pre-submission of documents required. Counter check only. Light document list reflects this."
+
+occupation_documents:
+  source: null
+  confidence: pattern
+  note: "VOA country with no occupation-specific document requirements. Fields populated with minimal practical guidance consistent with a stamp-on-arrival process."
+
+health:
+  source: https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Maldives.html
+  confidence: web
+  note: "Yellow fever certificate requirement confirmed by both foreign.gov.mv and US Travel State. No COVID-era tests or quarantine currently in effect per roamingroutes.com."

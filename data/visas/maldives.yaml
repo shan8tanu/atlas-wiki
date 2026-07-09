@@ -1,0 +1,58 @@
+country: Maldives
+iso_code: MV
+visa_difficulty: 1
+visa_type: Visa on Arrival
+max_stay: "30 days"
+entry_type: "Single Entry"
+visa_validity: "30 days from date of arrival"
+passport_validity_months: 6
+blank_pages_required: 2
+region: Asia
+
+authority:
+  name: Maldives Immigration
+  processor: Direct
+  official_portal: https://imuga.immigration.gov.mv/
+
+visa_types:
+  voa:
+    label: Visa on Arrival
+    documents:
+      - Valid Indian passport with at least 6 months' validity from the date of arrival
+      - Completed Imuga Traveller Declaration — submitted online at imuga.immigration.gov.mv within 96 hours before departure
+      - Confirmed return or onward ticket out of the Maldives
+      - Confirmed and prepaid accommodation — resort, hotel, or guesthouse booking covering the full stay
+      - Proof of sufficient funds — approximately USD 100 per day, or evidence of a fully prepaid resort or hotel package
+      - Travel health insurance covering the full duration of stay (strongly recommended)
+
+requirements:
+  visa_fee_inr: 0
+  processing_days: 1
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: "Proof of sufficient funds required — approximately USD 100 per day of stay, or a confirmed prepaid resort or hotel booking covering the entire trip. No formal document submission before travel; funds may be demonstrated via cash or credit/debit card at the immigration counter if queried."
+  financial_documents:
+    - Recent bank statement or active credit/debit card to demonstrate sufficient travel funds if queried at the immigration counter
+  occupation_documents:
+    self_employed:
+      - Valid passport with confirmed return ticket (VOA — no occupation-specific documents required at the counter)
+      - Bank statement or credit card showing adequate funds for the stay duration
+    business_owner:
+      - Valid passport with confirmed return ticket (VOA — no occupation-specific documents required at the counter)
+      - Bank statement or credit card showing adequate funds for the stay duration
+    student:
+      - Valid passport with confirmed return ticket (VOA — no occupation-specific documents required at the counter)
+      - Student ID card or current enrolment letter as a supporting document
+      - Parent's or sponsor's bank statement or credit card showing sufficient travel funds
+    homemaker:
+      - Valid passport with confirmed return ticket (VOA — no occupation-specific documents required at the counter)
+      - Spouse's or accompanying family member's bank statement or credit card showing sufficient travel funds
+    retired:
+      - Valid passport with confirmed return ticket (VOA — no occupation-specific documents required at the counter)
+      - Pension passbook or personal bank statement showing sufficient funds for the stay duration
+
+health:
+  vaccinations: "No mandatory vaccinations required for most travellers. A valid Yellow Fever vaccination certificate is required if arriving from or transiting through a yellow-fever-endemic country within 30 days of arrival in the Maldives."
+  insurance: "Travel health insurance is strongly recommended — medical facilities on resort atolls are extremely limited, and emergency medical evacuations to Malé or repatriation to India are very expensive."
+  notes: "Advanced medical care is available only in Malé; individual resort islands have basic clinics and first-aid facilities only. Carry an adequate personal supply of prescription medications, as pharmacies outside Malé have very limited stock of branded or specialist drugs."

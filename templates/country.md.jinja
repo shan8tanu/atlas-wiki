@@ -5,10 +5,17 @@
     unchanged. `country` is passed in explicitly (macros don't see render context).
 -#}
 {%- macro cite(country, section, sources=none, unverified=false, fresh=none) -%}
+{#- Defense in depth: only render source entries with all four required fields
+    truthy. validate.py's H2 check already ERRORs on malformed sources in CI,
+    but `mkdocs serve` (the local dev workflow) doesn't run validate.py first —
+    this keeps a mid-edit malformed entry from rendering a broken/misleading
+    citation badge (empty link, blank tier) instead of just being omitted. -#}
+{%- set valid_sources = (sources | selectattr('url') | selectattr('tier')
+                         | selectattr('label') | selectattr('accessed') | list) if sources else [] -%}
 {%- if unverified -%}
 <div class="atlas-unverified">⚠️ <strong>Unverified / Community-Reported</strong> — not yet confirmed against an official source. Confirm with the embassy/consulate before relying on it. <a class="atlas-unverified__report" href="https://github.com/shan8tanu/atlas-wiki/issues/new?labels=unverified-source&amp;title={{ ('Unverified source: ' ~ country ~ ' — ' ~ section) | urlencode }}&amp;body={{ ('**Country:** ' ~ country ~ '\n**Section:** ' ~ section ~ '\n\n**Official source URL:**\n\n**Notes:**\n') | urlencode }}" target="_blank" rel="noopener">Know an official source? Report it →</a></div>
-{%- elif sources -%}
-<div class="atlas-sources"><span class="atlas-sources__label">Sources:</span> {% for s in sources %}<span class="atlas-source"><span class="atlas-source__tier atlas-source__tier--{{ s.tier }}" title="Tier {{ s.tier }} source">T{{ s.tier }}</span> <a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a> <span class="atlas-source__date">accessed {{ s.accessed }}</span></span>{% if not loop.last %}<span class="atlas-source__sep"> · </span>{% endif %}{% endfor %}{% if fresh %} <span class="atlas-freshness atlas-freshness--{{ fresh.state }}">· re-checked every {{ fresh.cadence }} days{% if fresh.state == 'aging' %} · re-verification due{% elif fresh.state == 'overdue' %} · overdue for re-verification{% endif %}</span>{% endif %}</div>
+{%- elif valid_sources -%}
+<div class="atlas-sources"><span class="atlas-sources__label">Sources:</span> {% for s in valid_sources %}<span class="atlas-source"><span class="atlas-source__tier atlas-source__tier--{{ s.tier }}" title="Tier {{ s.tier }} source">T{{ s.tier }}</span> <a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a> <span class="atlas-source__date">accessed {{ s.accessed }}</span></span>{% if not loop.last %}<span class="atlas-source__sep"> · </span>{% endif %}{% endfor %}{% if fresh %} <span class="atlas-freshness atlas-freshness--{{ fresh.state }}">· re-checked every {{ fresh.cadence }} days{% if fresh.state == 'aging' %} · re-verification due{% elif fresh.state == 'overdue' %} · overdue for re-verification{% endif %}</span>{% endif %}</div>
 {%- endif -%}
 {%- endmacro -%}
 <script type="application/ld+json">

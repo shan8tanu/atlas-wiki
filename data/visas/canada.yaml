@@ -1,0 +1,77 @@
+country: Canada
+iso_code: CA
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: "6 months"
+entry_type: "Multiple Entry"
+visa_validity: "Up to 10 years or passport expiry, whichever is earlier"
+passport_validity_months: 6
+blank_pages_required: 2
+region: Americas
+
+authority:
+  name: Immigration, Refugees and Citizenship Canada (IRCC)
+  processor: VFS Global
+  official_portal: https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/apply-visitor-visa.html
+
+visa_types:
+  standard_visa:
+    label: Temporary Resident Visa (Visitor)
+    documents:
+      - Completed online application form (IMM 5257) submitted via IRCC secure portal
+      - Valid Indian passport — original plus photocopy of the bio-data page (all pages with stamps)
+      - Recent passport-sized photograph — 35×45 mm, white background, taken within last 6 months
+      - Biometric enrollment confirmation slip from VFS Global Visa Application Centre
+      - Confirmed return or onward flight booking — printed itinerary with booking reference
+      - Proof of accommodation — hotel reservation printout or host's invitation letter with their Canadian status proof (PR card / citizenship copy)
+      - Travel medical insurance policy covering the full duration of stay in Canada
+      - Bank statements for the last 6 months demonstrating sufficient available funds
+      - Proof of strong ties to India — employer's leave-sanctioned letter, property documents, or business ownership proof
+      - Cover letter detailing purpose, duration, planned itinerary, and intent to return
+
+requirements:
+  visa_fee_inr: 11500
+  processing_days: 33
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White
+  financial_proof: Six months of bank statements showing a healthy average balance adequate for trip costs; ITR for the last 2–3 years; salary slips confirming stable employment income and strong financial ties to India.
+  financial_documents:
+    - Bank statements for the last 6 months (all accounts)
+    - ITR acknowledgement for the last 2 years
+    - Salary slips for the last 3 months
+    - Employment letter on company letterhead confirming designation, salary, and sanctioned leave period
+  occupation_documents:
+    self_employed:
+      - Business registration certificate or trade licence
+      - Personal and business bank statements for the last 6 months
+      - ITR for the last 3 years (business income)
+      - GST registration certificate and filed returns for the last 2 years
+      - CA-certified audited financial statements for the last 2 years
+    business_owner:
+      - Certificate of incorporation, partnership deed, or MSME registration
+      - Personal and company bank statements for the last 6 months
+      - Personal and company ITR for the last 3 years
+      - Company audited financial statements for the last 2 years
+      - Board resolution or authorisation letter if travelling on company account
+    student:
+      - Valid student ID card and current enrolment letter from institution
+      - Sponsoring parent's or guardian's bank statements for the last 6 months
+      - Sponsoring parent's ITR for the last 2 years
+      - Notarised sponsorship affidavit and financial support letter from parent or guardian
+      - NOC from educational institution confirming enrolment status and approved leave dates
+    homemaker:
+      - Spouse's or parent's bank statements for the last 6 months
+      - Spouse's or parent's ITR for the last 2 years
+      - Notarised affidavit of financial support from sponsoring family member
+      - Marriage certificate if sponsored by spouse
+    retired:
+      - Pension slips for the last 3 months or updated pension passbook
+      - Bank statements for the last 6 months
+      - Pension sanction letter or government retirement order
+      - ITR for the last 2 years (pension income, if applicable)
+
+health:
+  vaccinations: Routine vaccinations must be up to date; no mandatory vaccinations are required to enter Canada, but influenza and COVID-19 boosters are recommended before departure.
+  insurance: Travel medical insurance is strongly recommended; Canada provides no public healthcare to visitors and a single emergency hospital admission can cost thousands of Canadian dollars.
+  notes: Canada has world-class healthcare in all major cities; carry prescription medications in original labelled packaging with a physician's letter, especially for controlled or regulated substances that may require declaration at the border.

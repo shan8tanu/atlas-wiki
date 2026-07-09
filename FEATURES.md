@@ -29,7 +29,7 @@ To prevent founder burnout, the platform relies on community audits ("Edit on Gi
 
 ### How it works
 1. **Dynamic Edit Routing (`gen_pages.py`)**: The MkDocs pencil icon (defined in `mkdocs.yml` via `content.action.edit`) is dynamically routed directly to the `data/visas/<country>.yaml` file on GitHub via `mkdocs_gen_files.set_edit_path()`. Contributors edit raw data, not UI code.
-2. **Structural Validation (`validate.py`)**: Before anything is built, `validate.py` runs check groups A–G over the YAML (required fields, types, value ranges, cross-file parity, optional feature blocks) and fails the pipeline on any error.
+2. **Structural Validation (`validate.py`)**: Before anything is built, `validate.py` runs check groups A–I over the YAML (required fields, types, value ranges, cross-file parity, optional feature blocks, per-claim citations, volatility policy) and fails the pipeline on any error.
 3. **Citation Requirement (`.github/PULL_REQUEST_TEMPLATE/`)**: The `data_correction.md` and `core_feature.md` PR templates force contributors to provide an official source/citation URL for their change.
 4. **CI Validation (`.github/workflows/ci.yml`)**: On every push and Pull Request, GitHub Actions runs `validate.py` then `mkdocs build --strict`. On Pull Requests it additionally runs `htmlproofer` (ignoring certain bot-blocking government domains) to ensure no official embassy links are dead. htmlproofer is deliberately skipped on direct pushes so a dead portal never blocks an unrelated change.
 5. **Ongoing link + accuracy monitoring**: `.github/workflows/link-check.yml` (weekly) re-scans all official links, and `.github/workflows/accuracy-audit.yml` (weekly) runs the AI accuracy audit.
@@ -38,7 +38,7 @@ To prevent founder burnout, the platform relies on community audits ("Edit on Gi
 > **Note:** An earlier draft of this doc described a `.github/CODEOWNERS` approval gate and a `.github/workflows/deploy.yml` GitHub Pages deploy. Neither file exists in the repository today — see the "Known drift" section of [`atlas_PROJECT_STATE.md`](atlas_PROJECT_STATE.md).
 
 **Key Files:**
-- `validate.py` + `validate/` — Structural validation (checks A–G).
+- `validate.py` + `validate/` — Structural validation (checks A–I).
 - `.github/workflows/ci.yml` — Push/PR validation (validate + strict build + PR-only dead-link check).
 - `.github/workflows/link-check.yml` — Weekly dead-link scan.
 - `.github/workflows/accuracy-audit.yml` — Weekly AI accuracy audit.

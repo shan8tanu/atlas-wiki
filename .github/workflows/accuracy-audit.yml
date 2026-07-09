@@ -1,7 +1,7 @@
 name: Weekly Accuracy Audit
 
-# Runs the AI accuracy audit (Claude + Brave Search) against all 26 countries
-# every Monday, one hour after the link-check workflow. Manual runs via the
+# Runs the AI accuracy audit (Claude + Brave Search) against every country in
+# data/visas/ every Monday, one hour after the link-check workflow. Manual runs via the
 # Actions tab (workflow_dispatch) are also supported.
 #
 # Requires two repository secrets (Settings → Secrets and variables → Actions):
@@ -14,7 +14,7 @@ on:
 
 jobs:
   accuracy-audit:
-    name: AI Accuracy Audit (26 countries)
+    name: AI Accuracy Audit
     runs-on: ubuntu-latest
 
     steps:

@@ -22,8 +22,8 @@ At the end of your session, append a new entry to the **Session Log** section in
 
 ## Session close-out
 Before ending any session that changed code or data:
-1. Update PROJECT_STATE.md: what changed, new/changed schema fields,
+1. Update atlas_PROJECT_STATE.md: what changed, new/changed schema fields,
    new validate.py check groups, open TODOs.
 2. If the country YAML schema changed, note the change at the top of
-   PROJECT_STATE.md under "## Schema changelog" with the date.
+   atlas_PROJECT_STATE.md under "## Schema changelog" with the date.
 3. Commit and push.

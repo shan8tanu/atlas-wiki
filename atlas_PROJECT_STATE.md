@@ -1,7 +1,8 @@
 # Atlas — Current State Snapshot
 
 > **Point-in-time snapshot** of the whole repository, drafted 2026-07-08 after a full
-> file-by-file review. Unlike [`.ai-state/STATE.md`](.ai-state/STATE.md) (an append-only
+> file-by-file review; last synced 2026-07-09 (citations + freshness systems merged, 4 new
+> countries added). Unlike [`.ai-state/STATE.md`](.ai-state/STATE.md) (an append-only
 > session log), this file is a *current* description of what exists today and is meant to be
 > overwritten when it drifts. Where older docs disagree with the code, the code wins and the
 > discrepancy is called out under **Known drift / cleanup candidates** at the bottom.
@@ -31,8 +32,8 @@ theme turn those pages into a static site.
   the YAML (facts) or the Jinja template (layout).
 - **Repo:** `github.com/shan8tanu/atlas-wiki` (branch `main`)
 - **Deploy target:** Cloudflare Pages → https://atlas-wiki.pages.dev/
-- **Coverage today:** 26 countries live on `main` (4 more — Sri Lanka, UK, Canada, Maldives —
-  exist only on open PR branches awaiting founder review).
+- **Coverage today:** 30 countries live on `main` (Sri Lanka, United Kingdom, Canada, and
+  Maldives merged 2026-07-09 via the `add_country.py` pipeline — see §5).
 
 ---
 
@@ -73,7 +74,7 @@ atlas/
 ├── .claude/launch.json           Dev server config (mkdocs serve :8000)
 ├── CLAUDE.md                     Claude Code project instructions
 ├── FEATURES.md                   Feature/architecture narrative (living doc)
-├── PROJECT_STATE.md              ← THIS FILE (current-state snapshot)
+├── atlas_PROJECT_STATE.md        ← THIS FILE (current-state snapshot)
 ├── mkdocs.yml                    Site config: theme, nav, plugins, CSS/JS
 ├── requirements.txt              mkdocs-material, mkdocs-gen-files, jinja2, pyyaml, anthropic
 │
@@ -90,13 +91,17 @@ atlas/
 ├── add_occupation_docs.py        One-shot migration (bulk-added occupation_documents)
 │
 ├── validate/                     Validation package
-│   ├── checks.py                 Check groups A–G (structural, type, value, cross-file, features)
-│   ├── schema.py                 Allowed values, ISO set, known processors, Indian states
+│   ├── checks.py                 Check groups A–I (structural → citations → volatility policy)
+│   ├── schema.py                 Allowed values, ISO set, known processors, Indian states,
+│   │                             CITABLE_BLOCKS, DIFFICULTY_LABELS
 │   ├── report.py                 Colored terminal report renderer
 │   └── claude_audit.py           Brave Search + Claude field-by-field comparison
 │
 ├── data/
-│   ├── visas/*.yaml              SOURCE OF TRUTH — 26 country files
+│   ├── visas/*.yaml              SOURCE OF TRUTH — 30 country files
+│   ├── sources/*.yaml            Provenance sidecars for AI-drafted countries (4 files: canada,
+│   │                             maldives, sri-lanka, united-kingdom) — not written for
+│   │                             hand/legacy-authored countries
 │   ├── volatility.yaml           Freshness cadence policy (validated by check I)
 │   └── transit/transit_rules.yaml  6 airport hubs (FRA, CDG, LHR, DXB, SIN, IST)
 │
@@ -113,7 +118,8 @@ atlas/
 │   ├── javascripts/theme.js      Checklist persistence, occ/visa selectors, cover-letter copy, mini-map
 │   ├── stylesheets/map.css       Map styling
 │   ├── stylesheets/theme.css     Design system (light-only; dark mode removed)
-│   ├── <country>.md × 26         ⚠ STALE committed build output — see §8
+│   ├── <country>.md × 26         ⚠ STALE committed build output — see §8 (the 4 countries added
+│   │                             2026-07-09 never had this problem — gen-files only, no stale copy)
 │   └── map-data.json             ⚠ STALE committed build output — see §8
 │
 ├── overrides/main.html           Material override: hero + mini-map, page_type body class
@@ -156,7 +162,7 @@ YYYY-MM-DD) or an `unverified: true` flag. Citable blocks = `requirements`, `hea
 `jurisdiction` & `exemptions` (parallel `jurisdiction_sources`/`_unverified`,
 `exemptions_sources`/`_unverified`, since a YAML list can't hold a sibling key). The registry is
 `CITABLE_BLOCKS` in `validate/schema.py`, shared by validation and mirrored by the template.
-Japan is the fully-migrated reference; the other 25 migrate later. Rendered as subtle tier-badged
+Japan is the fully-migrated reference; the other 29 migrate later. Rendered as subtle tier-badged
 "Sources" lines / an amber "Unverified" caveat by `templates/country.md.jinja`.
 
 **Freshness system** (builds on citations): `data/volatility.yaml` maps each citable block to a
@@ -192,8 +198,9 @@ Full field-by-field intent lives in the `add_country.py` schema contract
   CITABLE_BLOCKS key, positive-int cadences).
 - Exit 0 = pass (warnings allowed); exit 1 = errors. During the citation migration, group H emits
   H6 **warnings** for un-migrated countries (CI stays green). Pass **`--strict-citations`** to
-  upgrade H6 to an error — flip CI to it once all 26 countries are migrated. Japan already passes
-  strict.
+  upgrade H6 to an error — flip CI to it once all 30 countries are migrated. Japan already passes
+  strict. Current: 1403 checks, 0 errors, 143 warnings (up from 1219/129 pre-merge — the 4 new
+  countries add unmigrated-citation warnings, expected during migration).
 - Schema constants (allowed sets, ISO codes, `KNOWN_PROCESSORS` incl. VFS/BLS/TLScontact/CVASC/
   Direct, `KNOWN_INDIAN_STATES`, `ALLOWED_SOURCE_TIERS`, `CITABLE_BLOCKS`) live in
   [`validate/schema.py`](validate/schema.py).
@@ -211,8 +218,11 @@ UNKNOWN, writes `validation-report.md` (gitignored). Exit 2 = attention needed. 
 (`claude-sonnet-4-6`, prompt-cached schema + japan.yaml gold example) → `validate.py` self-check
 with one repair pass → mkdocs nav insert → optional branch/commit/push/PR via `gh`. Writes a
 `data/sources/<slug>.yaml` provenance sidecar (web/pattern/unverified confidence per fact group)
-and turns unverified fields into a PR verification checklist. *(`data/sources/` exists only on PR
-branches, not on `main`.)*
+and turns unverified fields into a PR verification checklist. Four countries drafted this way —
+Sri Lanka, United Kingdom, Canada, Maldives — merged to `main` 2026-07-09 after PR review; their
+sidecars now live in `data/sources/`. **None of the four have per-claim citations yet** (the
+`sources`/`unverified` schema from §4 postdates their drafts) — they show up in the H6 warning
+count and the `/meta/freshness` migration worklist alongside the other 25 legacy countries.
 
 ---
 
@@ -237,7 +247,7 @@ system stacks — Material's Google-Fonts loader is disabled via `font: false`).
 
 | Workflow | Trigger | Does |
 |---|---|---|
-| [`ci.yml`](.github/workflows/ci.yml) | push to `main` + PRs | `validate.py` → `mkdocs build --strict`; **htmlproofer only on PRs** (a dead embassy link never blocks a push) |
+| [`ci.yml`](.github/workflows/ci.yml) | push to `main` + PRs | `validate.py` → `freshness_report.py` (informational, always exit 0) → `mkdocs build --strict`; **htmlproofer only on PRs** (a dead embassy link never blocks a push) |
 | [`link-check.yml`](.github/workflows/link-check.yml) | Mon 06:00 UTC + manual | build + htmlproofer dead-link scan |
 | [`accuracy-audit.yml`](.github/workflows/accuracy-audit.yml) | Mon 07:00 UTC + manual | `validate_accuracy.py` → report to job summary + 90-day artifact. Needs `ANTHROPIC_API_KEY` (+ `BRAVE_SEARCH_API_KEY`) repo secrets |
 
@@ -245,6 +255,12 @@ htmlproofer ignores a curated set of bot-blocking government/processor domains (
 between `ci.yml` and `link-check.yml`). Contribution flow: edit YAML on GitHub via the page pencil →
 PR with a citation (templates in `.github/PULL_REQUEST_TEMPLATE/`) → maintainer review → merge →
 Cloudflare redeploys. Contributor guide: [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
+
+**Branch protection** is a repo ruleset (not `.github/CODEOWNERS` — see §8), requiring the
+`Build & Validate` status check to pass before merge. No required human-approval rule exists
+today — any push-capable collaborator (including an authenticated agent) can merge once CI is
+green. The `/meta/freshness` report page is the librarian's weekly re-verification queue (see
+§4's freshness system); it's URL-only, excluded from nav via `not_in_nav` in `mkdocs.yml`.
 
 ---
 
@@ -264,8 +280,14 @@ These are real mismatches found during this review — surfaced, not silently ch
    this session; STATE.md is append-only so it's noted in its session log instead.)
 3. **`FEATURES.md` referenced a `deploy.yml` / GitHub Pages.** There is no deploy workflow —
    hosting is Cloudflare Pages, which builds on push. Corrected in this session.
-4. **`data/sources/` is PR-branch-only.** Provenance sidecars written by `add_country.py` don't
-   exist on `main`; don't expect the directory in a fresh `main` checkout.
+4. ~~`data/sources/` is PR-branch-only~~ — **resolved 2026-07-09.** The 4 AI-drafted countries
+   (Sri Lanka, UK, Canada, Maldives) merged to `main`, so their provenance sidecars now live in
+   `data/sources/` on `main` too. Still true that hand/legacy-authored countries have no sidecar.
+5. **Repo ruleset had a stale required-check name** (fixed 2026-07-09): it required a status check
+   literally named "Build & Link Health Check", but that CI job was renamed to "Build & Validate"
+   back in commit `0b8f9a5` and the ruleset was never updated — every PR was silently `BLOCKED`
+   regardless of content. Updated the ruleset (`gh api` on ruleset id `13252933`) to require the
+   real check name.
 
 ---
 

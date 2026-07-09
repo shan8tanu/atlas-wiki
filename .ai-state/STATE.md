@@ -59,19 +59,27 @@ atlas/
 ├── data/
 │   ├── transit/                  # Transit guide data
 │   │   └── transit_rules.yaml   # 6 airport hubs (FRA, CDG, LHR, DXB, SIN, IST)
-│   └── visas/                    # SOURCE OF TRUTH — 26 country YAML files
+│   ├── volatility.yaml           # Freshness cadence policy — one entry per CITABLE_BLOCKS key
+│   ├── sources/                  # Provenance sidecars for AI-drafted countries (added 2026-07-09)
+│   │   ├── canada.yaml
+│   │   ├── maldives.yaml
+│   │   ├── sri-lanka.yaml
+│   │   └── united-kingdom.yaml
+│   └── visas/                    # SOURCE OF TRUTH — 30 country YAML files
 │       ├── australia.yaml
 │       ├── brazil.yaml
 │       ├── cambodia.yaml
+│       ├── canada.yaml           # added 2026-07-09 via add_country.py
 │       ├── china.yaml
 │       ├── france.yaml
 │       ├── germany.yaml
 │       ├── greece.yaml
 │       ├── indonesia.yaml
 │       ├── italy.yaml
-│       ├── japan.yaml
+│       ├── japan.yaml            # citation + freshness reference country
 │       ├── laos.yaml
 │       ├── malaysia.yaml
+│       ├── maldives.yaml         # added 2026-07-09 via add_country.py
 │       ├── netherlands.yaml
 │       ├── new-zealand.yaml
 │       ├── philippines.yaml
@@ -80,10 +88,12 @@ atlas/
 │       ├── singapore.yaml
 │       ├── south-korea.yaml
 │       ├── spain.yaml
+│       ├── sri-lanka.yaml        # added 2026-07-09 via add_country.py
 │       ├── switzerland.yaml
 │       ├── thailand.yaml
 │       ├── turkey.yaml
 │       ├── uae.yaml
+│       ├── united-kingdom.yaml   # added 2026-07-09 via add_country.py
 │       ├── united-states.yaml
 │       └── vietnam.yaml
 ├── docs/                         # Hand-written pages + static assets
@@ -108,12 +118,13 @@ atlas/
 ├── overrides/
 │   └── main.html                 # Material theme override: hero section, mini-map widget
 ├── templates/
-│   ├── country.md.jinja          # THE template for all 26 country pages
+│   ├── country.md.jinja          # THE template for all 30 country pages
 │   └── transit-guide.md.jinja    # Template for Transit Rules Guide page
 ├── validate/                     # Validation module
 │   ├── __init__.py
-│   ├── checks.py                 # Validation checks A–F
-│   ├── schema.py                 # Allowed values, ISO codes, placeholder definitions
+│   ├── checks.py                 # Validation checks A–I (structural → citations → volatility)
+│   ├── schema.py                 # Allowed values, ISO codes, placeholder definitions,
+│   │                             #   CITABLE_BLOCKS, DIFFICULTY_LABELS
 │   ├── report.py                 # Colored terminal output
 │   └── claude_audit.py           # Web search + Claude accuracy comparison
 ├── site/                         # Build output (gitignored, auto-generated)
@@ -124,13 +135,17 @@ atlas/
 ├── mkdocs.yml                    # MkDocs config: theme, nav, plugins, CSS/JS
 ├── requirements.txt              # Python deps: mkdocs-material, jinja2, pyyaml, anthropic
 ├── gen_pages.py                  # Build engine: YAML → Jinja2 → virtual Markdown + map-data.json
+│                                 #   + freshness context + /meta/freshness page
+├── freshness.py                  # Freshness engine: cadence policy, block states, page rollup,
+│                                 #   git-date cache, report builder (added 2026-07-09)
+├── freshness_report.py           # CLI: librarian's re-verification queue, always exit 0
 ├── validate.py                   # CLI: structural YAML validation
 ├── validate_accuracy.py          # CLI: AI-powered accuracy audit (needs ANTHROPIC_API_KEY)
 ├── admin_update.py               # CLI: trusted-source YAML updates with diff + confirmation
 ├── add_country.py                # CLI: AI new-country pipeline (research→draft→validate→PR)
 ├── add_visa_types.py             # One-shot: bulk-added visa_types to all YAMLs
 ├── add_occupation_docs.py        # One-shot: bulk-added occupation_documents to all YAMLs
-└── atlas_PROJECT_STATE.md              # Current-state snapshot (regenerated 2026-07-08)
+└── atlas_PROJECT_STATE.md        # Current-state snapshot (last synced 2026-07-09)
 ```
 
 ---
@@ -142,13 +157,13 @@ atlas/
 | Site Generator | MkDocs | Python-based |
 | Theme | Material for MkDocs | Custom overrides in `overrides/` |
 | Templating | Jinja2 | Build-time only |
-| Data | YAML (PyYAML) | 26 country files in `data/visas/` |
+| Data | YAML (PyYAML) | 30 country files in `data/visas/` |
 | Build Plugin | mkdocs-gen-files | Virtual page generation |
 | Frontend JS | Vanilla JavaScript | Zero external libraries |
-| Frontend CSS | Custom CSS | Light/dark mode, responsive |
-| AI Validation | Anthropic Claude API | Used by validate_accuracy.py and admin_update.py |
-| Web Search | Brave Search API | Optional, used by accuracy validator |
-| CI/CD | GitHub Actions | 2 workflows: ci.yml, link-check.yml |
+| Frontend CSS | Custom CSS | Light mode only (dark mode removed Apr 2026) |
+| AI Validation | Anthropic Claude API | Used by validate_accuracy.py, admin_update.py, add_country.py |
+| Web Search | Brave Search API | Optional, used by accuracy validator + add_country.py research |
+| CI/CD | GitHub Actions | 3 workflows: ci.yml, link-check.yml, accuracy-audit.yml |
 | Hosting | Cloudflare Pages | Static site at atlas-wiki.pages.dev |
 
 ---
@@ -157,7 +172,7 @@ atlas/
 
 | # | Feature | Status | Key Files | Added |
 |---|---------|--------|-----------|-------|
-| 1 | Data-driven country pages (26 countries) | Active | `gen_pages.py`, `templates/country.md.jinja`, `data/visas/*.yaml` | Feb 2026 |
+| 1 | Data-driven country pages (30 countries) | Active | `gen_pages.py`, `templates/country.md.jinja`, `data/visas/*.yaml` | Feb 2026 |
 | 2 | Interactive SVG world map | Active | `docs/map.md`, `docs/assets/world-map.svg`, `docs/javascripts/map.js`, `docs/stylesheets/map.css` | Feb 2026 |
 | 3 | Map data auto-generation (map-data.json) | Active | `gen_pages.py` (bottom section) | Feb 2026 |
 | 4 | Document checklist with localStorage | Active | `templates/country.md.jinja`, `docs/javascripts/theme.js` | Feb 2026 |
@@ -169,10 +184,10 @@ atlas/
 | 10 | Homepage mini-map widget | Active | `overrides/main.html`, `docs/javascripts/theme.js` | Feb 2026 |
 | 11 | CI/CD: PR validation pipeline | Active | `.github/workflows/ci.yml` | Feb 2026 |
 | 12 | CI/CD: Weekly link health check | Active | `.github/workflows/link-check.yml` | Feb 2026 |
-| 13 | Structural YAML validation (checks A–F) | Active | `validate.py`, `validate/checks.py`, `validate/schema.py` | Mar 2026 |
+| 13 | Structural YAML validation (checks A–I) | Active | `validate.py`, `validate/checks.py`, `validate/schema.py` | Mar 2026 |
 | 14 | AI accuracy audit (Claude + Brave) | Active | `validate_accuracy.py`, `validate/claude_audit.py` | Mar 2026 |
 | 15 | Admin update tool (trusted-source updates) | Active | `admin_update.py` | Mar 2026 |
-| 16 | Community edit routing (YAML, not MD) | Active | `gen_pages.py` (set_edit_path), `.github/CODEOWNERS` | Feb 2026 |
+| 16 | Community edit routing (YAML, not MD) | Active | `gen_pages.py` (set_edit_path) — note: `.github/CODEOWNERS` does NOT exist despite older docs referencing it; merge protection is a repo ruleset requiring only the `Build & Validate` check, no human-approval rule | Feb 2026 |
 | 17 | Flag emoji generation from ISO codes | Active | `gen_pages.py` (iso_to_flag), flagcdn.com in template | Feb 2026 |
 | 18 | Scroll-triggered reveal animations | Active | `docs/javascripts/theme.js` (IntersectionObserver) | Feb 2026 |
 | 19 | Transit Rules Guide (cross-destination) | Active | `data/transit/transit_rules.yaml`, `templates/transit-guide.md.jinja`, `gen_pages.py` | Mar 2026 |
@@ -183,16 +198,22 @@ atlas/
 | 23 | ECR / Non-ECR Passport Rules | Active (sample) | `data/visas/*.yaml` (ecr), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
 | 24 | Biometrics Tracking | Active (sample) | `data/visas/*.yaml` (biometrics), `templates/country.md.jinja`, `docs/stylesheets/theme.css` | Mar 2026 |
 | 25 | Group G validation (new field checks) | Active | `validate/checks.py` (check_g), `validate/schema.py` | Mar 2026 |
+| 26 | AI new-country pipeline (research→draft→validate→PR) | Active | `add_country.py`, `data/sources/*.yaml` (provenance sidecars) | Jul 2026 |
+| 27 | Per-claim citations (source + tier + access date per fact block) | Active — Japan migrated, 29 pending | `data/visas/*.yaml` (sources/unverified), `templates/country.md.jinja` (cite() macro), `validate/checks.py` (check_h), `validate/schema.py` (CITABLE_BLOCKS) | Jul 2026 |
+| 28 | Volatility-based freshness (cadence + fresh/aging/overdue states) | Active | `data/volatility.yaml`, `freshness.py`, `freshness_report.py`, `gen_pages.py`, `templates/country.md.jinja`, `validate/checks.py` (check_i) | Jul 2026 |
+| 29 | Freshness report / librarian queue (`/meta/freshness`) | Active | `freshness_report.py`, `gen_pages.py`, `mkdocs.yml` (`not_in_nav`), `.github/workflows/ci.yml` | Jul 2026 |
 
 ---
 
-## Countries Covered (26)
+## Countries Covered (30)
 
-**Asia (11):** Cambodia, China, Indonesia, Japan, Laos, Malaysia, Philippines, Singapore, South Korea, Thailand, Vietnam
+**Asia (13):** Cambodia, China, Indonesia, Japan, Laos, Malaysia, Maldives, Philippines, Singapore, South Korea, Sri Lanka, Thailand, Vietnam
 **Oceania (2):** Australia, New Zealand
-**Europe (7):** France, Germany, Greece, Italy, Netherlands, Spain, Switzerland, Turkey
+**Europe (9):** France, Germany, Greece, Italy, Netherlands, Spain, Switzerland, Turkey, United Kingdom
 **Middle East (3):** Qatar, Saudi Arabia, UAE
-**Americas (2):** Brazil, United States
+**Americas (3):** Brazil, Canada, United States
+
+*(Maldives, Sri Lanka, United Kingdom, Canada added 2026-07-09 via the `add_country.py` AI pipeline — see Feature #26.)*
 
 ---
 
@@ -498,3 +519,43 @@ atlas/
 - `mkdocs.yml` — not_in_nav meta/*
 - `.github/workflows/ci.yml` — freshness report step
 - `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` — docs
+
+### Session: 2026-07-09 — Claude (Opus 4.8) [continued — Greptile fix, main sync, doc refresh]
+**Branch:** feat/freshness-system → main (after user merge)
+**What changed:**
+- Addressed Greptile's review comment on PR #15 (`templates/country.md.jinja`): empirically verified
+  it does NOT actually crash the build (Jinja's default Undefined degrades silently; H2 is already
+  an ERROR that blocks CI before any build) — but found a real narrower gap: `mkdocs serve` (the
+  local dev workflow) skips `validate.py`, so a malformed mid-edit source could render a broken
+  citation badge. Hardened `cite()` with a `selectattr`-based filter to well-formed entries;
+  verified japan's rendered output is byte-identical, malformed/mixed fixtures render correctly.
+- User merged all 5 open PRs (#10 Sri Lanka, #11 UK, #12 Canada, #13 Maldives, #15 freshness) via
+  GitHub directly — I could not self-merge #15 (blocked by the auto-mode permission classifier:
+  self-authored PR to `main` with no CODEOWNERS/human-review gate). Synced local `main`
+  (fast-forward, 5630f29→2ddee59 total after fetch), deleted local branches for the merged PRs
+  (remote branches for add/* left in place — not asked to delete, more consequential).
+  Full validate.py + `mkdocs build --strict` re-run on merged main: 1403 checks, 0 errors, 143
+  warnings (up from 1219/129 — expected, the 4 new countries add H6 unmigrated-citation warnings).
+- **Repo now: 30 countries** (was 26). Updated stale documentation across the repo to match:
+  - `atlas_PROJECT_STATE.md` — country count/list, repo map (added `data/sources/`, `freshness.py`,
+    `freshness_report.py`, fixed the `PROJECT_STATE.md`→`atlas_PROJECT_STATE.md` self-reference
+    left over from the rename), check-group table (A–I), validate.py counts, CI table (added the
+    freshness-report step), "Known drift" item 4 marked resolved (data/sources/ now on main), new
+    drift item 5 documenting the ruleset fix from earlier this session, new-country-pipeline section
+    now notes the 4 merged countries lack citations yet.
+  - `FEATURES.md` — "checks A–G" → "A–I" (2 places).
+  - `.ai-state/STATE.md` (this file) — folder tree, tech stack table (also fixed a pre-existing
+    stale "light/dark mode" claim — dark mode was removed back in April), Feature Registry (fixed
+    #1/#13/#16 counts and the CODEOWNERS reference, added #26–29 for the new-country pipeline,
+    citations, freshness, and the freshness report — all of which existed before this session but
+    were never registered), Countries Covered list (also fixed a pre-existing Europe count error:
+    8 countries were listed under a "(7)" heading even before UK was added).
+  - `.github/workflows/accuracy-audit.yml` — job name and comment hardcoded "26 countries"; made
+    count-agnostic instead of hardcoding 30 (will drift again otherwise).
+- Did NOT touch: historical session-log entries in this file (this file's own rules make them
+  append-only), `add_visa_types.py`/`add_occupation_docs.py` docstrings (one-shot scripts
+  describing a historical run, not living docs), remote `add/*` branches (not asked to delete).
+**Files touched:**
+- `templates/country.md.jinja` — cite() macro hardening (commit `ba3b2b0` on the now-merged PR)
+- `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md`,
+  `.github/workflows/accuracy-audit.yml` — documentation sync

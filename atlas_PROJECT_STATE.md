@@ -11,6 +11,9 @@
 
 ## Schema changelog
 
+- **2026-07-09** — Changelog entries tightened (no new fields): `date` must parse as YYYY-MM-DD,
+  `description` non-empty, `source` https — checks G10–G12, so the site-wide Change Log page and
+  `changes.xml` RSS feed can trust their inputs.
 - **2026-07-09** — Freshness: new site-level `data/volatility.yaml` (`cadence_days` per citable
   block, check group I); country YAML gains optional per-block cadence override — `cadence_days`
   inside dict blocks / `visa_types.<key>`, or `<key>_cadence_days` parallel key for
@@ -60,6 +63,12 @@ data/visas/<country>.yaml            templates/country.md.jinja
   "Edit this page" pencil to the YAML source (`set_edit_path`) and emits `map-data.json`.
 - If [`data/transit/transit_rules.yaml`](data/transit/transit_rules.yaml) exists it also renders
   the Transit Visa Rules guide via [`templates/transit-guide.md.jinja`](templates/transit-guide.md.jinja).
+- It also aggregates every country's `changelog` entries into the site-wide **Change Log** page
+  (`/changes/`, [`templates/changes.md.jinja`](templates/changes.md.jinja), grouped by month,
+  newest first, in nav) and an **RSS 2.0 feed** (`/changes.xml`, hand-built with XML escaping,
+  capped at the 50 newest items, RFC 822 dates via `email.utils`, guid = slug+date+index;
+  autodiscovery `<link>` in [`overrides/main.html`](overrides/main.html)). Unparseable dates are
+  warned about and excluded at build time (checks G10–G12 make them CI errors anyway).
 - Config: [`mkdocs.yml`](mkdocs.yml). Local dev server: `python -m mkdocs serve` (see
   [`.claude/launch.json`](.claude/launch.json), port 8000).
 

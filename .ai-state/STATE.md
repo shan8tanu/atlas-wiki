@@ -594,3 +594,30 @@ atlas/
 **Files touched:**
 - `docs-internal/` (all 8 files — gitignored, local-only; no repo commit for them)
 - `.ai-state/STATE.md` — this entry
+
+### Session: 2026-07-10 — Claude (Fable 5)
+**Branch:** feat/changes-feed (from main)
+**What changed:**
+- Site-wide Change Log page + RSS feed aggregating every country's `changelog` entries:
+  - `gen_pages.py` collects (date, country, slug, type, description, source) while looping YAMLs;
+    unparseable dates -> named build warning + exclusion (non-fatal). New virtual page `changes.md`
+    (nav: between Guides and Contribute) grouped by month via `templates/changes.md.jinja`,
+    reusing the existing `.atlas-changelog` table + tag classes (zero new CSS/JS).
+  - RSS 2.0 at `changes.xml`: hand-built with `xml.sax.saxutils.escape`, RFC 822 pubDates via
+    `email.utils.format_datetime` (locale-independent; strftime %a/%b/%B deliberately avoided),
+    50-item cap, guid = slug+date+per-country-index, links to `{slug}/#change-log`, channel URLs
+    from mkdocs.yml `site_url` (via `mkdocs_gen_files.config` with fallback), atom:self link.
+    Autodiscovery `<link>` added to `overrides/main.html` extrahead block.
+  - Validation: new G10 (date parses YYYY-MM-DD), G11 (description non-empty), G12 (source https)
+    -- ERRORs, so the feed can trust its inputs. `check_f` non_country_pages gained `changes.md`
+    (would otherwise trip the F4 nav-parity warning).
+- Spec mismatches flagged: spec said "26 files" -- repo has 30; only japan+france carry changelog
+  data (6 entries total). All 6 render; feed validated well-formed (Python minidom; no xmllint on
+  this box), month grouping/nav/autodiscovery DOM-verified via preview + screenshot.
+**Files touched:**
+- `gen_pages.py` -- changelog collection + changes.md + changes.xml emission
+- `templates/changes.md.jinja` -- created
+- `overrides/main.html` -- RSS autodiscovery link
+- `mkdocs.yml` -- Changes nav entry
+- `validate/checks.py` -- G10-G12, non_country_pages, group-G docstring
+- `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` -- docs

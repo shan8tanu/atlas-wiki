@@ -468,7 +468,7 @@ def check_f(
     # Strip .md to get stems of referenced pages (exclude non-country pages).
     # Country pages are flat (japan.md); anything in a subdirectory (guides/...)
     # is a non-country page generated from other data sources.
-    non_country_pages = {"index.md", "map.md", "CONTRIBUTING.md"}
+    non_country_pages = {"index.md", "map.md", "CONTRIBUTING.md", "changes.md"}
     nav_country_stems = {
         p[:-3] for p in nav_md_files
         if p not in non_country_pages and "/" not in p
@@ -505,7 +505,9 @@ def check_f(
 
 def check_g(filepath: str, data: dict) -> List[CheckResult]:
     """
-    G1-G10: Validate new Section A-D fields (optional — only checked if present).
+    G1-G12: Validate new Section A-D fields (optional — only checked if present).
+    G10-G12 tighten changelog entries (parseable date, non-empty description,
+    https source) so the site-wide Change Log page and RSS feed can trust them.
     All new fields are optional, so missing fields are silently skipped.
     """
     short = os.path.basename(filepath)
@@ -531,7 +533,30 @@ def check_g(filepath: str, data: dict) -> List[CheckResult]:
                     results.append(_err("G2", short,
                         f"changelog[{i}].type {ctype!r} not in {sorted(ALLOWED_CHANGELOG_TYPES)}"))
 
-            if not any(r.check_id in ("G1", "G2") and not r.passed for r in results):
+                # G10: date must parse as YYYY-MM-DD (the site-wide Change Log
+                # page and RSS feed sort/format on it)
+                cdate = entry.get("date")
+                if cdate is not None:
+                    try:
+                        datetime.strptime(str(cdate), "%Y-%m-%d")
+                    except ValueError:
+                        results.append(_err("G10", short,
+                            f"changelog[{i}].date {cdate!r} is not a valid YYYY-MM-DD date"))
+
+                # G11: description must be a non-empty string
+                cdesc = entry.get("description")
+                if cdesc is not None and not str(cdesc).strip():
+                    results.append(_err("G11", short,
+                        f"changelog[{i}].description is empty"))
+
+                # G12: source must be an https URL
+                csrc = entry.get("source")
+                if csrc is not None and not str(csrc).startswith("https://"):
+                    results.append(_err("G12", short,
+                        f"changelog[{i}].source must start with https://, got {csrc!r}"))
+
+            if not any(r.check_id in ("G1", "G2", "G10", "G11", "G12") and not r.passed
+                       for r in results):
                 results.append(_ok("G1", short, f"changelog has {len(changelog)} valid entries"))
 
     # ── G3: jurisdiction offices must have office name and covers list ──

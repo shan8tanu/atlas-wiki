@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{# ── RSS feed autodiscovery (site-wide Change Log) ───────────────── #}
+{% block extrahead %}
+  {{ super() }}
+  <link rel="alternate" type="application/rss+xml" title="Atlas — Change Log"
+        href="{{ config.site_url }}changes.xml">
+{% endblock %}
+
 {# ── Homepage hero section ───────────────────────────────────────── #}
 {% block hero %}
   {% if page and page.meta and page.meta.page_type == "home" %}

@@ -128,3 +128,31 @@ on the page and queued for the librarian.
 - `freshness_report.py` — CLI wrapper (CI step in `ci.yml`).
 - `gen_pages.py` — injects `_freshness` / `_page_freshness` / `_difficulty_label`; emits `/meta/freshness`.
 - `validate/checks.py` — H7 (cadence overrides) + `check_i` (policy completeness).
+
+---
+
+## 📰 Site-Wide Change Log + RSS Feed
+
+Every per-country `changelog` entry, aggregated into one reverse-chronological page at `/changes/`
+(in the nav) and an RSS 2.0 feed at `/changes.xml` — so returning users and feed readers can see
+what changed across the whole wiki without visiting every country page.
+
+### How it works
+1. **Collection (`gen_pages.py`)**: while looping country YAMLs it gathers each changelog entry as
+   (date, country, slug, type, description, source). Unparseable dates get a named build warning
+   and are excluded — never a crash.
+2. **Page (`templates/changes.md.jinja`)**: entries grouped by month ("July 2026"), newest first;
+   each row reuses the existing changelog tag pills and links to the country page and the official
+   source. Shows all entries.
+3. **Feed**: hand-built RSS 2.0 (XML-escaped, RFC 822 dates via `email.utils` — locale-proof),
+   capped at the 50 newest items; item links point to each country's `#change-log` anchor,
+   `guid = slug+date+index`. Channel URLs come from `site_url` in `mkdocs.yml`. Autodiscovery
+   `<link rel="alternate">` on every page via `overrides/main.html`.
+4. **Trustworthy inputs**: checks **G10–G12** now enforce parseable dates, non-empty descriptions,
+   and https sources on changelog entries.
+
+**Key Files:**
+- `gen_pages.py` — collection + page + feed emission (bottom section).
+- `templates/changes.md.jinja` — the page template.
+- `overrides/main.html` — RSS autodiscovery link.
+- `validate/checks.py` — G10–G12.

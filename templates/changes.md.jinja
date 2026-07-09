@@ -1,0 +1,32 @@
+{#- ── Site-wide Change Log ───────────────────────────────────────────────────
+    Rendered by gen_pages.py as the virtual page changes.md. Context:
+      months   — list of {label: "July 2026", entries: [...]}, newest first;
+                 each entry: {date, country, slug, type, description, source}
+      feed_url — absolute URL of changes.xml (RSS 2.0)
+      total    — total entry count across all countries
+    Reuses the existing per-country changelog table + tag classes (theme.css
+    §21) — no new visual language; the redesign will restyle later.
+-#}
+# Change Log
+
+Every rule, fee, document, and process change recorded across the wiki — newest first.
+Each entry links to its country page and its official source.
+
+<small>{{ total }} change{{ "s" if total != 1 }} tracked · <a href="{{ feed_url }}" rel="alternate" type="application/rss+xml">Subscribe via RSS</a></small>
+{% for month in months %}
+
+## {{ month.label }}
+
+<div class="atlas-changelog" markdown>
+
+| Date | Country | Type | Change | Source |
+|------|---------|------|--------|--------|
+{%- for e in month.entries %}
+| {{ e.date }} | [{{ e.country }}]({{ e.slug }}.md) | <span class="atlas-changelog__tag atlas-changelog__tag--{{ e.type | lower }}">{{ e.type }}</span> | {{ e.description }} | [↗]({{ e.source }}) |
+{%- endfor %}
+
+</div>
+{%- endfor %}
+{% if not months %}
+_No changes recorded yet — changelog entries live in each country's YAML file._
+{% endif %}

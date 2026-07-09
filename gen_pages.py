@@ -1,6 +1,9 @@
+import email.utils
 import json
 import os
 import sys
+from datetime import datetime, timezone
+from xml.sax.saxutils import escape
 
 import yaml
 import mkdocs_gen_files
@@ -46,6 +49,12 @@ map_data = {}
 # Collect parsed YAML per file for the /meta/freshness report
 all_countries = {}
 
+# Collect changelog entries across all countries for /changes/ + changes.xml.
+# Locale-independent month names — strftime('%B') follows the OS locale.
+MONTH_NAMES = ("January", "February", "March", "April", "May", "June", "July",
+               "August", "September", "October", "November", "December")
+changelog_entries = []
+
 for filename in os.listdir(data_dir):
     print(f"[gen] Scanning file: {filename}")
 
@@ -89,6 +98,31 @@ for filename in os.listdir(data_dir):
         # Safely strip the extension and add .md
         base_name = os.path.splitext(filename)[0]
         md_filename = f"{base_name}.md"
+
+        # ── Collect changelog entries for the site-wide Change Log ─
+        # Structure/type/source problems are check group G's job (G1/G2,
+        # G10-G12 ERROR in CI); here we only guard the build itself:
+        # an unparseable date is warned about and excluded, never fatal.
+        for entry_idx, entry in enumerate(country_data.get('changelog') or []):
+            if not isinstance(entry, dict):
+                continue
+            try:
+                entry_date = datetime.strptime(
+                    str(entry.get('date')), '%Y-%m-%d').date()
+            except (TypeError, ValueError):
+                print(f"[gen] WARNING: {filename} changelog[{entry_idx}] has "
+                      f"unparseable date {entry.get('date')!r} - entry excluded "
+                      f"from the Change Log page and RSS feed")
+                continue
+            changelog_entries.append({
+                'date': entry_date,
+                'country': country_data.get('country', base_name.title()),
+                'slug': base_name,
+                'type': str(entry.get('type') or ''),
+                'description': str(entry.get('description') or '').strip(),
+                'source': str(entry.get('source') or ''),
+                'idx': entry_idx,  # index within this country's changelog (stable guid)
+            })
 
         with mkdocs_gen_files.open(md_filename, "w") as fd:
             fd.write(full_markdown)
@@ -145,3 +179,84 @@ if volatility:
     with mkdocs_gen_files.open("meta/freshness.md", "w") as fd:
         fd.write("---\npage_type: meta\n---\n\n" + report_md)
     mkdocs_gen_files.set_edit_path("meta/freshness.md", "data/volatility.yaml")
+
+
+# ── Generate /changes/ (site-wide Change Log) + changes.xml (RSS 2.0) ───────
+print(f"[gen] Generating Change Log page + RSS feed "
+      f"({len(changelog_entries)} entries)")
+
+# site_url from mkdocs.yml (mkdocs-gen-files exposes the live config);
+# fall back to the canonical URL if run outside mkdocs.
+_config = getattr(mkdocs_gen_files, 'config', None)
+site_url = (_config.get('site_url') if _config else None) or "https://atlas-wiki.pages.dev/"
+if not site_url.endswith('/'):
+    site_url += '/'
+feed_url = f"{site_url}changes.xml"
+
+# Newest first; stable country-name tie-break within a date.
+changelog_entries.sort(key=lambda e: e['country'])
+changelog_entries.sort(key=lambda e: e['date'], reverse=True)
+
+# Group by calendar month for the page ("July 2026"), preserving date order.
+months = []
+for e in changelog_entries:
+    label = f"{MONTH_NAMES[e['date'].month - 1]} {e['date'].year}"
+    if not months or months[-1]['label'] != label:
+        months.append({'label': label, 'entries': []})
+    months[-1]['entries'].append({**e, 'date': e['date'].isoformat()})
+
+changes_template = env.get_template('changes.md.jinja')
+rendered_changes = changes_template.render(
+    months=months, feed_url=feed_url, total=len(changelog_entries))
+with mkdocs_gen_files.open("changes.md", "w") as fd:
+    fd.write("---\npage_type: changes\n---\n\n" + rendered_changes)
+# The page aggregates every country's changelog; route edits to the data dir.
+mkdocs_gen_files.set_edit_path("changes.md", "data/visas")
+
+# ── RSS 2.0 feed: 50 most recent items, hand-built with XML escaping ────────
+rss_items = []
+for e in changelog_entries[:50]:
+    desc = e['description']
+    title = f"{e['country']}: {e['type']} — " + (
+        desc if len(desc) <= 80 else desc[:80].rstrip() + "…")
+    link = f"{site_url}{e['slug']}/#change-log"
+    pub = email.utils.format_datetime(  # RFC 822, locale-independent
+        datetime(e['date'].year, e['date'].month, e['date'].day,
+                 tzinfo=timezone.utc))
+    guid = f"{e['slug']}-{e['date'].isoformat()}-{e['idx']}"
+    rss_items.append(
+        "    <item>\n"
+        f"      <title>{escape(title)}</title>\n"
+        f"      <link>{escape(link)}</link>\n"
+        f"      <description>{escape(desc)}</description>\n"
+        f"      <pubDate>{pub}</pubDate>\n"
+        f"      <guid isPermaLink=\"false\">{escape(guid)}</guid>\n"
+        "    </item>"
+    )
+
+last_build = (email.utils.format_datetime(
+    datetime(changelog_entries[0]['date'].year,
+             changelog_entries[0]['date'].month,
+             changelog_entries[0]['date'].day, tzinfo=timezone.utc))
+    if changelog_entries else email.utils.format_datetime(
+        datetime.now(timezone.utc)))
+
+rss = (
+    '<?xml version="1.0" encoding="UTF-8"?>\n'
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+    '  <channel>\n'
+    '    <title>Atlas — Change Log</title>\n'
+    f'    <link>{escape(site_url)}changes/</link>\n'
+    '    <description>Visa rule, fee, document, and process changes for '
+    'Indian passport holders, aggregated across every country on the '
+    'Atlas wiki.</description>\n'
+    '    <language>en</language>\n'
+    f'    <lastBuildDate>{last_build}</lastBuildDate>\n'
+    f'    <atom:link href="{escape(feed_url)}" rel="self" '
+    'type="application/rss+xml" />\n'
+    + "\n".join(rss_items) + ("\n" if rss_items else "")
+    + '  </channel>\n'
+    '</rss>\n'
+)
+with mkdocs_gen_files.open("changes.xml", "w") as fd:
+    fd.write(rss)

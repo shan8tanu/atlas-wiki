@@ -1,3 +1,16 @@
+{#- ── Per-claim citation macro (check group H) ──────────────────────────────
+    Renders a compact, Wikipedia-style provenance line under a fact block, OR an
+    "unverified" caveat when the block is flagged. Renders NOTHING when a block
+    has neither sources nor unverified — so un-migrated country pages are visually
+    unchanged. `country` is passed in explicitly (macros don't see render context).
+-#}
+{%- macro cite(country, section, sources=none, unverified=false) -%}
+{%- if unverified -%}
+<div class="atlas-unverified">⚠️ <strong>Unverified / Community-Reported</strong> — not yet confirmed against an official source. Confirm with the embassy/consulate before relying on it. <a class="atlas-unverified__report" href="https://github.com/shan8tanu/atlas-wiki/issues/new?labels=unverified-source&amp;title={{ ('Unverified source: ' ~ country ~ ' — ' ~ section) | urlencode }}&amp;body={{ ('**Country:** ' ~ country ~ '\n**Section:** ' ~ section ~ '\n\n**Official source URL:**\n\n**Notes:**\n') | urlencode }}" target="_blank" rel="noopener">Know an official source? Report it →</a></div>
+{%- elif sources -%}
+<div class="atlas-sources"><span class="atlas-sources__label">Sources:</span> {% for s in sources %}<span class="atlas-source"><span class="atlas-source__tier atlas-source__tier--{{ s.tier }}" title="Tier {{ s.tier }} source">T{{ s.tier }}</span> <a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a> <span class="atlas-source__date">accessed {{ s.accessed }}</span></span>{% if not loop.last %}<span class="atlas-source__sep"> · </span>{% endif %}{% endfor %}</div>
+{%- endif -%}
+{%- endmacro -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -41,6 +54,8 @@
 
 </div>
 </div>
+
+{{ cite(country, "Requirements & Fees", requirements.sources, requirements.unverified) }}
 
 ## Document Checklist
 
@@ -119,6 +134,12 @@
     <span class="atlas-checklist__text">Visa fee payment — ₹{{ requirements.visa_fee_inr }}</span>
   </label>
 </div>
+{%- if visa_types %}
+{%- for vtype, vdata in visa_types.items() %}
+
+{{ cite(country, "Documents — " ~ vdata.label, vdata.sources, vdata.unverified) }}
+{%- endfor %}
+{%- endif %}
 
 <details class="atlas-cover-letter">
 <summary>Sample cover letter for {{ country }} {{ visa_type }}</summary>
@@ -188,6 +209,8 @@ Your application must be submitted to the consular office responsible for your *
 {%- endfor %}
 
 </div>
+
+{{ cite(country, "Where to Apply", jurisdiction_sources, jurisdiction_unverified) }}
 {%- endif %}
 
 {%- if transit %}
@@ -213,6 +236,8 @@ Your application must be submitted to the consular office responsible for your *
 {%- endif %}
 
 </div>
+
+{{ cite(country, "Transit Rules", transit.sources, transit.unverified) }}
 {%- endif %}
 
 {%- if exemptions %}
@@ -240,6 +265,8 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 {%- endfor %}
 
 </div>
+
+{{ cite(country, "Visa Exemptions", exemptions_sources, exemptions_unverified) }}
 {%- endif %}
 
 {%- if ecr %}
@@ -253,6 +280,8 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 {{ ecr.note }}
 
 </div>
+
+{{ cite(country, "ECR / Non-ECR Passport", ecr.sources, ecr.unverified) }}
 {%- endif %}
 
 ## Public Health & Vaccinations
@@ -279,6 +308,8 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 
 </div>
 
+{{ cite(country, "Health & Vaccinations", health.sources, health.unverified) }}
+
 {%- if biometrics %}
 
 ## Biometrics
@@ -294,6 +325,8 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 {{ biometrics.note }}
 
 </div>
+
+{{ cite(country, "Biometrics", biometrics.sources, biometrics.unverified) }}
 {%- endif %}
 
 {%- if changelog %}

@@ -53,7 +53,9 @@ atlas/
 │   ├── PULL_REQUEST_TEMPLATE/    # PR templates (core_feature.md, data_correction.md)
 │   └── workflows/
 │       ├── ci.yml                # PR validation: validate.py → mkdocs build --strict → htmlproofer
-│       └── link-check.yml        # Weekly link health check (Mondays 6 AM UTC)
+│       ├── link-check.yml        # Weekly link health check (Mondays 6 AM UTC)
+│       └── accuracy-audit.yml    # Weekly AI accuracy audit (Mondays 7 AM UTC)
+│   # NOTE (2026-07-08): CODEOWNERS listed below does NOT exist in the repo — see session log
 ├── data/
 │   ├── transit/                  # Transit guide data
 │   │   └── transit_rules.yaml   # 6 airport hubs (FRA, CDG, LHR, DXB, SIN, IST)
@@ -125,8 +127,10 @@ atlas/
 ├── validate.py                   # CLI: structural YAML validation
 ├── validate_accuracy.py          # CLI: AI-powered accuracy audit (needs ANTHROPIC_API_KEY)
 ├── admin_update.py               # CLI: trusted-source YAML updates with diff + confirmation
+├── add_country.py                # CLI: AI new-country pipeline (research→draft→validate→PR)
 ├── add_visa_types.py             # One-shot: bulk-added visa_types to all YAMLs
-└── add_occupation_docs.py        # One-shot: bulk-added occupation_documents to all YAMLs
+├── add_occupation_docs.py        # One-shot: bulk-added occupation_documents to all YAMLs
+└── atlas_PROJECT_STATE.md              # Current-state snapshot (regenerated 2026-07-08)
 ```
 
 ---
@@ -386,3 +390,63 @@ atlas/
 **Files touched:**
 - .gitignore — added settings.local.json exclusion (main)
 - data/visas + data/sources for sri-lanka, united-kingdom, canada, maldives — on their PR branches
+
+### Session: 2026-07-08 — Claude (Opus 4.8)
+**Branch:** main
+**What changed:**
+- Did a full file-by-file review of the repo and drafted `atlas_PROJECT_STATE.md` — a point-in-time current-state snapshot (distinct from this append-only log). Covers build pipeline, schema contract, validation groups A–G, all 5 CLI tools + model IDs, frontend, CI/CD, and a "Known drift" section.
+- Updated stale documentation to match reality:
+  - `FEATURES.md` — rewrote the Community/CI section. Removed references to `.github/CODEOWNERS` and `.github/workflows/deploy.yml` (neither exists), corrected hosting from GitHub Pages to Cloudflare Pages, fixed the PR-template path (now a `PULL_REQUEST_TEMPLATE/` directory), and added validate.py + the link-check/accuracy-audit workflows.
+  - `.ai_context.md` — added a header note flagging it as founding vision (not current impl) and pointing to atlas_PROJECT_STATE.md.
+  - This file — added `accuracy-audit.yml`, `add_country.py`, `atlas_PROJECT_STATE.md` to the folder tree and a note that the CODEOWNERS line in the tree is inaccurate.
+- **Drift findings (surfaced, not auto-fixed):**
+  1. All 26 `docs/<country>.md` and `docs/map-data.json` are committed but regenerated in-memory by `gen_pages.py` every build — stale artifacts (last touched 2026-03-01). Build is unaffected (virtual wins) but they contradict CLAUDE.md's "don't exist on disk." Candidates for deletion from git — left for founder decision.
+  2. `.github/CODEOWNERS` referenced by old docs does not exist anywhere in the repo.
+  3. `data/sources/` exists only on PR branches, not `main`.
+- Verified: `python validate.py` → 1214 checks, 0 errors, 0 warnings; `mkdocs build --strict` → exit 0.
+**Files touched:**
+- `atlas_PROJECT_STATE.md` — created
+- `FEATURES.md` — corrected Community/CI section + added atlas_PROJECT_STATE.md pointer
+- `.ai_context.md` — added header pointer note
+- `.ai-state/STATE.md` — folder-tree additions + this session log entry
+
+### Session: 2026-07-09 — Claude (Opus 4.8)
+**Branch:** feat/per-claim-citations (from main)
+**What changed:**
+- **Item Zero — per-claim citations infrastructure + Japan reference.** Every citable fact block
+  can now display source link + authority tier + access date, or an "unverified" caveat.
+- **Schema**: added optional `sources` list (`url`/`tier` 1–3/`label`/`accessed`) + `unverified`
+  bool to dict blocks (requirements, health, each visa_types entry, transit, ecr, biometrics) and
+  parallel `jurisdiction_sources`/`_unverified` + `exemptions_sources`/`_unverified` for the list
+  blocks. Single source of truth: `CITABLE_BLOCKS` registry in `validate/schema.py`.
+- **Validation group H** (`validate/checks.py` `check_h`): H1–H5 validate each source entry's
+  shape (fields, https URL, tier ∈ {1,2,3}, parseable date); H6 warns when a citable block lacks
+  both `sources` and `unverified` — new `--strict-citations` flag upgrades H6 to an error to gate
+  CI post-migration. Wired into `validate.py`; docstring updated.
+- **Rendering**: `cite()` macro in `templates/country.md.jinja` renders a subtle tier-badged
+  "Sources" line or an amber "Unverified / Community-Reported" caveat with a prefilled GitHub-issue
+  "Report it" link; blocks with neither render nothing (un-migrated pages unchanged). Styles in
+  `docs/stylesheets/theme.css` §23.
+- **Japan migrated** as the reference: requirements + standard_visa docs cite the embassy (T1) and
+  VFS (T2) URLs (accessed 2026-07-09, corroborated via web search — origin servers `.go.jp`/VFS
+  bot-block direct fetch with 403, so access was verified through search). health, transit, ecr,
+  biometrics, the e-Visa/long-stay tabs, jurisdiction, and exemptions are honestly flagged
+  `unverified: true` (no openable official source). Japan passes `--strict-citations`.
+- **`add_country.py`**: `_SCHEMA_CONTRACT` now instructs drafts to emit `sources` per block from
+  the provenance sidecar (confidence `web`→tiered source, `pattern`/`unverified`→`unverified: true`).
+- Docs: `atlas_PROJECT_STATE.md` (§4 schema, §5 group H), `FEATURES.md` (new citations section).
+- **Verified**: `validate.py` → exit 0 (129 H6 warnings on the 25 un-migrated countries);
+  `validate.py --strict-citations` → exit 1 (fails on those 25); `--strict-citations --file
+  japan.yaml` → exit 0; malformed-source fixture confirmed H2–H5 fire; `mkdocs build --strict` →
+  exit 0; live preview confirmed Japan renders T1/T2 source lines + 8 unverified caveats and
+  France (non-migrated) renders zero citation markup (no regression).
+- **NOT committed/pushed** — working tree on the feature branch awaiting maintainer review.
+**Files touched:**
+- `validate/schema.py` — ALLOWED_SOURCE_TIERS, SOURCE_REQUIRED_FIELDS, SOURCE_DATE_FORMAT, CITABLE_BLOCKS
+- `validate/checks.py` — `check_h` (group H) + `_iter_present_citable_blocks`
+- `validate.py` — import/wire check_h, `--strict-citations` flag, docstring
+- `templates/country.md.jinja` — `cite()` macro + 10 per-block call sites
+- `docs/stylesheets/theme.css` — §23 sources/unverified styles
+- `data/visas/japan.yaml` — citation migration (reference country)
+- `add_country.py` — citations added to `_SCHEMA_CONTRACT`
+- `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` — docs

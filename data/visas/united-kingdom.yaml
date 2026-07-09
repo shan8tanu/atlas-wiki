@@ -1,0 +1,95 @@
+country: United Kingdom
+iso_code: GB
+visa_difficulty: 4
+visa_type: Standard Visa
+max_stay: 6 months per visit
+entry_type: "Multiple Entry"
+visa_validity: "6 months from issue"
+passport_validity_months: 6
+blank_pages_required: 2
+region: Europe
+
+authority:
+  name: British High Commission, New Delhi (UK Visas & Immigration)
+  processor: VFS Global
+  official_portal: https://www.gov.uk/apply-uk-visa
+
+visa_types:
+  standard_visa:
+    label: Standard Visitor Visa
+    documents:
+      - Online application form completed and submitted via the UKVI portal (gov.uk/apply-uk-visa)
+      - Current valid passport plus all previous passports held within the last 10 years
+      - Two recent passport-size photographs — 35×45 mm, white or light grey plain background
+      - VFS Global biometrics appointment confirmation slip
+      - Bank statements for the last 6 months showing sufficient available funds
+      - Salary slips for the last 3 months (salaried applicants)
+      - Income Tax Return (ITR) acknowledgements for the last 2–3 years
+      - Confirmed return flight tickets and detailed travel itinerary
+      - Proof of accommodation — hotel bookings, Airbnb confirmation, or host's invitation letter
+      - Evidence of strong ties to India — employment letter, property documents, or family commitments
+      - Travel insurance covering the full duration of stay (strongly recommended)
+  long_term:
+    label: Long-term Visitor Visa (2 / 5 / 10 year)
+    documents:
+      - Online application form via UKVI portal — select long-term validity option during application
+      - Current valid passport plus all previous passports from the last 10 years
+      - Bank statements for the last 6–12 months demonstrating consistent and adequate finances
+      - ITR acknowledgements for the last 3 years showing stable, regular income
+      - Employment letter confirming designation, salary, and sanctioned leave period
+      - Evidence of previous UK visits or strong travel history with prior visa stamps
+      - Proof of significant ties to India — property ownership, family, or business interests
+      - Detailed cover letter explaining the need for long-term multiple-entry validity
+
+requirements:
+  visa_fee_inr: 17551
+  processing_days: 15
+  photo_specs:
+    dimensions: 35x45mm
+    bg_color: White or light grey
+  financial_proof: Six months of bank statements demonstrating sufficient funds for the entire trip, supported by ITR acknowledgements for 2–3 years and proof of regular employment or business income.
+  financial_documents:
+    - Bank statements for the last 6 months (all savings and current accounts)
+    - Salary slips for the last 3 months
+    - Income Tax Return (ITR) acknowledgements for the last 2–3 years
+    - Form 16 issued by employer for the last 2 years
+    - Employment letter on company letterhead confirming role, salary, and leave approval
+  occupation_documents:
+    self_employed:
+      - Personal and business bank statements for the last 6 months
+      - ITR for the last 3 years including business income computation sheet
+      - GST registration certificate and most recent GST returns
+      - Business registration certificate or trade licence
+      - CA-certified audited profit and loss account for the last 2 years
+      - Client contracts or recent invoices demonstrating ongoing business activity
+    business_owner:
+      - Personal and company bank statements for the last 6 months
+      - Personal and corporate ITR for the last 3 years
+      - Certificate of incorporation and memorandum or articles of association
+      - Company audited financial statements for the last 2 years
+      - Board resolution or authorisation letter approving director's travel
+      - Director Identification Number (DIN) proof or company registration document
+    student:
+      - Valid student ID card and current enrolment confirmation letter from institution
+      - No Objection Certificate (NOC) from the educational institution
+      - Sponsor's (parent or guardian) bank statements for the last 6 months
+      - Sponsor's ITR for the last 3 years
+      - Notarised affidavit of financial support from parent or guardian
+      - Proof of tuition fee payment for the ongoing academic year
+    homemaker:
+      - Spouse's bank statements for the last 6 months
+      - Spouse's ITR for the last 3 years
+      - Spouse's employment letter or business proof confirming income source
+      - Marriage certificate with certified English translation if not originally in English
+      - Notarised financial support affidavit from spouse
+    retired:
+      - Pension payment slips or pension passbook for the last 3 months
+      - Bank statements for the last 6 months
+      - Pension sanction letter or retirement order from former employer
+      - ITR for the last 3 years (pension or other income)
+      - Proof of assets — fixed deposit certificates, property documents, or investment statements
+
+health:
+  vaccinations: No mandatory vaccination certificates are required to enter the United Kingdom. Routine immunisations including MMR, tetanus, and influenza should be up to date before travel.
+  insurance: Travel health insurance is strongly recommended; Indian visitors on a Standard Visitor Visa have no automatic entitlement to free NHS treatment, and medical costs without adequate coverage can be very substantial.
+  notes: The UK has world-class healthcare infrastructure; NHS Accident and Emergency departments will treat life-threatening emergencies regardless of insurance status, but all routine and non-emergency care requires private payment by visitors. Carry your insurance policy document and the insurer's 24-hour emergency helpline number at all times.

@@ -559,3 +559,38 @@ atlas/
 - `templates/country.md.jinja` — cite() macro hardening (commit `ba3b2b0` on the now-merged PR)
 - `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md`,
   `.github/workflows/accuracy-audit.yml` — documentation sync
+
+### Session: 2026-07-09 — Claude (Opus 4.8) [continued — docs-internal full refresh]
+**Branch:** main
+**What changed:**
+- Full refresh of the gitignored `docs-internal/` suite (~5,300 → ~8,300 lines), which was written
+  2026-03-15/29 and predated citations, freshness, add_country.py, the dark-mode removal, and the
+  4 new countries. Three parallel agents rewrote the five technical parts, each verifying every
+  claim against current source (not prior docs); I handled the two operational docs by hand.
+- Technical parts: Part 01 (arch, 480→1042 lines) gained citations/freshness/add_country deep
+  dives + corrected governance from the live `gh api` ruleset; Part 02 (frontend, 641→889) had its
+  dark-mode/Google-Fonts content replaced with the real light-only/system-font state incl. the
+  `body`-vs-`:root` font-var gotcha; Part 03 (schema, 946→1655) added sources/unverified/
+  cadence_days to every block reference, the cite() walkthrough, and §15/§16 for vision blocks +
+  citations/freshness; Part 04 (validation, 1088→1879) added Groups G/H/I (G was never documented
+  at all), the freshness tier, real governance (no CODEOWNERS; ruleset requires only Build &
+  Validate, no human-approval rule) and the stale-check-name failure scenario; Part 05 (workflows,
+  1192→1806) added freshness_report.py/add_country.py references, H*/I* troubleshooting, and a
+  command cheat sheet.
+- Operational docs: `weekly-validation-plan.md` got a prominent 2026-07-09 update note — the
+  manual weekly audit is largely superseded by the automated `/meta/freshness` queue for cited
+  countries and now primarily drives citation migration; §6 rewritten around add_country.py (4 of
+  6 Batch-1 countries done); rotation tables flagged as not yet re-tiered for the new 4.
+  `audit-log.md` trackers extended with the 4 new countries (tier unassigned — founder call) and
+  annotated that the baseline audit was never run. README.md links fixed (they pointed to
+  pre-rename filenames) + operational-docs table added.
+- Cross-check pass caught and fixed one agent error: Parts 02/03 claimed "only Japan" has the six
+  vision-feature blocks — ground truth (grep of all 30 YAMLs) is Japan AND France (28 of 30 lack
+  them); citations, separately, ARE Japan-only. Agents' independent findings recorded in their
+  parts: old docs misclassified Brazil as e-Visa-primary; Canada/Maldives are the first
+  single-visa-type countries (tabs branch now exercised for real); difficulty tier 5 is now
+  validated; ruleset display name is still the old one (cosmetic — the gating check context is
+  correct).
+**Files touched:**
+- `docs-internal/` (all 8 files — gitignored, local-only; no repo commit for them)
+- `.ai-state/STATE.md` — this entry

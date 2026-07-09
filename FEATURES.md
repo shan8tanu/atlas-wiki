@@ -90,8 +90,41 @@ confirmed. This turns the site's core promise into something a reader can see an
 
 **Key Files:**
 - `validate/schema.py` — `CITABLE_BLOCKS`, `ALLOWED_SOURCE_TIERS`, source-field contract.
-- `validate/checks.py` — `check_h` (groups H1–H6).
+- `validate/checks.py` — `check_h` (groups H1–H7).
 - `templates/country.md.jinja` — the `cite()` macro and per-block call sites.
 - `docs/stylesheets/theme.css` — §23 source-line + unverified-caveat styles.
 - `data/visas/japan.yaml` — the fully-migrated reference country.
 - `add_country.py` — new-country drafts now emit the `sources` structure from provenance.
+
+---
+
+## ⏳ Volatility-Based Freshness (re-verification system)
+
+Cited facts age. Every citable block's `accessed` dates are compared against a site-level
+cadence policy at build time, producing a per-block state — **fresh / aging / overdue** — shown
+on the page and queued for the librarian.
+
+### How it works
+1. **Policy (`data/volatility.yaml`)**: one cadence (days) per citable block type — e.g.
+   requirements 30, visa_types 45, health/transit/jurisdiction/exemptions 90, ecr/biometrics 180.
+   Countries may override per block (`cadence_days` / `<key>_cadence_days`). Check group **I**
+   fails validation if any CITABLE_BLOCKS key lacks a cadence, so the policy stays complete.
+2. **Engine (`freshness.py`)**: at build time, age = today − newest `accessed`; fresh ≤ cadence,
+   aging ≤ 2×, overdue > 2×. Unverified blocks are exempt; unsourced blocks silent. Page rollup
+   is worst-state-wins.
+3. **Rendering**: sources lines gain "· re-checked every N days" plus a text state label when
+   aging/overdue (state always in text, color only reinforces). The Visa Info card gains a
+   Difficulty row (1–5 labels shared with the map) and a page badge — "Facts verified on
+   schedule / Some facts due / Some facts overdue · <latest date>". Unmigrated pages instead show
+   "Last updated <git commit date> · source citations being added" ("verified" = source checked;
+   "updated" = file committed — never mixed).
+4. **Ops surface**: `freshness_report.py` prints the aging/overdue queue + a migration worklist
+   (oldest-commit first) in CI on every run (informational, always exit 0); the same report is
+   published at `/meta/freshness` (URL-only, hidden from nav via `not_in_nav`).
+
+**Key Files:**
+- `data/volatility.yaml` — the cadence policy.
+- `freshness.py` — states, rollup, git-date cache, report builder.
+- `freshness_report.py` — CLI wrapper (CI step in `ci.yml`).
+- `gen_pages.py` — injects `_freshness` / `_page_freshness` / `_difficulty_label`; emits `/meta/freshness`.
+- `validate/checks.py` — H7 (cadence overrides) + `check_i` (policy completeness).

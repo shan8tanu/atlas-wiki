@@ -8,6 +8,18 @@
 
 ---
 
+## Schema changelog
+
+- **2026-07-09** — Freshness: new site-level `data/volatility.yaml` (`cadence_days` per citable
+  block, check group I); country YAML gains optional per-block cadence override — `cadence_days`
+  inside dict blocks / `visa_types.<key>`, or `<key>_cadence_days` parallel key for
+  jurisdiction/exemptions (check H7).
+- **2026-07-09** — Citations (PR #14): optional `sources` list (`url`/`tier` 1–3/`label`/
+  `accessed`) + `unverified: true` on citable blocks; parallel `jurisdiction_sources`/
+  `_unverified` + `exemptions_sources`/`_unverified` (check group H).
+
+---
+
 ## 1. What Atlas is
 
 A **static, citation-backed visa-requirements database for Indian passport holders** — the
@@ -66,7 +78,11 @@ atlas/
 ├── requirements.txt              mkdocs-material, mkdocs-gen-files, jinja2, pyyaml, anthropic
 │
 ├── gen_pages.py                  Build engine: YAML → Jinja → virtual MD + map-data.json
-├── validate.py                   CLI: structural YAML validation (checks A–G)
+│                                 + freshness context + /meta/freshness page
+├── freshness.py                  Freshness engine: cadence policy, block states, page rollup,
+│                                 git-date cache, report builder
+├── freshness_report.py           CLI: librarian's re-verification queue (always exit 0)
+├── validate.py                   CLI: structural YAML validation (checks A–I)
 ├── validate_accuracy.py          CLI: AI accuracy audit (needs ANTHROPIC_API_KEY)
 ├── admin_update.py               CLI: trusted-source YAML updates w/ diff + confirm
 ├── add_country.py                CLI: AI new-country pipeline (research→draft→validate→PR)
@@ -81,6 +97,7 @@ atlas/
 │
 ├── data/
 │   ├── visas/*.yaml              SOURCE OF TRUTH — 26 country files
+│   ├── volatility.yaml           Freshness cadence policy (validated by check I)
 │   └── transit/transit_rules.yaml  6 airport hubs (FRA, CDG, LHR, DXB, SIN, IST)
 │
 ├── templates/
@@ -142,6 +159,19 @@ YYYY-MM-DD) or an `unverified: true` flag. Citable blocks = `requirements`, `hea
 Japan is the fully-migrated reference; the other 25 migrate later. Rendered as subtle tier-badged
 "Sources" lines / an amber "Unverified" caveat by `templates/country.md.jinja`.
 
+**Freshness system** (builds on citations): `data/volatility.yaml` maps each citable block to a
+verification cadence (days); `freshness.py` computes per-block states at build time from the
+newest `accessed` date (fresh ≤ cadence · aging ≤ 2× · overdue > 2×; unverified blocks exempt,
+unsourced blocks silent). Per-block override: `cadence_days` inline (dict blocks) or
+`<key>_cadence_days` (list blocks). `gen_pages.py` injects `_freshness`/`_page_freshness`/
+`_difficulty_label` into the template: sources lines gain "re-checked every N days" (+ text state
+label when aging/overdue), and the Visa Info card gains a Difficulty row (labels in
+`DIFFICULTY_LABELS`, `validate/schema.py`) plus a worst-state-wins page badge (git-commit-date
+"Last updated" fallback for unmigrated pages — never file mtime). Ops surface:
+`freshness_report.py` (always exit 0, printed in CI) + virtual page `/meta/freshness`
+(nav-hidden via `not_in_nav`). Wording rule: "verified" = cited source checked; "updated" = file
+committed.
+
 Full field-by-field intent lives in the `add_country.py` schema contract
 ([add_country.py](add_country.py) `_SCHEMA_CONTRACT`), which doubles as the human-readable spec.
 
@@ -157,7 +187,9 @@ Full field-by-field intent lives in the `add_country.py` schema contract
   **G** optional feature blocks (changelog, jurisdiction, transit, exemptions, ecr, biometrics) ·
   **H** per-claim citations (source entry shape: fields present, https URL, tier ∈ {1,2,3},
   parseable `accessed` date; **H6** warns when a citable block has neither `sources` nor
-  `unverified: true`).
+  `unverified: true`; **H7** validates `cadence_days` overrides) ·
+  **I** volatility policy (site-level, once: `data/volatility.yaml` exists, parses, covers every
+  CITABLE_BLOCKS key, positive-int cadences).
 - Exit 0 = pass (warnings allowed); exit 1 = errors. During the citation migration, group H emits
   H6 **warnings** for un-migrated countries (CI stays green). Pass **`--strict-citations`** to
   upgrade H6 to an error — flip CI to it once all 26 countries are migrated. Japan already passes

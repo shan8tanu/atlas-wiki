@@ -41,6 +41,11 @@ plugins:
       scripts:
         - gen_pages.py
 
+# Internal pages reachable by URL only (e.g. /meta/freshness) — deliberately
+# outside the nav; this silences the "not in nav" notice explicitly.
+not_in_nav: |
+  meta/*
+
 extra:
   social:
     - icon: fontawesome/brands/github

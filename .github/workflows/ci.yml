@@ -37,6 +37,11 @@ jobs:
       - name: Validate YAML data
         run: python validate.py
 
+      - name: Freshness report (informational)
+        # Librarian's re-verification queue — always exits 0, never gates the
+        # build. The same content is published at /meta/freshness.
+        run: python freshness_report.py
+
       - name: Build site (strict mode)
         # --strict turns warnings into errors so broken templates or bad YAML
         # cause the check to fail and block the PR.

@@ -450,3 +450,51 @@ atlas/
 - `data/visas/japan.yaml` — citation migration (reference country)
 - `add_country.py` — citations added to `_SCHEMA_CONTRACT`
 - `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` — docs
+
+### Session: 2026-07-09 — Claude (Opus 4.8) [continued — freshness system]
+**Branch:** feat/freshness-system (from main, after PR #14 merged)
+**What changed:**
+- PR #14 merged to main (squash, `d45a6c7`). Also fixed the repo RULESET (not code): it required
+  a status check named "Build & Link Health Check" but the CI job was renamed "Build & Validate"
+  in `0b8f9a5` — every PR was silently BLOCKED. Updated ruleset 13252933 via gh api to the real
+  check name. PRs #10–#13 left open (their human-verification checkboxes are unchecked).
+- **Volatility-based freshness system** on top of citations:
+  - `data/volatility.yaml` — cadence policy: requirements 30d, visa_types 45d,
+    health/transit/jurisdiction/exemptions 90d, ecr/biometrics 180d. Per-block override
+    `cadence_days` (dict blocks) / `<key>_cadence_days` (list blocks).
+  - `freshness.py` — engine: block states (fresh ≤ cadence · aging ≤ 2× · overdue > 2× from
+    newest `accessed`; unverified exempt, unsourced silent), worst-state-wins page rollup,
+    ONE-git-call last-commit-date cache (never file mtime), report builder (console + markdown).
+  - `freshness_report.py` — CLI, always exit 0 (librarian queue, not a gate); `--data-dir`/`--today`
+    flags for fixtures. New CI step prints it on every run.
+  - `gen_pages.py` — sys.path guard for repo-root imports; injects `_freshness`,
+    `_page_freshness` (incl. git_date fallback), `_difficulty_label`; emits virtual
+    `/meta/freshness` page (nav-hidden via mkdocs `not_in_nav: meta/*`).
+  - Template: `cite()` gained `fresh` arg — sources lines append "· re-checked every N days" +
+    text state label when aging/overdue (never color alone). Visa Info card gained a Difficulty
+    row (`DIFFICULTY_LABELS` added to validate/schema.py, mirrors map.js 1–5 incl. 5=Restricted)
+    and the page badge ("Facts verified on schedule / due / overdue · date · some sections
+    pending citation" | fallback "Last updated <git date> · source citations being added").
+    Wording rule: "verified" = source checked, "updated" = commit.
+  - Validation: `_iter_present_citable_blocks` now yields a 5-tuple (+cadence override), H7
+    validates overrides, new site-level `check_i` (I1–I4) enforces policy completeness.
+- **Verified**: validate.py exit 0 (129 H6 warnings unchanged, 1219 passed); I3/I4 fire on a
+  doctored scratch policy; fixture (scratchpad, deleted) exercised fresh+aging+overdue and
+  worst-wins=overdue with correct report ordering; real report exit 0 (japan all fresh, 25-country
+  worklist oldest-first); `mkdocs build --strict` green with `site/meta/freshness/index.html`;
+  DOM-verified via preview: japan badge "Facts verified on schedule · 2026-07-09" + Difficulty
+  "4 — Standard Visa" + "re-checked every 30/45 days" spans; thailand shows ONLY Difficulty row +
+  "Last updated 2026-03-15 · source citations being added" (zero citation markup); /meta/freshness
+  renders both sections (screenshot tool timed out — DOM checks used instead).
+**Files touched:**
+- `data/volatility.yaml` — created (cadence policy)
+- `freshness.py`, `freshness_report.py` — created
+- `validate/schema.py` — DIFFICULTY_LABELS
+- `validate/checks.py` — iterator 5-tuple, H7, check_i
+- `validate.py` — wire check_i, docstring A–I
+- `gen_pages.py` — freshness context + /meta/freshness
+- `templates/country.md.jinja` — fresh arg, call sites, Difficulty row, page badge
+- `docs/stylesheets/theme.css` — freshness + page-badge styles
+- `mkdocs.yml` — not_in_nav meta/*
+- `.github/workflows/ci.yml` — freshness report step
+- `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` — docs

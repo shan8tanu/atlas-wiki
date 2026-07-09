@@ -667,11 +667,16 @@ def check_g(filepath: str, data: dict) -> List[CheckResult]:
 #         → WARNING by default, ERROR when strict_citations is enabled. This lets
 #         un-migrated countries pass normal CI while `--strict-citations` (used to
 #         flip enforcement on later) fails on them.
+#   H7  — a `cadence_days` freshness override, if present, is a positive int.
 
 def _iter_present_citable_blocks(data: dict):
     """
-    Yield (block_id, label, sources, unverified) for every citable fact block
-    that is actually present in `data`.
+    Yield (block_id, label, sources, unverified, cadence_override) for every
+    citable fact block that is actually present in `data`.
+
+    cadence_override is the block's optional `cadence_days` value (or the
+    parallel `<key>_cadence_days` for list blocks) — None when not set. It is
+    consumed by freshness.py and validated by H7.
     """
     for spec in CITABLE_BLOCKS:
         key, kind = spec["key"], spec["kind"]
@@ -679,7 +684,8 @@ def _iter_present_citable_blocks(data: dict):
 
         if kind == "dict":
             if isinstance(val, dict):
-                yield (key, spec["label"], val.get("sources"), val.get("unverified"))
+                yield (key, spec["label"], val.get("sources"), val.get("unverified"),
+                       val.get("cadence_days"))
 
         elif kind == "dict_items":
             if isinstance(val, dict):
@@ -687,12 +693,14 @@ def _iter_present_citable_blocks(data: dict):
                     if isinstance(sub, dict):
                         label = f"{spec['label']} - {sub.get('label', sub_key)}"
                         yield (f"{key}.{sub_key}", label,
-                               sub.get("sources"), sub.get("unverified"))
+                               sub.get("sources"), sub.get("unverified"),
+                               sub.get("cadence_days"))
 
         elif kind == "list":
             if isinstance(val, list) and len(val) > 0:
                 yield (key, spec["label"],
-                       data.get(spec["sources_key"]), data.get(spec["unverified_key"]))
+                       data.get(spec["sources_key"]), data.get(spec["unverified_key"]),
+                       data.get(f"{key}_cadence_days"))
 
 
 def check_h(filepath: str, data: dict, strict_citations: bool = False) -> List[CheckResult]:
@@ -747,11 +755,17 @@ def check_h(filepath: str, data: dict, strict_citations: bool = False) -> List[C
                         f"{loc}.accessed {accessed!r} is not a valid "
                         f"{SOURCE_DATE_FORMAT} date"))
 
-    for block_id, label, sources, unverified in _iter_present_citable_blocks(data):
+    for block_id, label, sources, unverified, cadence in _iter_present_citable_blocks(data):
         # H1: unverified, if present, must be a bool
         if unverified is not None and not isinstance(unverified, bool):
             results.append(_err("H1", short,
                 f"{block_id}.unverified must be bool, got {type(unverified).__name__}"))
+
+        # H7: cadence_days override, if present, must be a positive int
+        if cadence is not None and (not isinstance(cadence, int)
+                                    or isinstance(cadence, bool) or cadence < 1):
+            results.append(_err("H7", short,
+                f"{block_id} cadence_days override must be a positive int, got {cadence!r}"))
 
         if sources is not None:
             _validate_sources(block_id, sources)
@@ -769,5 +783,56 @@ def check_h(filepath: str, data: dict, strict_citations: bool = False) -> List[C
     if not any(r.check_id.startswith("H") and not r.passed for r in results):
         results.append(_ok("H", short,
             "citations valid; all present blocks are cited or flagged unverified"))
+
+    return results
+
+
+# ── Group I: Volatility policy (site-level, run once) ─────────────────────────
+# The freshness system (freshness.py) needs a complete cadence policy:
+#   I1 — data/volatility.yaml exists and parses as YAML
+#   I2 — it has a `cadence_days` dict
+#   I3 — every CITABLE_BLOCKS key has an entry (missing key = ERROR, so the
+#        policy can never silently fall behind the block registry)
+#   I4 — every cadence value is a positive int
+
+def check_i(volatility_path: str = os.path.join("data", "volatility.yaml")) -> List[CheckResult]:
+    short = os.path.basename(volatility_path)
+    results = []
+
+    if not os.path.exists(volatility_path):
+        results.append(_err("I1", short, f"{volatility_path} not found"))
+        return results
+
+    try:
+        with open(volatility_path, encoding="utf-8") as fh:
+            vol = yaml.safe_load(fh)
+    except yaml.YAMLError as exc:
+        results.append(_err("I1", short, f"YAML parse error: {exc}"))
+        return results
+    results.append(_ok("I1", short, "volatility.yaml parses"))
+
+    cadences = vol.get("cadence_days") if isinstance(vol, dict) else None
+    if not isinstance(cadences, dict):
+        results.append(_err("I2", short, "volatility.yaml must contain a `cadence_days` dict"))
+        return results
+    results.append(_ok("I2", short, "cadence_days dict present"))
+
+    # I3: complete coverage of the citable-block registry
+    missing = [spec["key"] for spec in CITABLE_BLOCKS if spec["key"] not in cadences]
+    for key in missing:
+        results.append(_err("I3", short,
+            f"cadence_days is missing an entry for citable block {key!r}"))
+    if not missing:
+        results.append(_ok("I3", short,
+            f"cadence_days covers all {len(CITABLE_BLOCKS)} citable blocks"))
+
+    # I4: positive-int values
+    bad = {k: v for k, v in cadences.items()
+           if not isinstance(v, int) or isinstance(v, bool) or v < 1}
+    for k, v in bad.items():
+        results.append(_err("I4", short,
+            f"cadence_days.{k} must be a positive int, got {v!r}"))
+    if not bad:
+        results.append(_ok("I4", short, "all cadence values are positive ints"))
 
     return results

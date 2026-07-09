@@ -19,3 +19,11 @@ At the end of your session, append a new entry to the **Session Log** section in
 4. **Use `mkdocs serve` for local preview.** The dev server config is in `.claude/launch.json` (port 8000).
 
 5. **Don't commit `site/` or `docs-internal/`.** Both are gitignored. `site/` is auto-generated; `docs-internal/` is local documentation.
+
+## Session close-out
+Before ending any session that changed code or data:
+1. Update PROJECT_STATE.md: what changed, new/changed schema fields,
+   new validate.py check groups, open TODOs.
+2. If the country YAML schema changed, note the change at the top of
+   PROJECT_STATE.md under "## Schema changelog" with the date.
+3. Commit and push.

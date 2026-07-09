@@ -1,0 +1,22 @@
+# Volatility policy — verification cadence (in days) per citable fact block.
+#
+# This is the SITE-LEVEL policy consumed by freshness.py (build-time freshness
+# states), freshness_report.py (librarian worklist), and validate.py (check I).
+# One entry per key in CITABLE_BLOCKS (validate/schema.py); validation FAILS if
+# a block key is missing here, so the policy stays complete as blocks are added.
+#
+# A country YAML may override a single block's cadence with `cadence_days`
+# (inside dict blocks / visa_types entries) or `<key>_cadence_days` (parallel
+# key for the list blocks jurisdiction/exemptions).
+#
+# Freshness states, derived from the newest `accessed` date among a block's
+# sources: fresh (age <= cadence) · aging (<= 2x cadence) · overdue (> 2x).
+cadence_days:
+  requirements: 30   # fees, portals, forms change fastest
+  visa_types: 45     # document checklists per visa route
+  health: 90
+  transit: 90
+  jurisdiction: 90
+  exemptions: 90
+  ecr: 180
+  biometrics: 180

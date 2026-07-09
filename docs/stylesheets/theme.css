@@ -828,6 +828,42 @@ body.atlas-page--home .md-content__inner > h1:first-of-type {
   color: var(--atlas-link);
 }
 
+/* Freshness state, appended to the sources line. State is always carried by
+   TEXT ("re-verification due" / "overdue for re-verification"); the tint is
+   reinforcement only — never color alone. */
+.atlas-freshness {
+  color: var(--atlas-muted);
+}
+
+.atlas-freshness--aging {
+  color: #b7791f;
+  font-weight: 600;
+}
+
+.atlas-freshness--overdue {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* Page-level freshness badge at the bottom of the Visa Info overview card.
+   "verified" = cited source checked · "updated" = data file committed. */
+.atlas-page-badge {
+  margin: 0.75rem 0 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--atlas-border);
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--atlas-muted);
+}
+
+.atlas-page-badge--aging {
+  color: #b7791f;
+}
+
+.atlas-page-badge--overdue {
+  color: #c0392b;
+}
+
 
 /* ── 17. Accessibility ────────────────────────────────────────── */
 

@@ -5,6 +5,16 @@ All constants are hardcoded — no network access required.
 
 ALLOWED_VISA_DIFFICULTIES = {1, 2, 3, 4, 5}
 
+# Human labels for visa_difficulty tiers. Keep in sync with the JS mirror in
+# docs/javascripts/map.js (COLORS/LABELS) and the legend in docs/map.md.
+DIFFICULTY_LABELS = {
+    1: "Visa-Free",
+    2: "e-Visa",
+    3: "Visa on Arrival",
+    4: "Standard Visa",
+    5: "Restricted",
+}
+
 ALLOWED_VISA_TYPES = {"Standard Visa", "e-Visa", "Visa on Arrival"}
 
 ALLOWED_REGIONS = {"Asia", "Europe", "Americas", "Oceania", "Middle East"}

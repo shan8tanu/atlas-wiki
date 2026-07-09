@@ -4,11 +4,11 @@
     has neither sources nor unverified — so un-migrated country pages are visually
     unchanged. `country` is passed in explicitly (macros don't see render context).
 -#}
-{%- macro cite(country, section, sources=none, unverified=false) -%}
+{%- macro cite(country, section, sources=none, unverified=false, fresh=none) -%}
 {%- if unverified -%}
 <div class="atlas-unverified">⚠️ <strong>Unverified / Community-Reported</strong> — not yet confirmed against an official source. Confirm with the embassy/consulate before relying on it. <a class="atlas-unverified__report" href="https://github.com/shan8tanu/atlas-wiki/issues/new?labels=unverified-source&amp;title={{ ('Unverified source: ' ~ country ~ ' — ' ~ section) | urlencode }}&amp;body={{ ('**Country:** ' ~ country ~ '\n**Section:** ' ~ section ~ '\n\n**Official source URL:**\n\n**Notes:**\n') | urlencode }}" target="_blank" rel="noopener">Know an official source? Report it →</a></div>
 {%- elif sources -%}
-<div class="atlas-sources"><span class="atlas-sources__label">Sources:</span> {% for s in sources %}<span class="atlas-source"><span class="atlas-source__tier atlas-source__tier--{{ s.tier }}" title="Tier {{ s.tier }} source">T{{ s.tier }}</span> <a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a> <span class="atlas-source__date">accessed {{ s.accessed }}</span></span>{% if not loop.last %}<span class="atlas-source__sep"> · </span>{% endif %}{% endfor %}</div>
+<div class="atlas-sources"><span class="atlas-sources__label">Sources:</span> {% for s in sources %}<span class="atlas-source"><span class="atlas-source__tier atlas-source__tier--{{ s.tier }}" title="Tier {{ s.tier }} source">T{{ s.tier }}</span> <a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a> <span class="atlas-source__date">accessed {{ s.accessed }}</span></span>{% if not loop.last %}<span class="atlas-source__sep"> · </span>{% endif %}{% endfor %}{% if fresh %} <span class="atlas-freshness atlas-freshness--{{ fresh.state }}">· re-checked every {{ fresh.cadence }} days{% if fresh.state == 'aging' %} · re-verification due{% elif fresh.state == 'overdue' %} · overdue for re-verification{% endif %}</span>{% endif %}</div>
 {%- endif -%}
 {%- endmacro -%}
 <script type="application/ld+json">
@@ -36,12 +36,21 @@
 ### Visa Info
 
 * **Visa Type:** {{ visa_type | default("Standard Visa") }}
+{%- if _difficulty_label %}
+* **Difficulty:** {{ visa_difficulty }} — {{ _difficulty_label }}
+{%- endif %}
 * **Entry Type:** {{ entry_type | default("Single Entry") }}
 * **Maximum Stay:** {{ max_stay | default("Varies") }}
 * **Visa Validity:** {{ visa_validity | default("Refer to visa stamp") }}
 * **Visa Fee:** ₹{{ requirements.visa_fee_inr }}
 * **Processing Time:** {{ requirements.processing_days }} working days
 * **Photo Spec:** {{ requirements.photo_specs.dimensions }}, {{ requirements.photo_specs.bg_color }} bg
+
+{%- if _page_freshness and _page_freshness.state %}
+<p class="atlas-page-badge atlas-page-badge--{{ _page_freshness.state }}">{% if _page_freshness.state == 'fresh' %}Facts verified on schedule{% elif _page_freshness.state == 'aging' %}Some facts due for re-verification{% else %}Some facts overdue{% endif %} · {{ _page_freshness.latest_accessed }}{% if _page_freshness.pending %} · some sections pending citation{% endif %}</p>
+{%- elif _page_freshness and _page_freshness.git_date %}
+<p class="atlas-page-badge atlas-page-badge--none">Last updated {{ _page_freshness.git_date }} · source citations being added</p>
+{%- endif %}
 
 </div>
 <div class="atlas-card atlas-card--authority" markdown>
@@ -55,7 +64,7 @@
 </div>
 </div>
 
-{{ cite(country, "Requirements & Fees", requirements.sources, requirements.unverified) }}
+{{ cite(country, "Requirements & Fees", requirements.sources, requirements.unverified, _freshness.get('requirements')) }}
 
 ## Document Checklist
 
@@ -137,7 +146,7 @@
 {%- if visa_types %}
 {%- for vtype, vdata in visa_types.items() %}
 
-{{ cite(country, "Documents — " ~ vdata.label, vdata.sources, vdata.unverified) }}
+{{ cite(country, "Documents — " ~ vdata.label, vdata.sources, vdata.unverified, _freshness.get('visa_types.' ~ vtype)) }}
 {%- endfor %}
 {%- endif %}
 
@@ -210,7 +219,7 @@ Your application must be submitted to the consular office responsible for your *
 
 </div>
 
-{{ cite(country, "Where to Apply", jurisdiction_sources, jurisdiction_unverified) }}
+{{ cite(country, "Where to Apply", jurisdiction_sources, jurisdiction_unverified, _freshness.get('jurisdiction')) }}
 {%- endif %}
 
 {%- if transit %}
@@ -237,7 +246,7 @@ Your application must be submitted to the consular office responsible for your *
 
 </div>
 
-{{ cite(country, "Transit Rules", transit.sources, transit.unverified) }}
+{{ cite(country, "Transit Rules", transit.sources, transit.unverified, _freshness.get('transit')) }}
 {%- endif %}
 
 {%- if exemptions %}
@@ -266,7 +275,7 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 
 </div>
 
-{{ cite(country, "Visa Exemptions", exemptions_sources, exemptions_unverified) }}
+{{ cite(country, "Visa Exemptions", exemptions_sources, exemptions_unverified, _freshness.get('exemptions')) }}
 {%- endif %}
 
 {%- if ecr %}
@@ -281,7 +290,7 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 
 </div>
 
-{{ cite(country, "ECR / Non-ECR Passport", ecr.sources, ecr.unverified) }}
+{{ cite(country, "ECR / Non-ECR Passport", ecr.sources, ecr.unverified, _freshness.get('ecr')) }}
 {%- endif %}
 
 ## Public Health & Vaccinations
@@ -308,7 +317,7 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 
 </div>
 
-{{ cite(country, "Health & Vaccinations", health.sources, health.unverified) }}
+{{ cite(country, "Health & Vaccinations", health.sources, health.unverified, _freshness.get('health')) }}
 
 {%- if biometrics %}
 
@@ -326,7 +335,7 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 
 </div>
 
-{{ cite(country, "Biometrics", biometrics.sources, biometrics.unverified) }}
+{{ cite(country, "Biometrics", biometrics.sources, biometrics.unverified, _freshness.get('biometrics')) }}
 {%- endif %}
 
 {%- if changelog %}

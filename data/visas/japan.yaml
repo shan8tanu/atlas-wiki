@@ -49,6 +49,30 @@ visa_types:
 
 requirements:
   visa_fee_inr: 500
+  # Fee breakdown — amounts verified 2026-07-10 against the VFS Global
+  # one-pager already cited in sources below. Totals are computed at build
+  # time (gen_pages.py); visa_fee_inr above must stay equal to the
+  # is_government_fee component (check J4).
+  fees:
+    components:
+      - label: "Government visa fee (single entry)"
+        amount_inr: 500
+        mandatory: true
+        refundable: true
+        is_government_fee: true
+        note: "Refunded only if the visa is not approved"
+      - label: "VFS Global service charge"
+        amount_inr: 800
+        mandatory: true
+        refundable: false
+        note: "Inclusive of taxes, per application; effective 01 Apr 2026. Refund terms not published — treated as non-refundable"
+      - label: "Courier return of passport"
+        amount_inr: 550
+        mandatory: false
+        refundable: false
+        note: "Optional; collect in person at the VFS centre to skip this"
+    payment_methods: ["Cash", "Card (POS)", "UPI"]
+    fee_last_revised: "2026-04-01"
   processing_days: 4
   photo_specs:
     dimensions: 35x45mm
@@ -94,7 +118,7 @@ requirements:
     - url: https://www.vfsglobal.com/one-pager/japan/india/bengaluru/index.html
       tier: 2
       label: "VFS Global — Japan visa service charges (India)"
-      accessed: "2026-07-09"
+      accessed: "2026-07-10"
 
 health:
   # No Japan-specific official public-health source located; guidance is general.

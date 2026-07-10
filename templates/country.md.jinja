@@ -354,7 +354,7 @@ Indian passport holders may qualify for simplified or waived visa requirements i
 | Date | Type | Change | Source |
 |------|------|--------|--------|
 {%- for entry in changelog %}
-| {{ entry.date }} | <span class="atlas-changelog__tag atlas-changelog__tag--{{ entry.type | lower }}">{{ entry.type }}</span> | {{ entry.description }} | [↗]({{ entry.source }}) |
+| {{ entry.date }} | <span class="atlas-changelog__tag atlas-changelog__tag--{{ entry.type | lower }}">{{ entry.type }}</span> | {{ entry.description | replace("|", "\|") }} | [↗]({{ entry.source }}) |
 {%- endfor %}
 
 </div>

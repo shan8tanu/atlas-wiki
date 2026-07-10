@@ -14,9 +14,9 @@ authority:
   official_portal: https://india.diplo.de/
 # Citations (2026-07-10): india.diplo.de fee page and the EU Commission
 # Schengen pages opened successfully (tier 1); VFS Global pages 403.
-# DISCREPANCY flagged in PR: stored visa_fee_inr 7200 vs the German
-# missions' published INR 9,800 for the €90 adult fee — data left
-# untouched per migration rules (founder decides the INR convention).
+# visa_fee_inr set to the German missions' OFFICIAL published INR 9,800 for the
+# €90 adult fee (official-INR-first convention, founder-directed 2026-07-10) —
+# was a stale 7,200 conversion.
 visa_types:
   standard_visa:
     label: Standard Visa
@@ -27,17 +27,6 @@ visa_types:
       - Confirmed return flight tickets (printed copy)
       - Proof of accommodation — hotel booking confirmation or invitation letter
       - Travel insurance covering the full stay duration
-  evisa:
-    label: e-Visa (where available)
-    # Likely bulk-script artifact: Germany has no short-stay e-Visa.
-    # Flagged in the PR for founder review; data left untouched.
-    unverified: true
-    documents:
-      - Online application form submitted via the official visa portal
-      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
-      - Digital photograph — white background, JPEG, minimum 200 KB
-      - Return flight booking reference number
-      - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
     unverified: true
@@ -49,7 +38,7 @@ visa_types:
       - Sponsor letter or proof of fixed deposits / investment holdings
 
 requirements:
-  visa_fee_inr: 7200
+  visa_fee_inr: 9800  # official INR published by German missions in India for the €90 fee
   processing_days: 15
   photo_specs:
     dimensions: 35x45mm
@@ -93,7 +82,7 @@ requirements:
   sources:
     - url: https://india.diplo.de/in-en/service/1984596-1984596
       tier: 1
-      label: "German Missions in India — Schengen visa fees (adults €90, non-refundable)"
+      label: "German Missions in India — Schengen visa fees (adults €90 / INR 9,800, non-refundable)"
       accessed: "2026-07-10"
     - url: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy/applying-schengen-visa_en
       tier: 1

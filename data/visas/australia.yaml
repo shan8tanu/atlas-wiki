@@ -27,18 +27,20 @@ visa_types:
       - Confirmed return flight tickets (printed copy)
       - Proof of accommodation — hotel booking confirmation or invitation letter
       - Travel insurance covering the full stay duration
-  evisa:
-    label: e-Visa (where available)
-    # Likely bulk-script artifact: Indian passports are not eligible for
-    # Australia's ETA (601) or eVisitor (651) — flagged in the PR for
-    # founder review, data left untouched per migration rules.
+  online:
+    label: "Online (ImmiAccount)"
+    # Relabelled from a mislabeled "e-Visa" tab (2026-07-10). India is NOT
+    # eligible for Australia's ETA (601) or eVisitor (651), but the Visitor
+    # visa (subclass 600) IS lodged online via ImmiAccount — that is the real
+    # online route for Indian tourists, not a separate e-Visa product.
+    # Unverified: immi.homeaffairs.gov.au bot-blocks automated fetches.
     unverified: true
     documents:
-      - Online application form submitted via the official visa portal
-      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
-      - Digital photograph — white background, JPEG, minimum 200 KB
-      - Return flight booking reference number
-      - Hotel or accommodation booking reference number
+      - Online application lodged via ImmiAccount (immi.homeaffairs.gov.au)
+      - Scanned copy of passport bio page — clear colour copy
+      - Recent passport-style digital photograph
+      - Confirmed return flight itinerary
+      - Proof of accommodation for the full stay
   long_term:
     label: Long-stay Visa
     unverified: true
@@ -94,13 +96,17 @@ requirements:
       - Pension sanction letter / retirement proof
 
 health:
-  # "insurance mandatory" is doubtful for visitor subclass 600 (generally
-  # recommended, not mandatory) — flagged in the PR; unverifiable while
-  # health.gov.au / homeaffairs block automated access.
+  # insurance downgraded "mandatory" -> "strongly recommended" 2026-07-10
+  # (founder-directed): Home Affairs states health insurance is recommended for
+  # subclass 600, NOT a blanket legal requirement — it only becomes mandatory
+  # if visa condition 8501 is imposed on a specific grant. Over-claiming a
+  # requirement costs users money, so the safe accurate wording is "recommended".
+  # Block stays unverified: immi.homeaffairs.gov.au bot-blocks automated fetches.
   unverified: true
   vaccinations: Routine vaccinations sufficient. Yellow Fever certificate if arriving
     from endemic area.
-  insurance: Travel health insurance mandatory — no reciprocal healthcare for Indian
-    citizens.
+  insurance: Travel health insurance strongly recommended — most visitors have no
+    access to Medicare, so you bear all medical costs. Becomes mandatory only if
+    visa condition 8501 is imposed on your grant.
   notes: Sun protection essential. Be aware of dangerous wildlife in rural/coastal
     areas.

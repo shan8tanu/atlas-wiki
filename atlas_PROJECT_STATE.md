@@ -11,6 +11,12 @@
 
 ## Schema changelog
 
+- **2026-07-10** — Fee convention (written into `add_country.py` `_SCHEMA_CONTRACT`):
+  `visa_fee_inr` is the **government fee only** (never a bundled total; J4-enforced) **and**
+  follows **official-INR-first** — store the mission's own published INR when it exists (e.g.
+  German missions publish INR 9,800 for the €90 Schengen fee), and only hand-convert when no
+  official INR is published, recording the FX rate + date. Germany corrected 7,200 → 9,800;
+  France/Greece flagged (their consulate INR pages bot-block automated fetches).
 - **2026-07-10** — Fee breakdown: optional `requirements.fees` block — `components` list
   (`label`/`amount_inr`/`mandatory`/`refundable`, exactly one `is_government_fee: true` whose
   amount must equal the still-required `visa_fee_inr`), optional `child_fee_inr`,

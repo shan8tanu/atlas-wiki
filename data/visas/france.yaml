@@ -26,18 +26,6 @@ visa_types:
       - Confirmed return flight tickets (printed copy)
       - Proof of accommodation — hotel booking confirmation or invitation letter
       - Travel insurance covering the full stay duration
-  evisa:
-    label: e-Visa (where available)
-    # Likely bulk-script artifact: France has no short-stay e-Visa — the
-    # France-Visas portal is an online FORM, the visa itself is a sticker.
-    # Flagged in the PR for founder review; data left untouched.
-    unverified: true
-    documents:
-      - Online application form submitted via the official visa portal
-      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
-      - Digital photograph — white background, JPEG, minimum 200 KB
-      - Return flight booking reference number
-      - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
     unverified: true
@@ -49,6 +37,10 @@ visa_types:
       - Sponsor letter or proof of fixed deposits / investment holdings
 
 requirements:
+  # TODO(official-INR-first): 7200 is a stale €90 conversion. The French
+  # consulate/VFS India fee schedule publishes an official INR (Germany's is
+  # 9,800 for the same €90), but france-visas.gouv.fr and TLScontact bot-block
+  # automated fetches — needs a human to read the official INR and update.
   visa_fee_inr: 7200
   processing_days: 15
   photo_specs:
@@ -153,14 +145,16 @@ jurisdiction:
 
 # ── Section B: Transit Rules ─────────────────────────────────────
 transit:
-  # Visa Code Art. 3(5) (per EUR-Lex search snippets) exempts holders of
-  # valid visas from Member States, Canada, Japan, USA — the stored
-  # exception ALSO lists the UK, which needs founder verification
-  # (EUR-Lex renders empty to automated fetchers, so no citable page).
+  # UK removed 2026-07-10 (founder-directed): EU Visa Code Art. 3(5) grants the
+  # ATV exemption to holders of a valid visa/residence permit from a Schengen
+  # member state, Canada, Japan, or the USA — the UK is not on that list (likely
+  # pre-Brexit residue). Corrected to the Code's list. Block stays unverified:
+  # the exemption text is only in Regulation 810/2009, which renders empty to
+  # automated fetchers, so there is no citable France-Visas page.
   unverified: true
   visa_required: true
   exceptions:
-    - "Airside Transit Visa (ATV) exemption if holding valid visa or residence permit from EU/EEA, US, Canada, Japan, or UK"
+    - "Airside Transit Visa (ATV) exemption if holding a valid visa or residence permit from a Schengen member state, the US, Canada, or Japan (per EU Visa Code Art. 3(5))"
     - "Transit without visa if connecting flight departs within 24 hours and passenger does not leave the international zone"
   notes: "Paris CDG has an international transit zone. Passengers transiting to non-Schengen destinations may not need to clear immigration."
 

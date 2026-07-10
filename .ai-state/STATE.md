@@ -695,3 +695,33 @@ atlas/
 - `data/visas/{australia,cambodia,france,germany,greece}.yaml` — sources/unverified only
 - `freshness.py` — page_rollup pending includes unverified (post-review)
 - `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs
+
+### Session: 2026-07-10 — Claude (Opus 4.8) [founder decisions: fee convention + data corrections]
+**Branch:** fix/fee-convention-and-data-corrections (from main)
+**What changed (all founder-directed):**
+- Fee convention: adopted OFFICIAL-INR-FIRST (store the mission's published INR; convert only
+  when none exists, recording rate+date). Written into add_country.py `_SCHEMA_CONTRACT`.
+  - Germany visa_fee_inr 7200 -> 9800 (diplo.de official INR for €90, already cited T1).
+  - France/Greece left at 7200 with a TODO comment — their consulate/VFS India fee pages
+    bot-block automated fetches, so their official INR needs a human. Not guessed.
+- e-Visa tab cleanup: DELETED the `evisa` visa_types tab from France/Germany/Greece (no Schengen
+  short-stay e-Visa exists for Indian passports — Brazil precedent). Australia NOT deleted:
+  relabelled `evisa` -> key `online`, label "Online (ImmiAccount)" — subclass 600 is genuinely
+  lodged online, the old tab was mislabeled not fabricated. All stay unverified.
+- France transit: removed "UK" from the ATV exemption; corrected to the EU Visa Code Art. 3(5)
+  list (Schengen member state / US / Canada / Japan). Likely pre-Brexit residue. Block stays
+  unverified (Reg. 810/2009 renders empty to fetchers; no citable France-Visas page).
+- Australia insurance: downgraded "mandatory" -> "strongly recommended" (Home Affairs: insurance
+  is recommended for subclass 600; mandatory only if condition 8501 is imposed). Over-claiming a
+  requirement costs users money. Block stays unverified (homeaffairs bot-blocks fetches).
+- INFRA GAP CONFIRMED: the weekly-rebuild step (rebuild.yml + CLOUDFLARE_DEPLOY_HOOK secret +
+  issue forms) from the #15 "suggested, not built" note NEVER shipped — no rebuild.yml in git
+  history, no CLOUDFLARE_DEPLOY_HOOK secret, no .github/ISSUE_TEMPLATE/. rebuild.yml built in a
+  separate branch/PR; the Cloudflare deploy hook + secret are the founder's to set (I can't).
+- Verified: 4 changed country files pass --strict-citations; full validate 1409 passed / 0 errors
+  / 113 warnings (unchanged — no new bare blocks); strict build green; rendered output confirms
+  Germany ₹9,800 + 2 tabs, Australia "Online (ImmiAccount)" tab, France ATV list, AU insurance.
+**Files touched:**
+- `data/visas/{australia,france,germany,greece}.yaml` — corrections above
+- `add_country.py` — official-INR-first convention in the schema contract
+- `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs

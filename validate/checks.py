@@ -524,7 +524,12 @@ def check_g(filepath: str, data: dict) -> List[CheckResult]:
                     results.append(_err("G1", short, f"changelog[{i}] must be a dict"))
                     continue
                 for required_key in ("date", "type", "description", "source"):
-                    if required_key not in entry:
+                    # A key present with an explicit `null` value is treated
+                    # the same as a missing key (matches the _get()/req()
+                    # convention used by checks A-F) — otherwise G10-G12 below
+                    # silently no-op on None and a null-valued field would
+                    # pass validation with zero errors.
+                    if entry.get(required_key) is None:
                         results.append(_err("G1", short,
                             f"changelog[{i}] missing required key: {required_key}"))
                 # G2: changelog type must be in allowed set

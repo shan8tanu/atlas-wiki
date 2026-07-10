@@ -60,10 +60,13 @@ selectors, cover-letter copy), `docs/javascripts/map.js` (map). Zero external JS
      date first.
    - **Verification queue** — every block flagged `unverified`, with the official portal to check
      against.
-2. **Verifies a fact**: opens the portal, confirms the number, then either edits the block's
-   `sources` list by hand, or runs
+2. **Verifies a fact in one command**: opens the portal, confirms the number, then runs
    `python admin_update.py --country <slug> --source <official-url>` — which fetches the source,
-   proposes a YAML diff, and writes only on confirmation.
+   proposes value updates, **adds the `sources` citation (tier auto-suggested, accessed=today)
+   and clears the block's `unverified` flag**, validates the proposal with the same checks CI
+   runs, shows a diff, and writes only on confirmation. If the portal blocks server-side fetches,
+   read it yourself and pass `--text "what the page says" --cite <url>`; `--no-cite` does a pure
+   value update. (Hand-editing the `sources` list works too.)
 3. **Optional second opinion**: the weekly AI accuracy audit
    (`validate_accuracy.py` / `accuracy-audit.yml`) grades 8 fields per country as
    PLAUSIBLE / SUSPECT / OUTDATED and posts a report — a prompt for where to look, not a source of

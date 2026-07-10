@@ -266,6 +266,12 @@ UNKNOWN, writes `validation-report.md` (gitignored). Exit 2 = attention needed. 
 
 **Admin update — [`admin_update.py`](admin_update.py).** Fetches a trusted URL/text, asks Claude
 (`claude-sonnet-4-6`) to update only affected fields, shows a colored diff, writes on confirmation.
+**Citation-aware (2026-07-11):** with `--source URL` (or `--text … --cite URL`) it also adds the
+`sources` entry (tier auto-suggested by domain, `accessed` = today) to every block the source
+supports and clears those blocks' `unverified` flags — one command closes a verification-queue
+item. `--no-cite` = values only. Proposals are run through validation groups B–J **before** the
+diff; an invalid proposal is never written. This is the primary apply-tool for the
+`/meta/freshness` verification queue.
 
 **New-country pipeline — [`add_country.py`](add_country.py).** Brave research → Claude draft
 (`claude-sonnet-4-6`, prompt-cached schema + japan.yaml gold example) → `validate.py` self-check

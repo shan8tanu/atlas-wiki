@@ -292,9 +292,11 @@ def build_report(countries: dict, cadences: dict, git_dates: dict,
         "automated fetches). Each needs a human to open the portal, confirm the fact, then either "
         "add a `sources` entry to the block or correct the data.",
         "",
-        "**Apply a fix:** `python admin_update.py --country <slug> --source <official-url>` "
-        "(fetches the source, proposes a YAML diff, writes on confirmation) — or edit the block's "
-        "`sources` list by hand.",
+        "**Apply a fix in one command:** `python admin_update.py --country <slug> --source "
+        "<official-url>` — fetches the source, proposes value updates, **adds the `sources` "
+        "citation and clears the block's `unverified` flag**, validates, and writes on your "
+        "confirmation. If the portal blocks server fetches, open it yourself and use "
+        "`--text \"what the page says\" --cite <url>`. Or edit the block's `sources` by hand.",
         "",
         "| Country | Block | Check against (official portal) |",
         "|---------|-------|--------------------------------|",

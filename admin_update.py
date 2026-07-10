@@ -5,6 +5,14 @@ admin_update.py — Trusted-source admin update tool.
 Fetches authoritative source content (URL or raw text), asks Claude to update
 only the relevant YAML fields, shows a diff, and writes on confirmation.
 
+CITATIONS: when the source is a URL (--source, or --text with --cite URL), the
+proposed update ALSO adds a `sources` entry (url / tier / label /
+accessed=today) to every citable block the source supports and removes that
+block's `unverified: true` flag — one command closes a verification-queue item
+end to end. Pass --no-cite for a pure value update. The proposed YAML is run
+through the structural validators (groups B–J) BEFORE the diff is shown; a
+proposal with validation errors is never written.
+
 Requires: ANTHROPIC_API_KEY
 
 Usage (interactive):
@@ -12,7 +20,9 @@ Usage (interactive):
 
 Usage (non-interactive):
     python admin_update.py --country japan --source "https://..."
-    python admin_update.py --country japan --text "Fee is now 1500 INR as of March 2025."
+    python admin_update.py --country australia --text "Visitor 600 fee is AUD 200..." \\
+        --cite "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/visitor-600"
+    python admin_update.py --country japan --source "https://..." --no-cite
 """
 
 import argparse
@@ -24,6 +34,7 @@ import textwrap
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import date
 from html.parser import HTMLParser
 from typing import Optional
 
@@ -48,6 +59,7 @@ MAX_SOURCE_CHARS = 4000
 
 _CLAUDE_PROMPT = """\
 You are updating a YAML travel data file for Indian passport holders.
+Today's date is {today}.
 
 Current YAML:
 ---
@@ -60,9 +72,56 @@ Instructions:
 - Update ONLY fields that are clearly addressed by the source content
 - Do not change fields not mentioned in the source
 - Preserve all YAML keys, structure, and formatting conventions
-- Return the complete updated YAML wrapped in ```yaml ... ``` fences
+{citation_instructions}
+- Return the complete updated YAML wrapped in ```yaml ... ``` fences\
+"""
+
+# Appended when a citation URL is available (--source, or --text + --cite).
+_CITE_INSTRUCTIONS = """\
+- CITATIONS: this source was accessed today at:
+    {cite_url}
+  For EVERY citable fact block whose facts this source states or confirms
+  (even when the stored value needs no change — confirming it IS an update):
+    * add (or refresh) a `sources` entry on that block:
+        - url: {cite_url}
+          tier: {tier}
+          label: "<short human name, e.g. 'Home Affairs - Visitor visa 600 (fee, processing)'>"
+          accessed: "{today}"
+      Append to the block's existing `sources` list if one exists (do not
+      duplicate an entry for the same url — refresh its accessed date instead).
+    * remove that block's `unverified: true` flag (and any stale comment that
+      only explained why it was unverified).
+  Citable dict blocks (`requirements`, `health`, `transit`, `ecr`, `biometrics`)
+  and each `visa_types.<key>` entry carry `sources` INLINE; the list blocks use
+  PARALLEL top-level keys `jurisdiction_sources` / `exemptions_sources` (and
+  `jurisdiction_unverified` / `exemptions_unverified`).
+  Do NOT add the citation to blocks the source says nothing about, and do NOT
+  touch their `unverified` flags.
+- If the source contains no actionable updates AND supports no block, return
+  the original YAML unchanged\
+"""
+
+_NO_CITE_INSTRUCTIONS = """\
+- Do NOT modify any `sources` lists or `unverified` flags
 - If the source contains no actionable updates, return the original YAML unchanged\
 """
+
+
+def suggest_tier(url: str) -> int:
+    """
+    Suggested citation tier by domain, mirroring the add_country.py convention:
+    known processor = 2; government-looking domain = 1; otherwise 3.
+    Claude may keep or adjust it per the same rules; check H4 validates the result.
+    """
+    netloc = urllib.parse.urlparse(url).netloc.lower()
+    if any(p in netloc for p in ("vfsglobal.", "blsinternational.", "tlscontact.")):
+        return 2
+    gov_markers = (".gov", ".gouv.", ".go.", ".gob.", ".gv.", ".mil",
+                   "europa.eu", ".diplo.de", ".admin.ch", ".mfa.", ".emb-",
+                   ".embassy.", ".highcommission.", ".consulate.")
+    if any(m in netloc for m in gov_markers):
+        return 1
+    return 3
 
 
 # ── HTML stripping ────────────────────────────────────────────────────────────
@@ -179,21 +238,41 @@ def _extract_yaml_block(text: str) -> Optional[str]:
     return None
 
 
-def propose_update(current_yaml: str, source_content: str) -> str:
+def build_prompt(current_yaml: str, source_content: str,
+                 cite_url: Optional[str] = None) -> str:
+    """
+    Assemble the update prompt. When cite_url is set, the citation
+    instructions (add `sources` entry, clear `unverified`) are included with
+    today's date and a suggested tier; otherwise sources/unverified are
+    explicitly off-limits.
+    """
+    today = date.today().isoformat()
+    if cite_url:
+        citation_instructions = _CITE_INSTRUCTIONS.format(
+            cite_url=cite_url, tier=suggest_tier(cite_url), today=today)
+    else:
+        citation_instructions = _NO_CITE_INSTRUCTIONS
+    return _CLAUDE_PROMPT.format(
+        today=today,
+        current_yaml=current_yaml,
+        source_content=source_content[:MAX_SOURCE_CHARS],
+        citation_instructions=citation_instructions,
+    )
+
+
+def propose_update(current_yaml: str, source_content: str,
+                   cite_url: Optional[str] = None) -> str:
     """
     Ask Claude to produce an updated YAML given source_content.
     Returns the proposed YAML string (may be identical to current if no changes needed).
     """
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    prompt = _CLAUDE_PROMPT.format(
-        current_yaml=current_yaml,
-        source_content=source_content[:MAX_SOURCE_CHARS],
-    )
+    prompt = build_prompt(current_yaml, source_content, cite_url)
 
     response = client.messages.create(
         model=ANTHROPIC_MODEL,
-        max_tokens=2048,
+        max_tokens=4096,
         messages=[{"role": "user", "content": prompt}],
     )
 
@@ -205,6 +284,68 @@ def propose_update(current_yaml: str, source_content: str) -> str:
             "Claude did not return a YAML block. Raw response:\n" + raw[:500]
         )
     return extracted
+
+
+# ── Pre-write validation gate ─────────────────────────────────────────────────
+
+def _citation_status(data: dict) -> dict:
+    """{block_id: 'sourced' | 'unverified' | 'bare'} for every citable block."""
+    from validate.checks import _iter_present_citable_blocks
+    status = {}
+    for block_id, _label, sources, unverified, _c in _iter_present_citable_blocks(data):
+        if isinstance(sources, list) and len(sources) > 0:
+            status[block_id] = "sourced"
+        elif unverified is True:
+            status[block_id] = "unverified"
+        else:
+            status[block_id] = "bare"
+    return status
+
+
+def validate_proposed(proposed_yaml: str, filepath: str,
+                      current_yaml: Optional[str] = None) -> list:
+    """
+    Run the structural validators (groups B–J) on the PROPOSED YAML before
+    anything touches disk. Returns the list of ERROR-level failures (empty =
+    safe to show the diff / write). Same checks CI runs, so a proposal that
+    passes here won't bounce in CI.
+
+    When current_yaml is given, ALSO blocks citation-status regressions: a
+    block that today is `sourced` or `unverified` may not come back `bare`
+    (unverified removed without gaining a source, or sources deleted). H6 is
+    only a CI warning during the migration, so without this rule a bad
+    proposal would silently downgrade a block's trust status. bare→bare stays
+    allowed — value updates on un-migrated countries must not be blocked.
+    """
+    from validate.checks import (CheckResult, check_b, check_c, check_d,
+                                 check_e, check_g, check_h, check_j)
+    try:
+        data = yaml.safe_load(proposed_yaml)
+    except yaml.YAMLError as exc:
+        raise RuntimeError(f"Proposed YAML does not parse: {exc}") from exc
+    if not isinstance(data, dict):
+        raise RuntimeError("Proposed YAML is not a mapping at the top level.")
+
+    results = []
+    for check in (check_b, check_c, check_d, check_e, check_g, check_h, check_j):
+        results.extend(check(filepath, data))
+    errors = [r for r in results if r.severity == "ERROR" and not r.passed]
+
+    if current_yaml is not None:
+        before = _citation_status(yaml.safe_load(current_yaml))
+        after = _citation_status(data)
+        short = os.path.basename(filepath)
+        for block_id, prev in before.items():
+            now = after.get(block_id, "bare")
+            if prev == "sourced" and now != "sourced":
+                errors.append(CheckResult("REG", "ERROR", False,
+                    f"{block_id} would lose its sources (was 'sourced', "
+                    f"becomes {now!r}) — citations must not be deleted", short))
+            elif prev == "unverified" and now == "bare":
+                errors.append(CheckResult("REG", "ERROR", False,
+                    f"{block_id} would lose `unverified: true` WITHOUT gaining a "
+                    f"sources entry — the flag may only be cleared by a citation", short))
+    return errors
 
 
 # ── Diff display ──────────────────────────────────────────────────────────────
@@ -321,6 +462,16 @@ def main() -> int:
     parser.add_argument("--source", "-s", metavar="URL", help="URL to fetch as the source")
     parser.add_argument("--text", "-t", metavar="TEXT", help="Raw source text (alternative to URL)")
     parser.add_argument(
+        "--cite", metavar="URL",
+        help="Citation URL when using --text (the page YOU opened). With --source, "
+             "the source URL itself is cited automatically.",
+    )
+    parser.add_argument(
+        "--no-cite",
+        action="store_true",
+        help="Pure value update: do not add sources entries or clear unverified flags.",
+    )
+    parser.add_argument(
         "--yes", "-y",
         action="store_true",
         help="Apply changes without confirmation prompt.",
@@ -375,13 +526,42 @@ def main() -> int:
         print("ERROR: Source content is empty.", file=sys.stderr)
         return 1
 
+    # ── Citation URL: --source cites itself; --text needs --cite ────────────
+    cite_url = None
+    if not args.no_cite:
+        cite_url = source_url or args.cite
+    if cite_url and not str(cite_url).startswith("https://"):
+        print(f"ERROR: citation URL must be https://, got {cite_url!r}", file=sys.stderr)
+        return 1
+    if cite_url:
+        print(f"Citation: will add a sources entry for {cite_url} "
+              f"(suggested tier {suggest_tier(cite_url)}, accessed {date.today().isoformat()}) "
+              f"to every block this source supports, and clear those blocks' unverified flags.")
+    else:
+        print("Citation: OFF (values only; sources/unverified untouched)."
+              + ("" if args.no_cite else
+                 " Tip: pass --cite <url> with --text to cite the page you read."))
+
     # ── Ask Claude ───────────────────────────────────────────────────────────
     print(f"\nAsking {ANTHROPIC_MODEL} to generate updated YAML...", end=" ", flush=True)
     try:
-        proposed_yaml = propose_update(current_yaml, source_content)
+        proposed_yaml = propose_update(current_yaml, source_content, cite_url)
         print("done.")
     except RuntimeError as exc:
         print(f"\nERROR: {exc}", file=sys.stderr)
+        return 1
+
+    # ── Validate BEFORE showing the diff (same checks CI runs) ──────────────
+    try:
+        errors = validate_proposed(proposed_yaml, yaml_path, current_yaml)
+    except RuntimeError as exc:
+        print(f"\nERROR: {exc}", file=sys.stderr)
+        return 1
+    if errors:
+        print("\nERROR: the proposed update FAILS structural validation — "
+              "nothing was written:", file=sys.stderr)
+        for r in errors:
+            print(f"  [{r.check_id}] {r.message}", file=sys.stderr)
         return 1
 
     # ── Show diff ────────────────────────────────────────────────────────────

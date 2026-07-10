@@ -1,4 +1,5 @@
 import email.utils
+import hashlib
 import json
 import os
 import sys
@@ -121,7 +122,6 @@ for filename in os.listdir(data_dir):
                 'type': str(entry.get('type') or ''),
                 'description': str(entry.get('description') or '').strip(),
                 'source': str(entry.get('source') or ''),
-                'idx': entry_idx,  # index within this country's changelog (stable guid)
             })
 
         with mkdocs_gen_files.open(md_filename, "w") as fd:
@@ -223,7 +223,13 @@ for e in changelog_entries[:50]:
     pub = email.utils.format_datetime(  # RFC 822, locale-independent
         datetime(e['date'].year, e['date'].month, e['date'].day,
                  tzinfo=timezone.utc))
-    guid = f"{e['slug']}-{e['date'].isoformat()}-{e['idx']}"
+    # guid is a content hash (type+description), NOT the array index —
+    # new entries are conventionally prepended to a country's changelog
+    # (see japan.yaml), which would shift every later entry's index and
+    # falsely re-deliver old items as new to RSS readers on every rebuild.
+    content_hash = hashlib.sha1(
+        f"{e['type']}|{e['description']}".encode('utf-8')).hexdigest()[:10]
+    guid = f"{e['slug']}-{e['date'].isoformat()}-{content_hash}"
     rss_items.append(
         "    <item>\n"
         f"      <title>{escape(title)}</title>\n"

@@ -22,7 +22,7 @@ Each entry links to its country page and its official source.
 | Date | Country | Type | Change | Source |
 |------|---------|------|--------|--------|
 {%- for e in month.entries %}
-| {{ e.date }} | [{{ e.country }}]({{ e.slug }}.md) | <span class="atlas-changelog__tag atlas-changelog__tag--{{ e.type | lower }}">{{ e.type }}</span> | {{ e.description }} | [↗]({{ e.source }}) |
+| {{ e.date }} | [{{ e.country }}]({{ e.slug }}.md) | <span class="atlas-changelog__tag atlas-changelog__tag--{{ e.type | lower }}">{{ e.type }}</span> | {{ e.description | replace("|", "\\|") }} | [↗]({{ e.source }}) |
 {%- endfor %}
 
 </div>

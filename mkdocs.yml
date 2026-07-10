@@ -100,4 +100,5 @@ nav:
       - United States: united-states.md
   - Guides:
     - Transit Visa Rules: guides/transit-visa-rules.md
+  - Changes: changes.md
   - Contribute: CONTRIBUTING.md

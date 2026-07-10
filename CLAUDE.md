@@ -4,6 +4,8 @@
 
 Before doing anything, read `.ai-state/STATE.md`. It contains the current folder structure, feature registry, and a log of what every previous session changed. This saves you from re-exploring the codebase.
 
+**Orientation docs:** `atlas_PROJECT_STATE.md` (current-state snapshot: schema, check groups A–J, CLI tools) · `USER-JOURNEYS.md` (who does what) · `BACKLOG.md` (open TODOs) · `/meta/freshness` page (live list of blocks needing a source). Data corrections go through the founder — surface discrepancies in the PR, don't silently "fix" data.
+
 ## After Every Session: Update the State File
 
 At the end of your session, append a new entry to the **Session Log** section in `.ai-state/STATE.md`. Follow the format documented in that file. Never rewrite or delete existing entries.

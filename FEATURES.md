@@ -2,7 +2,7 @@
 
 This is a living document that tracks the features implemented in Project Atlas, how they work under the hood, and the files that power them. We will update this file after each session as new features are built.
 
-> For a full, current file-by-file snapshot of the repository (validation, CLI tooling, CI/CD, and known drift), see [`atlas_PROJECT_STATE.md`](atlas_PROJECT_STATE.md).
+> For a full, current file-by-file snapshot of the repository (validation, CLI tooling, CI/CD, and known drift), see [`atlas_PROJECT_STATE.md`](atlas_PROJECT_STATE.md). For how each role uses the site, see [`USER-JOURNEYS.md`](USER-JOURNEYS.md); for open TODOs, [`BACKLOG.md`](BACKLOG.md).
 
 ---
 

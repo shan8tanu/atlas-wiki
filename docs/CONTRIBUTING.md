@@ -38,6 +38,25 @@ Once submitted, the **project maintainer will review your PR**, verify the citat
 
 ---
 
+## Bonus: cite your source in the data itself
+
+Beyond the citation URL in your PR, you can attach the source to the exact fact block so the page
+shows it. Most fact blocks (`requirements`, `health`, each visa type, `transit`, etc.) accept a
+`sources` list:
+
+```yaml
+requirements:
+  visa_fee_inr: 9800
+  sources:
+    - url: https://official-portal.example/fees   # deep link, not a homepage
+      tier: 1            # 1 = government/embassy · 2 = VFS/BLS/TLScontact · 3 = verified secondary
+      label: "Embassy of X — fee schedule"
+      accessed: "2026-07-10"   # the date you actually checked it
+```
+
+If you genuinely can't find an official source, add `unverified: true` to the block instead — that's
+honest, and it shows readers the fact needs confirmation. `python validate.py` checks the shape.
+
 ## What You Should NOT Edit
 
 - Files in `docs/` (these are auto-generated)

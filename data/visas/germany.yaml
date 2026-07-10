@@ -12,9 +12,15 @@ authority:
   name: Embassy of Germany, New Delhi
   processor: VFS Global
   official_portal: https://india.diplo.de/
+# Citations (2026-07-10): india.diplo.de fee page and the EU Commission
+# Schengen pages opened successfully (tier 1); VFS Global pages 403.
+# DISCREPANCY flagged in PR: stored visa_fee_inr 7200 vs the German
+# missions' published INR 9,800 for the €90 adult fee — data left
+# untouched per migration rules (founder decides the INR convention).
 visa_types:
   standard_visa:
     label: Standard Visa
+    unverified: true
     documents:
       - Completed visa application form — printed, signed, and dated
       - Appointment confirmation slip from VFS Global / BLS / embassy
@@ -23,6 +29,9 @@ visa_types:
       - Travel insurance covering the full stay duration
   evisa:
     label: e-Visa (where available)
+    # Likely bulk-script artifact: Germany has no short-stay e-Visa.
+    # Flagged in the PR for founder review; data left untouched.
+    unverified: true
     documents:
       - Online application form submitted via the official visa portal
       - Scanned copy of passport bio page — JPEG or PDF, clearly legible
@@ -31,6 +40,7 @@ visa_types:
       - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
+    unverified: true
     documents:
       - Completed long-stay visa application (consulate-specific form)
       - Employer NOC confirming leave of absence for the full stay period
@@ -80,8 +90,20 @@ requirements:
       - Bank statements for the last 3 months
       - ITR for 2 years (pension income, if applicable)
       - Pension sanction letter / retirement proof
+  sources:
+    - url: https://india.diplo.de/in-en/service/1984596-1984596
+      tier: 1
+      label: "German Missions in India — Schengen visa fees (adults €90, non-refundable)"
+      accessed: "2026-07-10"
+    - url: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy/applying-schengen-visa_en
+      tier: 1
+      label: "European Commission — Applying for a Schengen visa (15-day normal processing)"
+      accessed: "2026-07-10"
 
 health:
+  # Insurance-mandatory is Schengen-wide but the EUR 30,000 figure and the
+  # vaccination guidance have no fetchable official source (VFS pages 403).
+  unverified: true
   vaccinations: Routine vaccinations sufficient. Tick-borne encephalitis vaccine for
     forested areas.
   insurance: Schengen travel insurance mandatory — minimum EUR 30,000 medical coverage.

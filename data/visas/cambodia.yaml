@@ -12,9 +12,16 @@ authority:
   name: Royal Embassy of Cambodia, New Delhi
   processor: Online
   official_portal: https://www.evisa.gov.kh/
+# Citations (2026-07-10): official portals block automated access —
+# evisa.gov.kh (redirect loop on every path), mfaic.gov.kh (WAF "URL
+# rejected"). All blocks flagged unverified pending human verification;
+# web-search context corroborates the stored facts (USD 30 tourist e-visa,
+# ~3 business days) but corroboration without opening the page does not
+# meet the citation bar.
 visa_types:
   voa:
     label: Visa on Arrival
+    unverified: true
     documents:
       - Completed arrival card (distributed on aircraft or at immigration counter)
       - Confirmed return flight ticket — boarding pass or printed itinerary
@@ -22,6 +29,7 @@ visa_types:
       - VOA fee in cash — USD or accepted local currency (check current rate before travel)
   evisa:
     label: e-Visa
+    unverified: true
     documents:
       - Online application form submitted via the official visa portal
       - Scanned copy of passport bio page — JPEG or PDF, clearly legible
@@ -30,6 +38,7 @@ visa_types:
       - Hotel or accommodation booking reference number
   standard_visa:
     label: Standard Visa (Embassy)
+    unverified: true
     documents:
       - Completed visa application form — printed, signed, and dated
       - Appointment confirmation slip from the embassy
@@ -38,6 +47,7 @@ visa_types:
       - Travel insurance covering the full stay duration
 
 requirements:
+  unverified: true
   visa_fee_inr: 2500
   processing_days: 1
   photo_specs:
@@ -63,6 +73,7 @@ requirements:
       - Proof of sufficient funds in cash or card
 
 health:
+  unverified: true
   vaccinations: Hepatitis A & B, Typhoid, Japanese Encephalitis, Rabies (for rural
     travellers).
   insurance: Travel health insurance essential — medical facilities limited outside

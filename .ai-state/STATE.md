@@ -662,3 +662,36 @@ atlas/
 - `data/visas/japan.yaml` — fees block + VFS source accessed bump
 - `add_country.py` — contract fees spec + visa_fee_inr semantics fix
 - `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` — docs
+
+### Session: 2026-07-10 — Claude (Fable 5) [citations batch 1]
+**Branch:** feat/citations-batch-1 (from main)
+**What changed:**
+- Migrated the next 5 worklist countries to per-block citations (japan pattern): Australia,
+  Cambodia, France, Germany, Greece — 30 citable blocks total. Data values untouched (rule:
+  discrepancies are reported, not fixed).
+- Outcomes: 5 blocks CITED tier-1 (France requirements + biometrics via EU Commission pages;
+  Germany requirements via india.diplo.de fee page + EU page; Greece requirements via EU page);
+  25 blocks honestly `unverified` — every AU/KH portal and all VFS/TLS/mfa.gr pages block
+  automated fetches (403 / redirect loops / WAF). accessed dates only on pages actually opened
+  2026-07-10.
+- DISCREPANCIES flagged for founder (PR #19): (1) Germany stored visa_fee_inr 7200 vs the German
+  missions' published INR 9,800 for the €90 adult fee — the ₹7,200 convention (also FR/GR) uses a
+  stale exchange rate; (2) e-Visa visa_types tabs on AU/FR/DE/GR are likely bulk-script artifacts
+  (no e-Visa exists for Indian passports on any of them — Brazil precedent); (3) France transit
+  exception lists UK visas but Visa Code Art. 3(5) search evidence lists only EU/CA/JP/US;
+  (4) Australia health "insurance mandatory" is doubtful for visitor 600; (5) VIS source says
+  fingerprint re-use over "5 years" vs stored "59 months" (consistent phrasing, noted).
+- Post-review fixes (Greptile on PR #19): (a) `page_rollup` in freshness.py now counts
+  `unverified` blocks as `pending` — an unverified block IS pending a real citation, so
+  unverified-heavy pages no longer show a bare "verified on schedule" badge and stay on the
+  migration worklist (AU/KH were wrongly dropping off with 0 real sources); (b) Germany
+  requirements source label no longer embeds the contradicting "INR 9,800" figure (keeps the
+  uncontested €90) so the live page doesn't self-contradict — the INR-convention discrepancy
+  stays flagged in the PR for founder decision.
+- Verified: all 5 files pass `validate.py -f <file> --strict-citations`; full validate 1408
+  passed / 113 warnings (was 143 — 30 fewer H6); strict build green; freshness worklist 29 → 24;
+  DOM-verified France + Thailand control.
+**Files touched:**
+- `data/visas/{australia,cambodia,france,germany,greece}.yaml` — sources/unverified only
+- `freshness.py` — page_rollup pending includes unverified (post-review)
+- `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs

@@ -12,9 +12,14 @@ authority:
   name: Embassy of France, New Delhi
   processor: TLScontact
   official_portal: https://france-visas.gouv.fr/
+# Citations (2026-07-10): france-visas.gouv.fr and TLScontact block automated
+# fetches (403); EU Commission pages (fetchable, tier 1) support the
+# requirements and biometrics blocks. Remaining blocks unverified pending
+# human verification.
 visa_types:
   standard_visa:
     label: Standard Visa
+    unverified: true
     documents:
       - Completed visa application form — printed, signed, and dated
       - Appointment confirmation slip from VFS Global / BLS / embassy
@@ -23,6 +28,10 @@ visa_types:
       - Travel insurance covering the full stay duration
   evisa:
     label: e-Visa (where available)
+    # Likely bulk-script artifact: France has no short-stay e-Visa — the
+    # France-Visas portal is an online FORM, the visa itself is a sticker.
+    # Flagged in the PR for founder review; data left untouched.
+    unverified: true
     documents:
       - Online application form submitted via the official visa portal
       - Scanned copy of passport bio page — JPEG or PDF, clearly legible
@@ -31,6 +40,7 @@ visa_types:
       - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
+    unverified: true
     documents:
       - Completed long-stay visa application (consulate-specific form)
       - Employer NOC confirming leave of absence for the full stay period
@@ -80,14 +90,25 @@ requirements:
       - Bank statements for the last 3 months
       - ITR for 2 years (pension income, if applicable)
       - Pension sanction letter / retirement proof
+  sources:
+    - url: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy/applying-schengen-visa_en
+      tier: 1
+      label: "European Commission — Applying for a Schengen visa (€90 fee, 15-day processing, insurance requirement)"
+      accessed: "2026-07-10"
 
 health:
+  # EU pages confirm medical insurance is required but not the EUR 30,000
+  # figure or the vaccination guidance — below the citation bar, so honest
+  # unverified until france-visas.gouv.fr (403 to automation) is checked
+  # by a human.
+  unverified: true
   vaccinations: Routine vaccinations (MMR, DPT, Polio). Hepatitis A for first-time
     travellers.
   insurance: Schengen travel insurance mandatory — minimum EUR 30,000 medical coverage.
   notes: Excellent healthcare. Pharmacies (green cross) widely available.
 
 # ── Section A: Jurisdiction Map ──────────────────────────────────
+jurisdiction_unverified: true
 jurisdiction:
   - office: "Embassy of France, New Delhi (via TLScontact)"
     covers:
@@ -132,6 +153,11 @@ jurisdiction:
 
 # ── Section B: Transit Rules ─────────────────────────────────────
 transit:
+  # Visa Code Art. 3(5) (per EUR-Lex search snippets) exempts holders of
+  # valid visas from Member States, Canada, Japan, USA — the stored
+  # exception ALSO lists the UK, which needs founder verification
+  # (EUR-Lex renders empty to automated fetchers, so no citable page).
+  unverified: true
   visa_required: true
   exceptions:
     - "Airside Transit Visa (ATV) exemption if holding valid visa or residence permit from EU/EEA, US, Canada, Japan, or UK"
@@ -139,6 +165,7 @@ transit:
   notes: "Paris CDG has an international transit zone. Passengers transiting to non-Schengen destinations may not need to clear immigration."
 
 # ── Section B: Visa Exemptions / Indian Privilege ────────────────
+exemptions_unverified: true
 exemptions:
   - holding: "Valid Schengen Visa (any country)"
     grants: "Can enter France without a separate French visa"
@@ -155,6 +182,8 @@ exemptions:
 
 # ── Section B: ECR / Non-ECR Rules ──────────────────────────────
 ecr:
+  # Indian eMigrate/POE rule — no fetchable official source found.
+  unverified: true
   applies: true
   note: "ECR passport holders travelling to France for employment must obtain Emigration Clearance from the Protector of Emigrants. Tourist and business visa applicants are not affected."
 
@@ -163,6 +192,11 @@ biometrics:
   required: true
   validity_months: 59
   note: "Schengen VIS biometrics (10 fingerprints + photograph) valid for 59 months. If captured within the last 59 months at any Schengen consulate, you do not need to appear in person again."
+  sources:
+    - url: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-information-system_en
+      tier: 1
+      label: "European Commission — Visa Information System (fingerprint re-use over a 5-year period)"
+      accessed: "2026-07-10"
 
 # ── Section D: Change Log ────────────────────────────────────────
 changelog:

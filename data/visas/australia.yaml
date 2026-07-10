@@ -12,9 +12,15 @@ authority:
   name: Australian High Commission, New Delhi
   processor: VFS Global
   official_portal: https://immi.homeaffairs.gov.au/
+# Citations (2026-07-10): every official source is bot-blocked to automated
+# fetches — immi.homeaffairs.gov.au (403 on all paths incl. legacy ASPX),
+# visa.vfsglobal.com/ind/en/aus (403), india.highcommission.gov.au (500),
+# health.gov.au (timeout). All blocks flagged unverified pending human
+# verification against the subclass 600 pages.
 visa_types:
   standard_visa:
     label: Standard Visa
+    unverified: true
     documents:
       - Completed visa application form — printed, signed, and dated
       - Appointment confirmation slip from VFS Global / BLS / embassy
@@ -23,6 +29,10 @@ visa_types:
       - Travel insurance covering the full stay duration
   evisa:
     label: e-Visa (where available)
+    # Likely bulk-script artifact: Indian passports are not eligible for
+    # Australia's ETA (601) or eVisitor (651) — flagged in the PR for
+    # founder review, data left untouched per migration rules.
+    unverified: true
     documents:
       - Online application form submitted via the official visa portal
       - Scanned copy of passport bio page — JPEG or PDF, clearly legible
@@ -31,6 +41,7 @@ visa_types:
       - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
+    unverified: true
     documents:
       - Completed long-stay visa application (consulate-specific form)
       - Employer NOC confirming leave of absence for the full stay period
@@ -39,6 +50,7 @@ visa_types:
       - Sponsor letter or proof of fixed deposits / investment holdings
 
 requirements:
+  unverified: true
   visa_fee_inr: 10500
   processing_days: 25
   photo_specs:
@@ -82,6 +94,10 @@ requirements:
       - Pension sanction letter / retirement proof
 
 health:
+  # "insurance mandatory" is doubtful for visitor subclass 600 (generally
+  # recommended, not mandatory) — flagged in the PR; unverifiable while
+  # health.gov.au / homeaffairs block automated access.
+  unverified: true
   vaccinations: Routine vaccinations sufficient. Yellow Fever certificate if arriving
     from endemic area.
   insurance: Travel health insurance mandatory — no reciprocal healthcare for Indian

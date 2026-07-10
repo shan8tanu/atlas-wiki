@@ -93,7 +93,7 @@ requirements:
   sources:
     - url: https://india.diplo.de/in-en/service/1984596-1984596
       tier: 1
-      label: "German Missions in India — Schengen visa fees (adults €90 / INR 9,800, non-refundable)"
+      label: "German Missions in India — Schengen visa fees (adults €90, non-refundable)"
       accessed: "2026-07-10"
     - url: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy/applying-schengen-visa_en
       tier: 1

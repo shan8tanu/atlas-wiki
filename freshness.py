@@ -105,16 +105,23 @@ def block_freshness(data: dict, cadences: dict, today: date | None = None) -> di
 def page_rollup(freshness: dict, data: dict) -> dict:
     """
     Page-level summary: worst-state-wins across sourced blocks, the most recent
-    accessed date on the page, and a `pending` flag (any present citable block
-    with neither sources nor unverified — the H6 condition).
+    accessed date on the page, and a `pending` flag.
+
+    `pending` is True when any present citable block has no `sources` yet —
+    whether it's bare (never triaged) OR flagged `unverified: true` (triaged but
+    not yet confirmed against an official source). Both still need real-source
+    work, so both keep the page badge honest ("… some sections pending citation")
+    and keep the country on the migration worklist. (Treating `unverified` as
+    "done" previously let an all-unverified country — e.g. one whose every portal
+    bot-blocks fetches — silently drop off the worklist with zero real sources.)
 
     state is None when the page has no sourced blocks at all (fully unmigrated,
     or only unverified blocks): no verified dates exist, so callers fall back
     to the git "Last updated" line.
     """
     pending = any(
-        not (isinstance(sources, list) and sources) and unverified is not True
-        for _, _, sources, unverified, _ in _iter_present_citable_blocks(data)
+        not (isinstance(sources, list) and sources)
+        for _, _, sources, _unverified, _ in _iter_present_citable_blocks(data)
     )
     if not freshness:
         return {"state": None, "latest_accessed": None, "pending": pending}

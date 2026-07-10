@@ -35,9 +35,16 @@ jobs:
             echo "See this workflow file's header for the one-time setup steps."
             exit 0
           fi
-          code=$(curl -sS -o /dev/null -w "%{http_code}" -X POST "$HOOK")
+          # Bounded timeouts so a hung/slow hook endpoint can't stall the runner.
+          code=$(curl -sS -o /dev/null -w "%{http_code}" -X POST \
+                   --connect-timeout 10 --max-time 30 "$HOOK") || {
+            echo "::error::Could not reach the deploy hook (curl failed / timed out)."
+            exit 1
+          }
           echo "Deploy hook responded HTTP $code"
           case "$code" in
-            2*) echo "Rebuild triggered — Cloudflare will rebuild main and redeploy." ;;
+            # Cloudflare returns 200 with a JSON job id, and accepts the request
+            # even if a build is already queued — so report "accepted", not "done".
+            2*) echo "Deploy hook accepted (HTTP $code) — Cloudflare will build main if one isn't already pending." ;;
             *)  echo "::error::Deploy hook POST failed (HTTP $code)."; exit 1 ;;
           esac

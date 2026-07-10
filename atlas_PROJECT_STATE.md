@@ -11,6 +11,12 @@
 
 ## Schema changelog
 
+- **2026-07-10** — Fee breakdown: optional `requirements.fees` block — `components` list
+  (`label`/`amount_inr`/`mandatory`/`refundable`, exactly one `is_government_fee: true` whose
+  amount must equal the still-required `visa_fee_inr`), optional `child_fee_inr`,
+  `payment_methods`, `fee_last_revised` — check group J (J1–J6). `visa_fee_inr` semantics
+  clarified: GOVERNMENT FEE ONLY, never a bundled total. Totals are computed at build time.
+  Japan is the reference migration.
 - **2026-07-09** — Changelog entries tightened (no new fields): `date` must parse as YYYY-MM-DD,
   `description` non-empty, `source` https — checks G10–G12, so the site-wide Change Log page and
   `changes.xml` RSS feed can trust their inputs.
@@ -155,7 +161,7 @@ Enforced mechanically by `validate.py`. **Required** on every country file:
 | `visa_type` | one of `Standard Visa` \| `e-Visa` \| `Visa on Arrival` |
 | `max_stay`, `region` | region ∈ Asia/Europe/Americas/Oceania/Middle East |
 | `authority` | `.name`, `.processor`, `.official_portal` (HTTPS) |
-| `requirements` | `.visa_fee_inr` (int≥0), `.processing_days` (int≥1), `.photo_specs.{dimensions,bg_color}`, `.financial_proof`, `.financial_documents` |
+| `requirements` | `.visa_fee_inr` (int≥0, GOVERNMENT FEE ONLY), `.processing_days` (int≥1), `.photo_specs.{dimensions,bg_color}`, `.financial_proof`, `.financial_documents` |
 | `health` | `.vaccinations`, `.insurance`, `.notes` (each ≥20 chars) |
 
 **Optional** blocks (rendered conditionally by the template, validated by check group G):
@@ -187,6 +193,17 @@ label when aging/overdue), and the Visa Info card gains a Difficulty row (labels
 (nav-hidden via `not_in_nav`). Wording rule: "verified" = cited source checked; "updated" = file
 committed.
 
+**Fee breakdown** (optional, check group J): `requirements.fees.components` — per-component
+`label`/`amount_inr`/`mandatory`/`refundable` (+ optional `note`), with **exactly one**
+component marked `is_government_fee: true` whose amount must equal `visa_fee_inr` (J4 — the
+legacy integer stays the single-number fallback for the map, at-a-glance row, and accuracy
+audit). Optional `child_fee_inr`, `payment_methods`, `fee_last_revised`. Totals (mandatory /
+all-in) are **computed in `gen_pages.py`** (`compute_fees` → `_fees` context), never stored.
+Pages with `fees` render a `## Fees` table + computed totals; the overview fee row becomes
+"₹X total (₹Y government fee)" and the checklist fee item shows the mandatory total. No `fees`
+block → rendering identical to before. Japan is the migrated reference (amounts verified
+against the cited VFS one-pager 2026-07-10).
+
 Full field-by-field intent lives in the `add_country.py` schema contract
 ([add_country.py](add_country.py) `_SCHEMA_CONTRACT`), which doubles as the human-readable spec.
 
@@ -204,7 +221,10 @@ Full field-by-field intent lives in the `add_country.py` schema contract
   parseable `accessed` date; **H6** warns when a citable block has neither `sources` nor
   `unverified: true`; **H7** validates `cadence_days` overrides) ·
   **I** volatility policy (site-level, once: `data/volatility.yaml` exists, parses, covers every
-  CITABLE_BLOCKS key, positive-int cadences).
+  CITABLE_BLOCKS key, positive-int cadences) ·
+  **J** fee breakdown (optional `requirements.fees`: structure/types, non-negative amounts,
+  exactly one `is_government_fee` component equal to `visa_fee_inr`, parseable
+  `fee_last_revised`, ≥1 mandatory component).
 - Exit 0 = pass (warnings allowed); exit 1 = errors. During the citation migration, group H emits
   H6 **warnings** for un-migrated countries (CI stays green). Pass **`--strict-citations`** to
   upgrade H6 to an error — flip CI to it once all 30 countries are migrated. Japan already passes

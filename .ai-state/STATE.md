@@ -622,6 +622,47 @@ atlas/
 - `validate/checks.py` -- G10-G12, non_country_pages, group-G docstring
 - `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` -- docs
 
+### Session: 2026-07-10 — Claude (Fable 5) [fee breakdown]
+**Branch:** feat/fee-breakdown (from main)
+**What changed:**
+- Fee breakdown structure: optional `requirements.fees` block (components with
+  label/amount_inr/mandatory/refundable + optional note; exactly one `is_government_fee: true`
+  marker — chosen over label-matching, which breaks on wordings like "Embassy fee"; optional
+  child_fee_inr / payment_methods / fee_last_revised). Legacy `visa_fee_inr` stays REQUIRED and
+  = the government component (J4), so map / accuracy-audit / un-migrated pages are untouched.
+- Validation group J (J1-J6) in validate/checks.py, wired into validate.py (docstring A-J):
+  structure/types, amounts >= 0, exactly-one govt component, == visa_fee_inr, date parses,
+  >= 1 mandatory. Optional-block pattern (absent -> silent), all ERRORs.
+- Rendering: `compute_fees()` in gen_pages.py (totals COMPUTED at build time, never stored;
+  defensive against malformed local data) injects `_fees` beside `_freshness`. Template: new
+  `## Fees` table section (pipe-escaped labels/notes — lesson from PRs #16/#17), computed
+  "Total (mandatory) / with all optional services" line, payment/revised meta line; overview row
+  becomes "₹X total (₹Y government fee)"; checklist fee item shows the mandatory total (a
+  visa_fee_inr consumer the spec didn't list). theme.css §24: changelog-style table + spec-required
+  tabular-nums on the amount column. No fees block -> byte-identical rendering (thailand diffed).
+- Japan reference migration — NO invented numbers: the cited VFS one-pager FETCHED successfully
+  this time and yielded every amount: govt ₹500 single-entry (matches stored value), VFS service
+  charge ₹800 (incl. taxes, effective 01-Apr-2026), optional courier ₹550, payment methods
+  cash/POS/UPI, refund condition for the govt fee. VFS source accessed date bumped to 2026-07-10
+  (actually opened); embassy source unchanged (still 403s). Mandatory total ₹1300, all-in ₹1850.
+- add_country.py contract: fees block spec added; visa_fee_inr guidance FIXED from "realistic
+  total" (the convention that produced the UK inconsistency in PR #11) to GOVERNMENT FEE ONLY;
+  sidecar field list gains `fees`. Drafts scaffold govt-component-only when service charges are
+  unsourced (an empty fees block would fail J1/J3/J6 by design).
+- Verified: validate.py 1404 passed 0 errors (+1 = japan's J pass); all J1-J6 negative fixtures
+  fire; --strict-citations japan exit 0; thailand byte-identical (stash-diff); strict build +
+  freshness_report exit 0; DOM-verified japan fee table/totals/overview/checklist + tabular-nums
+  computed style and thailand unchanged (screenshots timed out again — known flakiness).
+**Files touched:**
+- `validate/checks.py` — check_j (J1-J6)
+- `validate.py` — wire check_j, docstring A-J
+- `gen_pages.py` — compute_fees + _fees injection
+- `templates/country.md.jinja` — Fees section, overview row, checklist line
+- `docs/stylesheets/theme.css` — §24 fee table
+- `data/visas/japan.yaml` — fees block + VFS source accessed bump
+- `add_country.py` — contract fees spec + visa_fee_inr semantics fix
+- `atlas_PROJECT_STATE.md`, `FEATURES.md`, `.ai-state/STATE.md` — docs
+
 ### Session: 2026-07-10 — Claude (Fable 5) [citations batch 1]
 **Branch:** feat/citations-batch-1 (from main)
 **What changed:**
@@ -640,10 +681,17 @@ atlas/
   exception lists UK visas but Visa Code Art. 3(5) search evidence lists only EU/CA/JP/US;
   (4) Australia health "insurance mandatory" is doubtful for visitor 600; (5) VIS source says
   fingerprint re-use over "5 years" vs stored "59 months" (consistent phrasing, noted).
+- Post-review fixes (Greptile on PR #19): (a) `page_rollup` in freshness.py now counts
+  `unverified` blocks as `pending` — an unverified block IS pending a real citation, so
+  unverified-heavy pages no longer show a bare "verified on schedule" badge and stay on the
+  migration worklist (AU/KH were wrongly dropping off with 0 real sources); (b) Germany
+  requirements source label no longer embeds the contradicting "INR 9,800" figure (keeps the
+  uncontested €90) so the live page doesn't self-contradict — the INR-convention discrepancy
+  stays flagged in the PR for founder decision.
 - Verified: all 5 files pass `validate.py -f <file> --strict-citations`; full validate 1408
   passed / 113 warnings (was 143 — 30 fewer H6); strict build green; freshness worklist 29 → 24;
-  DOM-verified France (badge "Facts verified on schedule · 2026-07-10", 2 T1 source lines,
-  8 unverified caveats) and Thailand control (unchanged git-date fallback, zero citation markup).
+  DOM-verified France + Thailand control.
 **Files touched:**
 - `data/visas/{australia,cambodia,france,germany,greece}.yaml` — sources/unverified only
+- `freshness.py` — page_rollup pending includes unverified (post-review)
 - `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs

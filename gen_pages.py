@@ -44,6 +44,46 @@ def iso_to_flag(iso_code: str) -> str:
     return ''.join(chr(0x1F1E6 + ord(c) - ord('A')) for c in iso_code.upper())
 
 
+def compute_fees(country_data: dict):
+    """
+    Compute fee totals from requirements.fees — totals are NEVER stored in
+    YAML. Returns {mandatory_total, all_in_total, govt_fee} or None when no
+    usable fees block exists. Defensive by design (skips malformed
+    components) so bad local data degrades on `mkdocs serve` instead of
+    crashing the build — structural enforcement is check group J's job in CI.
+    """
+    fees = (country_data.get('requirements') or {}).get('fees')
+    if not isinstance(fees, dict):
+        return None
+    components = fees.get('components')
+    if not isinstance(components, list):
+        return None
+
+    mandatory_total = 0
+    all_in_total = 0
+    govt_fee = None
+    usable = 0
+    for comp in components:
+        if not isinstance(comp, dict):
+            continue
+        amount = comp.get('amount_inr')
+        if not isinstance(amount, int) or isinstance(amount, bool):
+            continue
+        usable += 1
+        all_in_total += amount
+        if comp.get('mandatory') is True:
+            mandatory_total += amount
+        if comp.get('is_government_fee') is True and govt_fee is None:
+            govt_fee = amount
+    if usable == 0:
+        return None
+    return {
+        'mandatory_total': mandatory_total,
+        'all_in_total': all_in_total,
+        'govt_fee': govt_fee,
+    }
+
+
 # Collect map data while generating country pages
 map_data = {}
 
@@ -83,6 +123,7 @@ for filename in os.listdir(data_dir):
         country_data['_page_freshness'] = rollup
         country_data['_difficulty_label'] = DIFFICULTY_LABELS.get(
             country_data.get('visa_difficulty'))
+        country_data['_fees'] = compute_fees(country_data)
 
         # ── Render the Jinja2 template ────────────────────────────
         rendered_markdown = template.render(country_data)

@@ -8,7 +8,8 @@ Safe to run in CI with no API keys required.
 Check groups (see validate/checks.py):
   A parse · B required fields · C types · D values · E exhaustiveness ·
   F cross-file parity · G optional feature blocks · H per-claim citations ·
-  I volatility policy (data/volatility.yaml completeness).
+  I volatility policy (data/volatility.yaml completeness) ·
+  J fee breakdown (requirements.fees structure, totals integrity).
 
 Group H (per-claim citations) warns when a citable fact block has neither a
 `sources` list nor `unverified: true`. Pass --strict-citations to upgrade that
@@ -35,6 +36,7 @@ from validate.checks import (
     check_g,
     check_h,
     check_i,
+    check_j,
 )
 from validate.report import print_report
 
@@ -102,6 +104,7 @@ def main() -> int:
         all_results.extend(check_e(filepath, data))
         all_results.extend(check_g(filepath, data))
         all_results.extend(check_h(filepath, data, strict_citations=args.strict_citations))
+        all_results.extend(check_j(filepath, data))
 
     # ── Cross-file checks (F) ────────────────────────────────────────────────
     if len(parsed_files) > 1 or (len(parsed_files) == 1 and not args.file):

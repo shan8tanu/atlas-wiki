@@ -49,7 +49,11 @@
 * **Entry Type:** {{ entry_type | default("Single Entry") }}
 * **Maximum Stay:** {{ max_stay | default("Varies") }}
 * **Visa Validity:** {{ visa_validity | default("Refer to visa stamp") }}
+{%- if _fees %}
+* **Visa Fee:** ₹{{ _fees.mandatory_total }} total (₹{{ _fees.govt_fee }} government fee)
+{%- else %}
 * **Visa Fee:** ₹{{ requirements.visa_fee_inr }}
+{%- endif %}
 * **Processing Time:** {{ requirements.processing_days }} working days
 * **Photo Spec:** {{ requirements.photo_specs.dimensions }}, {{ requirements.photo_specs.bg_color }} bg
 
@@ -72,6 +76,26 @@
 </div>
 
 {{ cite(country, "Requirements & Fees", requirements.sources, requirements.unverified, _freshness.get('requirements')) }}
+{%- if _fees %}
+
+## Fees
+
+<div class="atlas-fees" markdown>
+
+| Component | Amount (₹) | Required? | Refundable | Notes |
+|-----------|-----------:|-----------|------------|-------|
+{%- for c in requirements.fees.components %}
+| {{ c.label | replace("|", "\|") }} | {{ c.amount_inr }} | {{ "Mandatory" if c.mandatory else "Optional" }} | {{ "Yes" if c.refundable else "No" }} | {{ (c.note | replace("|", "\|")) if c.note else "—" }} |
+{%- endfor %}
+
+**Total (mandatory):** ₹{{ _fees.mandatory_total }} · **with all optional services:** ₹{{ _fees.all_in_total }}
+{%- if requirements.fees.payment_methods or requirements.fees.fee_last_revised %}
+
+<small class="atlas-fees__meta">{% if requirements.fees.payment_methods %}Payment: {{ requirements.fees.payment_methods | join(" / ") }}{% endif %}{% if requirements.fees.payment_methods and requirements.fees.fee_last_revised %} · {% endif %}{% if requirements.fees.fee_last_revised %}Fee schedule last revised {{ requirements.fees.fee_last_revised }}{% endif %}</small>
+{%- endif %}
+
+</div>
+{%- endif %}
 
 ## Document Checklist
 
@@ -147,7 +171,7 @@
 {%- endif %}
   <label class="atlas-checklist__item">
     <input type="checkbox" data-key="fee-receipt">
-    <span class="atlas-checklist__text">Visa fee payment — ₹{{ requirements.visa_fee_inr }}</span>
+    <span class="atlas-checklist__text">Visa fee payment — ₹{{ _fees.mandatory_total if _fees else requirements.visa_fee_inr }}</span>
   </label>
 </div>
 {%- if visa_types %}

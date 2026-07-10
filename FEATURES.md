@@ -156,3 +156,38 @@ what changed across the whole wiki without visiting every country page.
 - `templates/changes.md.jinja` — the page template.
 - `overrides/main.html` — RSS autodiscovery link.
 - `validate/checks.py` — G10–G12.
+
+---
+
+## 💰 Fee Breakdown (what it really costs)
+
+The #1 user question — "what will this really cost, total?" — answered with a per-component fee
+table instead of a single number, while every un-migrated page keeps working unchanged.
+
+### How it works
+1. **Schema**: optional `requirements.fees.components` — each component has `label`,
+   `amount_inr`, `mandatory`, `refundable` (+ optional `note`). Exactly one component carries
+   `is_government_fee: true` and its amount must equal the still-required legacy
+   `visa_fee_inr` (which is now unambiguously the GOVERNMENT fee — the single-number fallback
+   for the map, overview card, and accuracy audit). Optional `child_fee_inr`,
+   `payment_methods`, `fee_last_revised`.
+2. **Validation (group J)**: J1 structure/types · J2 non-negative amounts · J3 exactly one
+   government component · J4 it equals `visa_fee_inr` · J5 `fee_last_revised` parses ·
+   J6 at least one mandatory component.
+3. **Rendering**: totals are **computed at build time** (`compute_fees` in `gen_pages.py`),
+   never stored. Migrated pages get a `## Fees` table (tabular-numeral amounts,
+   mandatory/optional + refundable flags, notes), a computed
+   "Total (mandatory): ₹X · with all optional services: ₹Y" line, an upgraded overview row
+   ("₹X total (₹govt government fee)"), and a checklist fee item showing the mandatory total.
+   Countries without `fees` render byte-identically to before.
+4. **Reference migration**: Japan — all three components (govt ₹500, VFS service charge ₹800,
+   optional courier ₹550) verified against the VFS Global one-pager already cited in its
+   `requirements.sources`.
+
+**Key Files:**
+- `validate/checks.py` — `check_j` (J1–J6).
+- `gen_pages.py` — `compute_fees` + `_fees` context injection.
+- `templates/country.md.jinja` — Fees section, overview row, checklist line.
+- `docs/stylesheets/theme.css` — §24 fee table styles.
+- `data/visas/japan.yaml` — reference migration.
+- `add_country.py` — schema contract now scaffolds `fees` for new countries.

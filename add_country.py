@@ -106,9 +106,26 @@ visa_types block (dict of tabs; KEY ORDER = display order):
 - Document strings should be specific and actionable, matching the tone of the gold example
 
 requirements block:
-- visa_fee_inr: integer >= 0 in Indian Rupees (0 is valid for free visas). Use the government fee for
-  the primary visa type; if the processor adds a mandatory service charge, use the realistic total an
-  applicant pays and note the breakdown in the sidecar.
+- visa_fee_inr: integer >= 0 in Indian Rupees (0 is valid for free visas). This is the GOVERNMENT
+  FEE ONLY for the primary visa type — never a bundled total (validation J4 enforces that it equals
+  the fees block's government component). Service charges belong in `fees.components`.
+- fees: the per-component cost breakdown (validation group J). Structure:
+    fees:
+      components:
+        - label: "Government visa fee"     # str
+          amount_inr: <int >= 0>
+          mandatory: true                  # bool
+          refundable: false                # bool
+          is_government_fee: true          # EXACTLY ONE component carries this marker;
+                                           # its amount_inr MUST equal visa_fee_inr
+          note: "..."                      # optional
+      payment_methods: ["Cash", "Card"]    # optional, only if sourced
+      fee_last_revised: "YYYY-MM-DD"       # optional, only if sourced
+  ALWAYS include the government component (mirroring visa_fee_inr, mandatory: true).
+  Add a processor service-charge component ONLY when research supports a specific INR amount
+  (record the source in the sidecar) — NEVER invent amounts; when unsupported, ship the
+  government component alone and note the gap in the sidecar. At least one component must be
+  mandatory. Totals are computed at build time — never write totals into the YAML.
 - processing_days: integer >= 1 — realistic typical processing time in working days (not best-case marketing)
 - photo_specs: dimensions matching regex ^\\d+x\\d+mm$ (e.g. 35x45mm) and bg_color (e.g. White)
 - financial_proof: prose summary, MINIMUM 20 characters
@@ -148,7 +165,7 @@ _meta:
   method: ai-draft-v1
   model: claude-sonnet-4-6
 <field>:            # one entry per: visa_type, visa_difficulty, max_stay, entry_type, visa_validity,
-  source: <url|null> #   authority, visa_types, visa_fee_inr, processing_days, photo_specs,
+  source: <url|null> #   authority, visa_types, visa_fee_inr, fees, processing_days, photo_specs,
   confidence: <c>    #   financial_documents, occupation_documents, health
   note: <optional one-liner, e.g. fee breakdown or caveat>
 

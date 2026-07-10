@@ -866,3 +866,135 @@ def check_i(volatility_path: str = os.path.join("data", "volatility.yaml")) -> L
         results.append(_ok("I4", short, "all cadence values are positive ints"))
 
     return results
+
+
+# ── Group J: Fee breakdown (requirements.fees, optional) ─────────────────────
+# The fee-breakdown block answers "what will this really cost, total". It is
+# optional (countries migrate incrementally); when present:
+#   J1 — structure/types: fees is a dict; components is a non-empty list of
+#        dicts, each with label (str), amount_inr (int), mandatory (bool),
+#        refundable (bool); optional child_fee_inr (int) and
+#        payment_methods (list of str)
+#   J2 — every amount_inr (and child_fee_inr) is >= 0
+#   J3 — EXACTLY ONE component carries `is_government_fee: true` (an explicit
+#        marker, chosen over label-matching "Government" which breaks on
+#        wordings like "Embassy fee")
+#   J4 — that component's amount_inr == requirements.visa_fee_inr (the legacy
+#        integer stays the government fee, so single-number consumers — map,
+#        accuracy audit, un-migrated pages — remain correct)
+#   J5 — fee_last_revised, if present, parses as YYYY-MM-DD
+#   J6 — at least one component is mandatory (a breakdown of only optional
+#        services can't answer the total-cost question)
+# Totals shown on pages are COMPUTED at build time (gen_pages.py), never
+# stored in YAML.
+
+def check_j(filepath: str, data: dict) -> List[CheckResult]:
+    short = os.path.basename(filepath)
+    results = []
+
+    fees = _get(data, "requirements", "fees")
+    if fees is None:
+        return results  # optional block — silently skipped when absent
+
+    if not isinstance(fees, dict):
+        results.append(_err("J1", short,
+            f"requirements.fees must be a dict, got {type(fees).__name__}"))
+        return results
+
+    components = fees.get("components")
+    if not isinstance(components, list) or len(components) == 0:
+        results.append(_err("J1", short,
+            "requirements.fees.components must be a non-empty list"))
+        return results
+
+    def _is_int(v):
+        return isinstance(v, int) and not isinstance(v, bool)
+
+    govt_components = []
+    mandatory_count = 0
+
+    for i, comp in enumerate(components):
+        loc = f"requirements.fees.components[{i}]"
+        if not isinstance(comp, dict):
+            results.append(_err("J1", short, f"{loc} must be a dict"))
+            continue
+
+        # J1: required keys, correctly typed
+        label = comp.get("label")
+        if not isinstance(label, str) or not label.strip():
+            results.append(_err("J1", short, f"{loc}.label must be a non-empty string"))
+        amount = comp.get("amount_inr")
+        if not _is_int(amount):
+            results.append(_err("J1", short,
+                f"{loc}.amount_inr must be an int, got {amount!r}"))
+        elif amount < 0:
+            # J2: non-negative amounts
+            results.append(_err("J2", short, f"{loc}.amount_inr={amount} must be >= 0"))
+        for flag in ("mandatory", "refundable"):
+            if not isinstance(comp.get(flag), bool):
+                results.append(_err("J1", short,
+                    f"{loc}.{flag} must be a bool, got {comp.get(flag)!r}"))
+        igf = comp.get("is_government_fee")
+        if igf is not None and not isinstance(igf, bool):
+            results.append(_err("J1", short,
+                f"{loc}.is_government_fee must be a bool, got {igf!r}"))
+
+        if comp.get("is_government_fee") is True:
+            govt_components.append((i, comp))
+        if comp.get("mandatory") is True:
+            mandatory_count += 1
+
+    # J1 continued: optional top-level fields, correctly typed
+    child_fee = fees.get("child_fee_inr")
+    if child_fee is not None:
+        if not _is_int(child_fee):
+            results.append(_err("J1", short,
+                f"requirements.fees.child_fee_inr must be an int, got {child_fee!r}"))
+        elif child_fee < 0:
+            results.append(_err("J2", short,
+                f"requirements.fees.child_fee_inr={child_fee} must be >= 0"))
+
+    methods = fees.get("payment_methods")
+    if methods is not None:
+        if not isinstance(methods, list) or not all(isinstance(m, str) for m in methods):
+            results.append(_err("J1", short,
+                "requirements.fees.payment_methods must be a list of strings"))
+
+    # J3: exactly one government-fee component
+    if len(govt_components) != 1:
+        results.append(_err("J3", short,
+            f"requirements.fees.components must have EXACTLY ONE entry with "
+            f"is_government_fee: true, found {len(govt_components)}"))
+    else:
+        # J4: government component mirrors the legacy visa_fee_inr
+        _, govt = govt_components[0]
+        legacy = _get(data, "requirements", "visa_fee_inr")
+        if _is_int(govt.get("amount_inr")) and _is_int(legacy) \
+                and govt["amount_inr"] != legacy:
+            results.append(_err("J4", short,
+                f"government-fee component amount_inr={govt['amount_inr']} must equal "
+                f"requirements.visa_fee_inr={legacy} (the legacy field stays the "
+                f"single-number government-fee fallback)"))
+
+    # J5: fee_last_revised parses
+    revised = fees.get("fee_last_revised")
+    if revised is not None:
+        try:
+            datetime.strptime(str(revised), "%Y-%m-%d")
+        except ValueError:
+            results.append(_err("J5", short,
+                f"requirements.fees.fee_last_revised {revised!r} is not a valid "
+                f"YYYY-MM-DD date"))
+
+    # J6: at least one mandatory component
+    if mandatory_count == 0:
+        results.append(_err("J6", short,
+            "requirements.fees.components must include at least one mandatory "
+            "component (an all-optional breakdown can't answer total cost)"))
+
+    if not any(r.check_id.startswith("J") and not r.passed for r in results):
+        results.append(_ok("J", short,
+            f"fee breakdown valid ({len(components)} component(s), "
+            f"{mandatory_count} mandatory)"))
+
+    return results

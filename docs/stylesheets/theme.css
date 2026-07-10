@@ -865,6 +865,43 @@ body.atlas-page--home .md-content__inner > h1:first-of-type {
 }
 
 
+/* ── 24. Fee breakdown table ───────────────────────────────────── */
+/* Mirrors the changelog table conventions (§21). Amount column uses
+   tabular numerals so figures align vertically. */
+
+.atlas-fees {
+  font-size: 0.88rem;
+}
+
+.atlas-fees table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.atlas-fees th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--atlas-muted);
+  font-weight: 700;
+}
+
+.atlas-fees td {
+  font-size: 0.85rem;
+  vertical-align: top;
+}
+
+.atlas-fees td:nth-child(2) {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.atlas-fees__meta {
+  color: var(--atlas-muted);
+}
+
+
 /* ── 17. Accessibility ────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

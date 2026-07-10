@@ -1,0 +1,43 @@
+name: Weekly Rebuild — refresh freshness badges
+
+# WHY: the freshness badges and the /meta/freshness worklist are computed at
+# BUILD time from each block's `accessed` date vs the current date
+# (gen_pages.py -> freshness.py). Cloudflare Pages only rebuilds on a push, so
+# during a week with no commits the badges silently go stale — an "aging" fact
+# keeps rendering "verified on schedule". This cron pokes a Cloudflare Pages
+# deploy hook once a week to force a fresh build + deploy so dates stay honest.
+#
+# ── ONE-TIME SETUP (founder — this workflow is INERT until BOTH are done) ─────
+#   1. Cloudflare dashboard -> Workers & Pages -> atlas-wiki -> Settings ->
+#      Builds & deployments -> Deploy hooks -> "Add deploy hook"
+#      (name: weekly-rebuild, branch: main). Copy the generated URL.
+#   2. Add it as a repo secret named CLOUDFLARE_DEPLOY_HOOK:
+#        gh secret set CLOUDFLARE_DEPLOY_HOOK
+#      (or Repo Settings -> Secrets and variables -> Actions -> New secret)
+# Until the secret exists the job runs, logs a warning, and exits 0 (no noise).
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"   # Mondays 08:00 UTC — after link-check (06:00) + accuracy-audit (07:00)
+  workflow_dispatch:        # allow manual "Run workflow" from the Actions tab
+
+jobs:
+  rebuild:
+    name: Trigger Cloudflare rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poke the Cloudflare Pages deploy hook
+        env:
+          HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::CLOUDFLARE_DEPLOY_HOOK secret is not set — skipping."
+            echo "See this workflow file's header for the one-time setup steps."
+            exit 0
+          fi
+          code=$(curl -sS -o /dev/null -w "%{http_code}" -X POST "$HOOK")
+          echo "Deploy hook responded HTTP $code"
+          case "$code" in
+            2*) echo "Rebuild triggered — Cloudflare will rebuild main and redeploy." ;;
+            *)  echo "::error::Deploy hook POST failed (HTTP $code)."; exit 1 ;;
+          esac

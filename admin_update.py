@@ -288,15 +288,37 @@ def propose_update(current_yaml: str, source_content: str,
 
 # ── Pre-write validation gate ─────────────────────────────────────────────────
 
-def validate_proposed(proposed_yaml: str, filepath: str) -> list:
+def _citation_status(data: dict) -> dict:
+    """{block_id: 'sourced' | 'unverified' | 'bare'} for every citable block."""
+    from validate.checks import _iter_present_citable_blocks
+    status = {}
+    for block_id, _label, sources, unverified, _c in _iter_present_citable_blocks(data):
+        if isinstance(sources, list) and len(sources) > 0:
+            status[block_id] = "sourced"
+        elif unverified is True:
+            status[block_id] = "unverified"
+        else:
+            status[block_id] = "bare"
+    return status
+
+
+def validate_proposed(proposed_yaml: str, filepath: str,
+                      current_yaml: Optional[str] = None) -> list:
     """
     Run the structural validators (groups B–J) on the PROPOSED YAML before
     anything touches disk. Returns the list of ERROR-level failures (empty =
     safe to show the diff / write). Same checks CI runs, so a proposal that
     passes here won't bounce in CI.
+
+    When current_yaml is given, ALSO blocks citation-status regressions: a
+    block that today is `sourced` or `unverified` may not come back `bare`
+    (unverified removed without gaining a source, or sources deleted). H6 is
+    only a CI warning during the migration, so without this rule a bad
+    proposal would silently downgrade a block's trust status. bare→bare stays
+    allowed — value updates on un-migrated countries must not be blocked.
     """
-    from validate.checks import (check_b, check_c, check_d, check_e,
-                                 check_g, check_h, check_j)
+    from validate.checks import (CheckResult, check_b, check_c, check_d,
+                                 check_e, check_g, check_h, check_j)
     try:
         data = yaml.safe_load(proposed_yaml)
     except yaml.YAMLError as exc:
@@ -307,7 +329,23 @@ def validate_proposed(proposed_yaml: str, filepath: str) -> list:
     results = []
     for check in (check_b, check_c, check_d, check_e, check_g, check_h, check_j):
         results.extend(check(filepath, data))
-    return [r for r in results if r.severity == "ERROR" and not r.passed]
+    errors = [r for r in results if r.severity == "ERROR" and not r.passed]
+
+    if current_yaml is not None:
+        before = _citation_status(yaml.safe_load(current_yaml))
+        after = _citation_status(data)
+        short = os.path.basename(filepath)
+        for block_id, prev in before.items():
+            now = after.get(block_id, "bare")
+            if prev == "sourced" and now != "sourced":
+                errors.append(CheckResult("REG", "ERROR", False,
+                    f"{block_id} would lose its sources (was 'sourced', "
+                    f"becomes {now!r}) — citations must not be deleted", short))
+            elif prev == "unverified" and now == "bare":
+                errors.append(CheckResult("REG", "ERROR", False,
+                    f"{block_id} would lose `unverified: true` WITHOUT gaining a "
+                    f"sources entry — the flag may only be cleared by a citation", short))
+    return errors
 
 
 # ── Diff display ──────────────────────────────────────────────────────────────
@@ -515,7 +553,7 @@ def main() -> int:
 
     # ── Validate BEFORE showing the diff (same checks CI runs) ──────────────
     try:
-        errors = validate_proposed(proposed_yaml, yaml_path)
+        errors = validate_proposed(proposed_yaml, yaml_path, current_yaml)
     except RuntimeError as exc:
         print(f"\nERROR: {exc}", file=sys.stderr)
         return 1

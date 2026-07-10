@@ -1,11 +1,16 @@
 # Atlas — Current State Snapshot
 
 > **Point-in-time snapshot** of the whole repository, drafted 2026-07-08 after a full
-> file-by-file review; last synced 2026-07-09 (citations + freshness systems merged, 4 new
-> countries added). Unlike [`.ai-state/STATE.md`](.ai-state/STATE.md) (an append-only
-> session log), this file is a *current* description of what exists today and is meant to be
-> overwritten when it drifts. Where older docs disagree with the code, the code wins and the
-> discrepancy is called out under **Known drift / cleanup candidates** at the bottom.
+> file-by-file review; last synced 2026-07-10 (fees, change-log/RSS, citations batch 1, the
+> fee/transit/insurance corrections, and the weekly-rebuild workflow all merged). Unlike
+> [`.ai-state/STATE.md`](.ai-state/STATE.md) (an append-only session log), this file is a
+> *current* description of what exists today and is meant to be overwritten when it drifts. Where
+> older docs disagree with the code, the code wins and the discrepancy is called out under
+> **Known drift / cleanup candidates** at the bottom.
+>
+> **Companion docs:** [`FEATURES.md`](FEATURES.md) (per-feature narrative) ·
+> [`USER-JOURNEYS.md`](USER-JOURNEYS.md) (who does what, end to end) ·
+> [`BACKLOG.md`](BACKLOG.md) (open TODOs) · `/meta/freshness` (live verification queue).
 
 ---
 
@@ -47,8 +52,9 @@ theme turn those pages into a static site.
   the YAML (facts) or the Jinja template (layout).
 - **Repo:** `github.com/shan8tanu/atlas-wiki` (branch `main`)
 - **Deploy target:** Cloudflare Pages → https://atlas-wiki.pages.dev/
-- **Coverage today:** 30 countries live on `main` (Sri Lanka, United Kingdom, Canada, and
-  Maldives merged 2026-07-09 via the `add_country.py` pipeline — see §5).
+- **Coverage today:** 30 countries live on `main`. **6/30 migrated to per-claim citations**
+  (Japan + batch 1: Australia, Cambodia, France, Germany, Greece); the other 24 render the
+  git-date "source citations being added" badge and sit on the `/meta/freshness` worklist.
 
 ---
 
@@ -95,15 +101,17 @@ atlas/
 ├── .claude/launch.json           Dev server config (mkdocs serve :8000)
 ├── CLAUDE.md                     Claude Code project instructions
 ├── FEATURES.md                   Feature/architecture narrative (living doc)
+├── USER-JOURNEYS.md              Traveller / contributor / librarian / maintainer journeys
+├── BACKLOG.md                    Open TODOs (transit sources, FR/GR INR, e-Visa audit, …)
 ├── atlas_PROJECT_STATE.md        ← THIS FILE (current-state snapshot)
 ├── mkdocs.yml                    Site config: theme, nav, plugins, CSS/JS
 ├── requirements.txt              mkdocs-material, mkdocs-gen-files, jinja2, pyyaml, anthropic
 │
 ├── gen_pages.py                  Build engine: YAML → Jinja → virtual MD + map-data.json
-│                                 + freshness context + /meta/freshness page
+│                                 + freshness context + /meta/freshness + /changes/ + changes.xml
 ├── freshness.py                  Freshness engine: cadence policy, block states, page rollup,
-│                                 git-date cache, report builder
-├── freshness_report.py           CLI: librarian's re-verification queue (always exit 0)
+│                                 git-date cache, report builder (+ verification queue)
+├── freshness_report.py           CLI: librarian's re-verification + verification queue (exit 0)
 ├── validate.py                   CLI: structural YAML validation (checks A–I)
 ├── validate_accuracy.py          CLI: AI accuracy audit (needs ANTHROPIC_API_KEY)
 ├── admin_update.py               CLI: trusted-source YAML updates w/ diff + confirm
@@ -148,9 +156,11 @@ atlas/
 └── .github/
     ├── PULL_REQUEST_TEMPLATE/     core_feature.md, data_correction.md
     └── workflows/
-        ├── ci.yml                push: validate + strict build; PR: also htmlproofer
+        ├── ci.yml                push: validate + freshness report + strict build; PR: also htmlproofer
         ├── link-check.yml        Weekly Mon 06:00 UTC dead-link scan
-        └── accuracy-audit.yml    Weekly Mon 07:00 UTC AI accuracy audit
+        ├── accuracy-audit.yml    Weekly Mon 07:00 UTC AI accuracy audit
+        └── rebuild.yml           Weekly Mon 08:00 UTC — pokes Cloudflare deploy hook so freshness
+                                  recomputes during push-less weeks (INERT until CLOUDFLARE_DEPLOY_HOOK set)
 ```
 
 ---
@@ -200,7 +210,12 @@ label when aging/overdue), and the Visa Info card gains a Difficulty row (labels
 "Last updated" fallback for unmigrated pages — never file mtime). Ops surface:
 `freshness_report.py` (always exit 0, printed in CI) + virtual page `/meta/freshness`
 (nav-hidden via `not_in_nav`). Wording rule: "verified" = cited source checked; "updated" = file
-committed.
+committed. The report has three sections: **aging/overdue** cited blocks, the **migration
+worklist** (unmigrated/partial countries, oldest git date first), and the **verification queue**
+— every `unverified` block with the official portal to check it against and the `admin_update.py`
+command to apply a fix. Freshness recomputes only when the site rebuilds, so a weekly
+`rebuild.yml` cron keeps badges honest during push-less weeks (needs the `CLOUDFLARE_DEPLOY_HOOK`
+secret — see [`BACKLOG.md`](BACKLOG.md) #6).
 
 **Fee breakdown** (optional, check group J): `requirements.fees.components` — per-component
 `label`/`amount_inr`/`mandatory`/`refundable` (+ optional `note`), with **exactly one**
@@ -288,6 +303,7 @@ system stacks — Material's Google-Fonts loader is disabled via `font: false`).
 | [`ci.yml`](.github/workflows/ci.yml) | push to `main` + PRs | `validate.py` → `freshness_report.py` (informational, always exit 0) → `mkdocs build --strict`; **htmlproofer only on PRs** (a dead embassy link never blocks a push) |
 | [`link-check.yml`](.github/workflows/link-check.yml) | Mon 06:00 UTC + manual | build + htmlproofer dead-link scan |
 | [`accuracy-audit.yml`](.github/workflows/accuracy-audit.yml) | Mon 07:00 UTC + manual | `validate_accuracy.py` → report to job summary + 90-day artifact. Needs `ANTHROPIC_API_KEY` (+ `BRAVE_SEARCH_API_KEY`) repo secrets |
+| [`rebuild.yml`](.github/workflows/rebuild.yml) | Mon 08:00 UTC + manual | POSTs to a Cloudflare deploy hook so freshness recomputes during push-less weeks. **Inert until `CLOUDFLARE_DEPLOY_HOOK` secret is set** (founder — see `BACKLOG.md` #6) |
 
 htmlproofer ignores a curated set of bot-blocking government/processor domains (kept in sync
 between `ci.yml` and `link-check.yml`). Contribution flow: edit YAML on GitHub via the page pencil →

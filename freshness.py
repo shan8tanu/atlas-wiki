@@ -199,12 +199,32 @@ def _collect(countries: dict, cadences: dict, today: date | None = None):
     return attention, worklist
 
 
+def _collect_unverified(countries: dict):
+    """
+    Every block flagged `unverified: true` across all countries — the human
+    verification queue. Returns rows {country, slug, block, label, portal},
+    sorted by country then block. `portal` is where to check the fact.
+    """
+    rows = []
+    for filename in sorted(countries):
+        data = countries[filename]
+        name = data.get("country", filename)
+        slug = os.path.splitext(filename)[0]
+        portal = ((data.get("authority") or {}).get("official_portal")) or "—"
+        for block_id, label, _sources, unverified, _c in _iter_present_citable_blocks(data):
+            if unverified is True:
+                rows.append({"country": name, "slug": slug, "block": block_id,
+                             "label": label, "portal": portal})
+    return rows
+
+
 def build_report(countries: dict, cadences: dict, git_dates: dict,
                  today: date | None = None) -> tuple[str, str]:
     """Returns (console_text, markdown_page) for the freshness report."""
     today = today or date.today()
     attention, worklist = _collect(countries, cadences, today)
     worklist.sort(key=lambda r: git_dates.get(r["file"], "0000-00-00"))
+    unverified = _collect_unverified(countries)
 
     # ── Console (ASCII-only: must not crash cp1252 Windows terminals) ────────
     lines = [f"Atlas Freshness Report — {today.isoformat()}".replace("—", "-"),
@@ -222,6 +242,11 @@ def build_report(countries: dict, cadences: dict, git_dates: dict,
         gd = git_dates.get(r["file"], "unknown")
         lines.append(f"  {gd}  {r['country']:<15} {r['status']}"
                      f" ({r['sourced_blocks']} sourced block(s))")
+    lines.append("")
+    lines.append(f"Verification queue ({len(unverified)} blocks flagged unverified, "
+                 f"need a human + official source):")
+    for r in unverified:
+        lines.append(f"  {r['country']:<15} {r['block']}")
     console = "\n".join(lines)
 
     # ── Markdown page (/meta/freshness) ───────────────────────────────────────
@@ -256,6 +281,29 @@ def build_report(countries: dict, cadences: dict, git_dates: dict,
     for r in worklist:
         gd = git_dates.get(r["file"], "—")
         md.append(f"| {gd} | {r['country']} | {r['status']} | {r['sourced_blocks']} |")
+
+    # ── Verification queue (the founder's manual to-verify list) ─────────────
+    md += [
+        "",
+        "## Verification queue — blocks awaiting an official source",
+        "",
+        f"{len(unverified)} block(s) are published with an \"Unverified / Community-Reported\" "
+        "caveat because no official source could be confirmed (often the portal bot-blocks "
+        "automated fetches). Each needs a human to open the portal, confirm the fact, then either "
+        "add a `sources` entry to the block or correct the data.",
+        "",
+        "**Apply a fix:** `python admin_update.py --country <slug> --source <official-url>` "
+        "(fetches the source, proposes a YAML diff, writes on confirmation) — or edit the block's "
+        "`sources` list by hand.",
+        "",
+        "| Country | Block | Check against (official portal) |",
+        "|---------|-------|--------------------------------|",
+    ]
+    if unverified:
+        for r in unverified:
+            md.append(f"| {r['country']} (`{r['slug']}`) | `{r['block']}` | {r['portal']} |")
+    else:
+        md.append("| _none_ | _every present block is cited_ | — |")
     md.append("")
     markdown = "\n".join(md)
 

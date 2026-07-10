@@ -725,3 +725,29 @@ atlas/
 - `data/visas/{australia,france,germany,greece}.yaml` — corrections above
 - `add_country.py` — official-INR-first convention in the schema contract
 - `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs
+
+### Session: 2026-07-10 — Claude (Opus 4.8) [polish + docs to stable state]
+**Branch:** chore/polish-docs-verification-queue (from main)
+**What changed:**
+- Verification queue (founder's manual to-verify list): `freshness.py` `_collect_unverified` +
+  `build_report` now enumerate every `unverified: true` block across all countries — country,
+  block id, and the official portal to check against — as a new section on `/meta/freshness` and
+  in `freshness_report.py` console output, with the `admin_update.py --country X --source URL`
+  apply command. 31 blocks across 6 migrated countries. Auto-generated, so it can't drift.
+- `BACKLOG.md` (new, root): durable open-TODO list — transit-guide real sourcing (placeholder
+  URLs), France/Greece official INR, e-Visa artifact audit (12 countries still carry the generic
+  "e-Visa (where available)" bulk-script tab incl. Japan), 24-country citation migration, fee
+  breakdown rollout, Cloudflare rebuild setup (founder), issue forms (optional).
+- `USER-JOURNEYS.md` (new, root): traveller / contributor / librarian-founder / maintainer
+  journeys end to end, each mapped to the files + tools involved.
+- Doc refresh: atlas_PROJECT_STATE.md (header companion-doc pointers, 6/30 migrated, repo map +
+  BACKLOG/USER-JOURNEYS/rebuild.yml, §7 CI table + rebuild row, freshness ops = 3 report
+  sections), FEATURES.md (companion-doc pointer), docs/CONTRIBUTING.md (how to add a `sources`
+  block / `unverified` flag), CLAUDE.md (orientation-docs pointer).
+- No schema/behaviour change to shipped country pages; verification queue is additive.
+- Verified: validate.py 1409 passed / 0 errors; strict build green; /meta/freshness renders all
+  three sections incl. the verification queue; freshness_report.py exit 0.
+**Files touched:**
+- `freshness.py` — verification queue (_collect_unverified + report sections)
+- `BACKLOG.md`, `USER-JOURNEYS.md` — created
+- `atlas_PROJECT_STATE.md`, `FEATURES.md`, `docs/CONTRIBUTING.md`, `CLAUDE.md`, `.ai-state/STATE.md` — docs

@@ -109,6 +109,12 @@ requirements block:
 - visa_fee_inr: integer >= 0 in Indian Rupees (0 is valid for free visas). This is the GOVERNMENT
   FEE ONLY for the primary visa type — never a bundled total (validation J4 enforces that it equals
   the fees block's government component). Service charges belong in `fees.components`.
+  OFFICIAL-INR-FIRST CONVENTION: when the mission/consulate publishes an official INR amount for
+  the fee (e.g. German missions in India publish INR 9,800 for the €90 Schengen fee), store THAT
+  exact figure and cite the page — do not re-convert a EUR/USD amount yourself. Only convert when
+  no official INR figure is published anywhere, and then record the FX rate and date used (put it
+  in the fee component's `note` and set `fees.fee_last_revised`). A stale hand-conversion is a
+  data error waiting to happen; the mission's own INR is authoritative.
 - fees: the per-component cost breakdown (validation group J). Structure:
     fees:
       components:

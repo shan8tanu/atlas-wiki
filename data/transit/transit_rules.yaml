@@ -14,7 +14,13 @@ hubs:
     exemptions:
       - description: "Hold a valid visa or residence permit issued by a Schengen member state"
       - description: "Hold a valid visa or residence permit issued by the United States, Canada, or Japan"
-      - description: "Hold a valid visa or residence permit issued by the United Kingdom or Ireland"
+      # "United Kingdom" removed 2026-07-10: the EU Visa Code Art. 3(5) airport-
+      # transit-visa exemption does not cover UK documents post-Brexit (this is
+      # the same pre-Brexit residue corrected on the France country page, and it
+      # applies uniformly across Schengen hubs). Ireland (an EU member state)
+      # retained. Source below is still a placeholder — the transit guide needs
+      # official verification before production.
+      - description: "Hold a valid visa or residence permit issued by Ireland (an EU member state)"
       - description: "Hold a valid visa issued by Andorra, Monaco, or San Marino"
       - description: "Are a family member of an EU/EEA citizen exercising freedom of movement rights"
       - description: "Hold a diplomatic or service passport"
@@ -35,7 +41,13 @@ hubs:
     exemptions:
       - description: "Hold a valid visa or residence permit issued by a Schengen member state"
       - description: "Hold a valid visa or residence permit issued by the United States, Canada, or Japan"
-      - description: "Hold a valid visa or residence permit issued by the United Kingdom or Ireland"
+      # "United Kingdom" removed 2026-07-10: the EU Visa Code Art. 3(5) airport-
+      # transit-visa exemption does not cover UK documents post-Brexit (this is
+      # the same pre-Brexit residue corrected on the France country page, and it
+      # applies uniformly across Schengen hubs). Ireland (an EU member state)
+      # retained. Source below is still a placeholder — the transit guide needs
+      # official verification before production.
+      - description: "Hold a valid visa or residence permit issued by Ireland (an EU member state)"
       - description: "Hold a valid visa issued by Andorra, Monaco, or San Marino"
       - description: "Are a family member of an EU/EEA citizen exercising freedom of movement rights"
       - description: "Hold a diplomatic or service passport"

@@ -27,17 +27,6 @@ visa_types:
       - Confirmed return flight tickets (printed copy)
       - Proof of accommodation — hotel booking confirmation or invitation letter
       - Travel insurance covering the full stay duration
-  evisa:
-    label: e-Visa (where available)
-    # Likely bulk-script artifact: Greece has no short-stay e-Visa.
-    # Flagged in the PR for founder review; data left untouched.
-    unverified: true
-    documents:
-      - Online application form submitted via the official visa portal
-      - Scanned copy of passport bio page — JPEG or PDF, clearly legible
-      - Digital photograph — white background, JPEG, minimum 200 KB
-      - Return flight booking reference number
-      - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
     unverified: true
@@ -49,6 +38,10 @@ visa_types:
       - Sponsor letter or proof of fixed deposits / investment holdings
 
 requirements:
+  # TODO(official-INR-first): 7200 is a stale €90 conversion. The Greek
+  # consulate/VFS India fee schedule publishes an official INR (Germany's is
+  # 9,800 for the same €90), but mfa.gr and VFS bot-block automated fetches —
+  # needs a human to read the official INR and update.
   visa_fee_inr: 7200
   processing_days: 15
   photo_specs:

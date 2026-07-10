@@ -12,9 +12,15 @@ authority:
   name: Embassy of Greece, New Delhi
   processor: VFS Global
   official_portal: https://www.mfa.gr/india/
+# Citations (2026-07-10): mfa.gr and VFS Global block automated fetches;
+# the EU Commission Schengen page (tier 1) supports the requirements
+# block. Stored visa_fee_inr 7200 reflects €90 at a stale exchange rate
+# (German missions publish INR 9,800 for the same €90) — INR convention
+# flagged in the PR.
 visa_types:
   standard_visa:
     label: Standard Visa
+    unverified: true
     documents:
       - Completed visa application form — printed, signed, and dated
       - Appointment confirmation slip from VFS Global / BLS / embassy
@@ -23,6 +29,9 @@ visa_types:
       - Travel insurance covering the full stay duration
   evisa:
     label: e-Visa (where available)
+    # Likely bulk-script artifact: Greece has no short-stay e-Visa.
+    # Flagged in the PR for founder review; data left untouched.
+    unverified: true
     documents:
       - Online application form submitted via the official visa portal
       - Scanned copy of passport bio page — JPEG or PDF, clearly legible
@@ -31,6 +40,7 @@ visa_types:
       - Hotel or accommodation booking reference number
   long_term:
     label: Long-stay Visa
+    unverified: true
     documents:
       - Completed long-stay visa application (consulate-specific form)
       - Employer NOC confirming leave of absence for the full stay period
@@ -80,8 +90,17 @@ requirements:
       - Bank statements for the last 3 months
       - ITR for 2 years (pension income, if applicable)
       - Pension sanction letter / retirement proof
+  sources:
+    - url: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy/applying-schengen-visa_en
+      tier: 1
+      label: "European Commission — Applying for a Schengen visa (€90 fee, 15-day processing, insurance requirement)"
+      accessed: "2026-07-10"
 
 health:
+  # Schengen-wide insurance rule confirmed at EU level but not the EUR
+  # 30,000 figure or vaccination guidance — unverified pending human check
+  # of mfa.gr (blocks automated access).
+  unverified: true
   vaccinations: Routine vaccinations sufficient. Hepatitis A recommended.
   insurance: Schengen travel insurance mandatory — minimum EUR 30,000 medical coverage.
   notes: Good healthcare in Athens and major islands. Remote islands have limited

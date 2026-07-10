@@ -171,7 +171,10 @@ YYYY-MM-DD) or an `unverified: true` flag. Citable blocks = `requirements`, `hea
 `jurisdiction` & `exemptions` (parallel `jurisdiction_sources`/`_unverified`,
 `exemptions_sources`/`_unverified`, since a YAML list can't hold a sibling key). The registry is
 `CITABLE_BLOCKS` in `validate/schema.py`, shared by validation and mirrored by the template.
-Japan is the fully-migrated reference; the other 29 migrate later. Rendered as subtle tier-badged
+Japan is the fully-migrated reference; batch 1 (Australia, Cambodia, France, Germany, Greece)
+migrated 2026-07-10 — 6/30 countries done, 24 on the worklist. Bot-blocked portals mean most
+batch-1 blocks are honestly `unverified` (France/Germany/Greece got EU-Commission / diplo.de T1
+citations for requirements + France's biometrics). Rendered as subtle tier-badged
 "Sources" lines / an amber "Unverified" caveat by `templates/country.md.jinja`.
 
 **Freshness system** (builds on citations): `data/volatility.yaml` maps each citable block to a

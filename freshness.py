@@ -246,7 +246,7 @@ def build_report(countries: dict, cadences: dict, git_dates: dict,
     lines.append(f"Verification queue ({len(unverified)} blocks flagged unverified, "
                  f"need a human + official source):")
     for r in unverified:
-        lines.append(f"  {r['country']:<15} {r['block']}")
+        lines.append(f"  {r['country']:<15} {r['block']:<26} {r['portal']}")
     console = "\n".join(lines)
 
     # ── Markdown page (/meta/freshness) ───────────────────────────────────────

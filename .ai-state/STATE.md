@@ -751,3 +751,32 @@ atlas/
 - `freshness.py` — verification queue (_collect_unverified + report sections)
 - `BACKLOG.md`, `USER-JOURNEYS.md` — created
 - `atlas_PROJECT_STATE.md`, `FEATURES.md`, `docs/CONTRIBUTING.md`, `CLAUDE.md`, `.ai-state/STATE.md` — docs
+
+### Session: 2026-07-11 — Claude (Opus 4.8) [admin_update citation-aware]
+**Branch:** feat/admin-update-citations (from main)
+**What changed:**
+- admin_update.py is now the one-command apply-tool for the /meta/freshness verification queue:
+  - With `--source URL` (or `--text ... --cite URL` when the portal blocks server fetches), the
+    proposal ALSO adds a `sources` entry (url / tier / label / accessed=today) to every citable
+    block the source supports and clears those blocks' `unverified: true` flags. `--no-cite` =
+    pure value update. Prompt knows the parallel-key shape for jurisdiction/exemptions and that
+    CONFIRMING an existing value is an actionable update (the queue's primary case).
+  - `suggest_tier(url)`: processor domains (vfsglobal/bls/tlscontact) -> 2, government-looking
+    domains -> 1, else 3 — mirrors the add_country.py convention; check H4 validates the result.
+  - Pre-write validation gate: `validate_proposed()` runs check groups B-J on the PROPOSED YAML
+    before the diff is shown — an invalid proposal (bad tier/date/url, structural damage) exits 1
+    and never touches disk. Non-https --cite rejected up front. max_tokens 2048 -> 4096 (full
+    country files with citations exceed the old cap).
+- Docs synced: /meta/freshness queue text (freshness.py), USER-JOURNEYS librarian step,
+  atlas_PROJECT_STATE §5 admin_update entry.
+- Tested WITHOUT an API key (none in env) by stubbing the model call: 8-case tier heuristic;
+  cite/no-cite prompt assembly; gate passes real cambodia.yaml, catches H2/H3/H4/H5 on a
+  malformed citation, raises on broken YAML; full main() end-to-end with --text/--cite --yes
+  wrote the citation + cleared the flag, strict-citations passed, and the verification queue
+  self-updated (cambodia/requirements row gone) — then the test write was REVERTED (simulation:
+  no page was actually opened); invalid-proposal run exited 1 with file byte-identical; --no-cite
+  and non-https --cite paths verified. The live Claude-call path is mechanically unchanged.
+**Files touched:**
+- `admin_update.py` — citation instructions, suggest_tier, validate_proposed gate, flags
+- `freshness.py` — queue apply-command text
+- `USER-JOURNEYS.md`, `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs

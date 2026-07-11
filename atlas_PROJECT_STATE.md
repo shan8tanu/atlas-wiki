@@ -295,6 +295,15 @@ system stacks — Material's Google-Fonts loader is disabled via `font: false`).
 - **Country page interactivity** — [`theme.js`](docs/javascripts/theme.js): localStorage checklist
   persistence, occupation + visa-type selectors, cover-letter copy button, homepage mini-map,
   IntersectionObserver reveal animations.
+  **Fixed 2026-07-11:** the occupation/visa-type selectors had NEVER worked in production
+  (born broken 2026-03-15): they relied on the bare `hidden` attribute, which
+  `.atlas-checklist__item { display: flex }` overrides (author CSS beats the UA sheet's
+  `[hidden]` rule). Visibility is now class-based (`.atlas-occ-hidden`/`.atlas-vtype-hidden`),
+  the JS finds the checklist by the shared `data-country` attribute (not sibling-walking), and
+  blocking **rendered-DOM tests** ([`tests/test_rendered_pages.py`](tests/test_rendered_pages.py),
+  stdlib-only, wired into ci.yml after the build) pin the whole mechanism. Any change to the
+  template/theme.js/theme.css additionally requires the founder's 2-minute click-through in
+  [`RELEASE_CHECKS.md`](RELEASE_CHECKS.md) (referenced from CLAUDE.md's close-out).
 - **Theme/design system** — [`theme.css`](docs/stylesheets/theme.css) (tokens, cards, selectors,
   checklist, and the optional section styles) + [`map.css`](docs/stylesheets/map.css).
 - **Hero + mini-map** — [`overrides/main.html`](overrides/main.html), which also sets a

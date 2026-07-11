@@ -98,6 +98,38 @@
   }
 
   /**
+   * Find the checklist a selector controls: looked up by the shared
+   * data-country attribute (falling back to the page's single checklist) —
+   * NOT by sibling-walking, so a template rearrangement can't silently
+   * detach the JS. tests/test_rendered_pages.py pins this contract in CI.
+   *
+   * Visibility is toggled via the .atlas-occ-hidden / .atlas-vtype-hidden
+   * classes, NOT the bare `hidden` property: .atlas-checklist__item sets
+   * `display: flex`, and any author display rule overrides the UA
+   * stylesheet's `[hidden] { display: none }` — which is why these
+   * selectors never worked between 2026-03-15 and this fix. The hidden
+   * attribute is still mirrored for assistive tech.
+   */
+  function findChecklist(selector) {
+    var slug = selector.dataset.country;
+    return (
+      (slug &&
+        document.querySelector('.atlas-checklist[data-country="' + slug + '"]')) ||
+      document.querySelector(".atlas-checklist")
+    );
+  }
+
+  function setItemVisible(item, hiddenClass, visible) {
+    item.classList.toggle(hiddenClass, !visible);
+    item.hidden = !visible; // kept in sync for assistive tech
+    if (!visible) {
+      // Uncheck what we hide so it can't silently pollute saved state
+      var cb = item.querySelector('input[type="checkbox"]');
+      if (cb) cb.checked = false;
+    }
+  }
+
+  /**
    * Visa-type selector — prominent tab strip above the Document Checklist.
    * Switching tabs shows only the process-specific checklist items for that
    * visa type. State persists per country: atlas-vtype-{country-slug}
@@ -109,16 +141,7 @@
     var countrySlug = selector.dataset.country;
     var storageKey = "atlas-vtype-" + countrySlug;
 
-    // Find the associated checklist (two siblings down: occ-selector, then checklist)
-    var checklist = null;
-    var sibling = selector.nextElementSibling;
-    while (sibling) {
-      if (sibling.classList.contains("atlas-checklist")) {
-        checklist = sibling;
-        break;
-      }
-      sibling = sibling.nextElementSibling;
-    }
+    var checklist = findChecklist(selector);
     if (!checklist) return;
 
     // Determine the default: first tab's data-vtype
@@ -138,13 +161,9 @@
         btn.classList.toggle("atlas-vtype-tab--active", isActive);
         btn.setAttribute("aria-selected", isActive ? "true" : "false");
       });
-      // Show/hide visa-type-specific checklist items
+      // Show only this visa type's checklist items
       checklist.querySelectorAll(".atlas-checklist__item--vtype").forEach(function (item) {
-        item.hidden = item.dataset.vtype !== vtype;
-      });
-      // Uncheck hidden items so they don't pollute saved state
-      checklist.querySelectorAll(".atlas-checklist__item--vtype[hidden] input").forEach(function (cb) {
-        cb.checked = false;
+        setItemVisible(item, "atlas-vtype-hidden", item.dataset.vtype === vtype);
       });
       localStorage.setItem(storageKey, vtype);
     }
@@ -167,21 +186,29 @@
     var selector = document.querySelector(".atlas-occ-selector");
     if (!selector) return;
 
-    var checklist = selector.nextElementSibling; // .atlas-checklist
+    var checklist = findChecklist(selector);
     if (!checklist) return;
 
-    var countrySlug = checklist.dataset.country;
+    var countrySlug = selector.dataset.country || checklist.dataset.country;
     var storageKey = "atlas-occ-" + countrySlug;
     var saved = localStorage.getItem(storageKey) || "salaried";
 
+    // Validate saved value maps to a real pill (guards against stale data)
+    var validOccs = Array.from(selector.querySelectorAll(".atlas-occ-btn"))
+      .map(function (b) { return b.dataset.occ; });
+    if (validOccs.indexOf(saved) === -1) saved = "salaried";
+
     function activate(occ) {
-      // Update button active state
+      // Update button active + pressed state
       selector.querySelectorAll(".atlas-occ-btn").forEach(function (btn) {
-        btn.classList.toggle("atlas-occ-btn--active", btn.dataset.occ === occ);
+        var isActive = btn.dataset.occ === occ;
+        btn.classList.toggle("atlas-occ-btn--active", isActive);
+        btn.setAttribute("aria-pressed", isActive ? "true" : "false");
       });
-      // Show/hide checklist items by occupation type
+      // Show only this occupation's items (universal items are untouched —
+      // they never carry the --occ modifier)
       checklist.querySelectorAll(".atlas-checklist__item--occ").forEach(function (item) {
-        item.hidden = item.dataset.occ !== occ;
+        setItemVisible(item, "atlas-occ-hidden", item.dataset.occ === occ);
       });
       localStorage.setItem(storageKey, occ);
     }

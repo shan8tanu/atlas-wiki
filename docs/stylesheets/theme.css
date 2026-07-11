@@ -308,6 +308,8 @@ body.atlas-page--country .md-grid {
   padding: 0.85rem 0;
   border-bottom: 1px solid var(--atlas-border);
   cursor: pointer;
+  font-size: 0.92rem;
+  transition: background var(--atlas-duration-fast) ease;
 }
 
 /* Hide mechanism for the occupation / visa-type selectors.
@@ -319,8 +321,6 @@ body.atlas-page--country .md-grid {
 .atlas-checklist__item.atlas-occ-hidden,
 .atlas-checklist__item.atlas-vtype-hidden {
   display: none;
-  font-size: 0.92rem;
-  transition: background var(--atlas-duration-fast) ease;
 }
 
 .atlas-checklist__item:last-child {

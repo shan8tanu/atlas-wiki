@@ -47,6 +47,14 @@ jobs:
         # cause the check to fail and block the PR.
         run: mkdocs build --strict
 
+      - name: Rendered-DOM tests (blocking)
+        # Asserts on the BUILT html: occupation/visa-type hide mechanism,
+        # selector↔checklist data-country contract, fees + sources intact.
+        # Exists because the occupation selector shipped broken for 4 months
+        # with every build green — template/CSS/JS interactivity regressions
+        # must fail CI, not wait for a human to click a pill.
+        run: python tests/test_rendered_pages.py
+
       - name: Check for dead official links (htmlproofer)
         # Only runs on pull_request events — not on direct pushes to main.
         # This keeps the push-to-main path fast and unblocked by external link failures.

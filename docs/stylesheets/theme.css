@@ -308,6 +308,17 @@ body.atlas-page--country .md-grid {
   padding: 0.85rem 0;
   border-bottom: 1px solid var(--atlas-border);
   cursor: pointer;
+}
+
+/* Hide mechanism for the occupation / visa-type selectors.
+   MUST be class-based: the `display: flex` above overrides the UA
+   stylesheet's `[hidden] { display: none }` (author styles always beat UA
+   styles), which is exactly why the selectors never worked from 2026-03-15
+   until this rule was added. The compound selector (0,2,0) outranks the
+   flex rule regardless of source order. */
+.atlas-checklist__item.atlas-occ-hidden,
+.atlas-checklist__item.atlas-vtype-hidden {
+  display: none;
   font-size: 0.92rem;
   transition: background var(--atlas-duration-fast) ease;
 }

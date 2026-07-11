@@ -107,13 +107,13 @@
 </div>
 {%- endif %}
 
-<div class="atlas-occ-selector" role="group" aria-label="Select applicant type">
-  <button class="atlas-occ-btn atlas-occ-btn--active" data-occ="salaried">Salaried</button>
-  <button class="atlas-occ-btn" data-occ="self_employed">Self-employed</button>
-  <button class="atlas-occ-btn" data-occ="business_owner">Business owner</button>
-  <button class="atlas-occ-btn" data-occ="student">Student</button>
-  <button class="atlas-occ-btn" data-occ="homemaker">Homemaker</button>
-  <button class="atlas-occ-btn" data-occ="retired">Retired</button>
+<div class="atlas-occ-selector" role="group" aria-label="Select applicant type" data-country="{{ country | lower | replace(' ', '-') }}">
+  <button class="atlas-occ-btn atlas-occ-btn--active" data-occ="salaried" aria-pressed="true">Salaried</button>
+  <button class="atlas-occ-btn" data-occ="self_employed" aria-pressed="false">Self-employed</button>
+  <button class="atlas-occ-btn" data-occ="business_owner" aria-pressed="false">Business owner</button>
+  <button class="atlas-occ-btn" data-occ="student" aria-pressed="false">Student</button>
+  <button class="atlas-occ-btn" data-occ="homemaker" aria-pressed="false">Homemaker</button>
+  <button class="atlas-occ-btn" data-occ="retired" aria-pressed="false">Retired</button>
 </div>
 
 <div class="atlas-checklist" data-country="{{ country | lower | replace(' ', '-') }}">
@@ -129,7 +129,7 @@
   {%- for vtype, vdata in visa_types.items() %}
     {%- set is_first_type = loop.first %}
     {%- for doc in vdata.documents %}
-  <label class="atlas-checklist__item atlas-checklist__item--vtype" data-vtype="{{ vtype }}"{% if not is_first_type %} hidden{% endif %}>
+  <label class="atlas-checklist__item atlas-checklist__item--vtype{% if not is_first_type %} atlas-vtype-hidden{% endif %}" data-vtype="{{ vtype }}"{% if not is_first_type %} hidden{% endif %}>
     <input type="checkbox" data-key="vt-{{ vtype }}-{{ loop.index }}">
     <span class="atlas-checklist__text">{{ doc }}</span>
   </label>
@@ -162,7 +162,7 @@
 {%- if requirements.occupation_documents %}
   {%- for occ_type, docs in requirements.occupation_documents.items() %}
     {%- for doc in docs %}
-  <label class="atlas-checklist__item atlas-checklist__item--occ" data-occ="{{ occ_type }}" hidden>
+  <label class="atlas-checklist__item atlas-checklist__item--occ atlas-occ-hidden" data-occ="{{ occ_type }}" hidden>
     <input type="checkbox" data-key="fin-{{ occ_type }}-{{ loop.index }}">
     <span class="atlas-checklist__text">{{ doc }}</span>
   </label>

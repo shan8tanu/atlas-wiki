@@ -780,3 +780,51 @@ atlas/
 - `admin_update.py` — citation instructions, suggest_tier, validate_proposed gate, flags
 - `freshness.py` — queue apply-command text
 - `USER-JOURNEYS.md`, `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs
+
+### Session: 2026-07-11 — Claude (Fable 5) [CRITICAL: occupation selector never worked]
+**Branch:** fix/occupation-selector (from main)
+**Root cause (evidence-first, per task):**
+- (a) FALSE LEAD: the `hidden` attribute SURVIVES the md_in_html pipeline intact (23/25 occ
+  labels carry it in built HTML; the 2 salaried ones correctly don't). Pipeline innocent.
+- REAL CAUSE: `.atlas-checklist__item { display: flex }` (theme.css) — any author `display`
+  rule overrides the UA stylesheet's `[hidden] { display: none }`, so the hidden attribute was
+  rendered inert. All occupations/visa-docs visible at once; JS clicks flipped attributes with
+  zero visual effect.
+- (b) JS binding was FINE: built DOM shows .atlas-occ-selector immediately before
+  .atlas-checklist (nextElementSibling worked) and the vtype while-walk reached it. Bound,
+  fired, visually void.
+- (c) Archaeology: display:flex landed 2026-03-01 (0216f3d, checklist feature); the hidden+JS
+  selector mechanism landed 2026-03-15 (1a717f6) into a stylesheet that already neutralised it.
+  BORN BROKEN — never worked in production, ~4 months.
+**Fix:**
+- theme.css: class-based hide `.atlas-checklist__item.atlas-occ-hidden / .atlas-vtype-hidden
+  { display: none }` (compound 0,2,0 — outranks the flex rule regardless of order).
+- Template: occ items carry atlas-occ-hidden; non-first vtype items carry atlas-vtype-hidden
+  (hidden attr kept, mirrored for AT); occ-selector gains data-country; occ buttons gain
+  aria-pressed.
+- theme.js: both sibling-walks replaced with findChecklist() — lookup by shared data-country
+  attr with single-checklist fallback; shared setItemVisible() toggles class + hidden +
+  unchecks hidden items (occ selector now unchecks too, parity with vtype); saved-occ
+  validated against real pills; aria-pressed maintained.
+**Permanent guarantee:**
+- tests/test_rendered_pages.py (stdlib html.parser, no deps): 6 occ buttons; hide mechanism on
+  all non-salaried occ items and non-first-tab vtype items; salaried/first-tab visible; the
+  selector↔checklist data-country contract; fees table + sources lines intact (japan). Wired
+  into ci.yml after the build, BLOCKING. RED-proven: 54 failures against the pre-fix build,
+  0 after the fix.
+- RELEASE_CHECKS.md: 2-minute founder click-through required after any template/theme.js/
+  theme.css change; referenced from CLAUDE.md close-out (step 3).
+**Behavioral verification (live serve, computed styles not attributes):**
+- japan: default = salaried only (2 items); each pill shows exactly its set (self_emp 5,
+  biz 5, student 5, homemaker 4, retired 4); aria-pressed tracks; tabs show only active tab's
+  docs with aria-selected; box checked on a tab is unchecked when switched away; 3 universal
+  items always visible; student+checked-passport survive reload. thailand control: salaried +
+  voa-first defaults, pills work. Zero console errors. NO data changes in this PR.
+**Files touched:**
+- `docs/stylesheets/theme.css` — class-based hide rules (root-cause fix)
+- `templates/country.md.jinja` — hide classes, occ data-country, aria-pressed
+- `docs/javascripts/theme.js` — findChecklist(), setItemVisible(), aria, uncheck parity
+- `tests/test_rendered_pages.py` — created (rendered-DOM CI tests)
+- `.github/workflows/ci.yml` — blocking DOM-test step after build
+- `RELEASE_CHECKS.md` — created; `CLAUDE.md` — close-out step 3 references it
+- `atlas_PROJECT_STATE.md`, `.ai-state/STATE.md` — docs

@@ -28,4 +28,10 @@ Before ending any session that changed code or data:
    new validate.py check groups, open TODOs.
 2. If the country YAML schema changed, note the change at the top of
    atlas_PROJECT_STATE.md under "## Schema changelog" with the date.
-3. Commit and push.
+3. If the session touched `templates/country.md.jinja`, `docs/javascripts/theme.js`,
+   or `docs/stylesheets/theme.css`: the founder MUST run the 2-minute
+   click-through in `RELEASE_CHECKS.md` before deploy — flag this
+   requirement prominently in the PR. (The occupation selector shipped
+   broken for 4 months with green builds; rendered-DOM tests in CI catch
+   the mechanism, only a human click-through proves the behavior.)
+4. Commit and push.
